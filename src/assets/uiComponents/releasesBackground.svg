@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="375px" height="387px" viewBox="0 0 375 387" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Background</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="71.8820258%" y1="46.5617039%" x2="11.9129595%" y2="46.5617039%" id="linearGradient-1">
+            <stop stop-color="#000000" offset="0%"></stop>
+            <stop stop-color="#620C0E" stop-opacity="0.705949113" offset="73.5351562%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2" points="0 0 375 0 375 387 0 387 187.5 175"></polygon>
+    </defs>
+    <g id="New-Releases-List" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="New-Releases" transform="translate(0.000000, -280.000000)">
+            <g id="Background" transform="translate(0.000000, 280.000000)">
+                <g id="Rectangle">
+                    <use fill="#ED1D23" xlink:href="#path-2"></use>
+                    <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                </g>
+                <rect id="Rectangle" fill-opacity="0.7" fill="#000000" x="0" y="0" width="375" height="387"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
