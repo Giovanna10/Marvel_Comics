@@ -9,9 +9,10 @@ import { NavigationStackProp } from "react-navigation-stack";
 type CartProps = {
   navigation: NavigationStackProp;
   getUserLoggedOut: typeof getUserLoggedOutAction;
+  userLogged: boolean;
 };
 
-const Cart: React.FC<CartProps> = ({ navigation, getUserLoggedOut }) => {
+const Cart: React.FC<CartProps> = ({ navigation, getUserLoggedOut, userLogged }) => {
   const styles = cartStyle;
 
   const signOutUser = () => {
@@ -19,7 +20,8 @@ const Cart: React.FC<CartProps> = ({ navigation, getUserLoggedOut }) => {
       .auth()
       .signOut()
       .then(getUserLoggedOut)
-      .then(navigation.navigate("Auth"));
+      .then(() => console.log(userLogged))
+      .then(() => navigation.navigate("Auth"));
   };
 
   return (
@@ -30,10 +32,14 @@ const Cart: React.FC<CartProps> = ({ navigation, getUserLoggedOut }) => {
   );
 };
 
+const mapStateToProps = state => ({
+  userLogged: state.user.loggedIn,
+});
+
 const mapDispatchToProps = dispatch => ({
   getUserLoggedOut: () => {
     dispatch(getUserLoggedOutAction());
   }
 });
 
-export default connect(null, mapDispatchToProps)(Cart);
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);

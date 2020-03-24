@@ -43,11 +43,13 @@ const Login: React.FC<LoginProps> = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleLogin = () => {
+    console.log(email, password);
+    
     email.length > 0 && password.length > 0
       ? firebase
           .auth()
           .signInWithEmailAndPassword(email, password)
-          .then(() => getUserLogged)
+          .then(getUserLogged)
           .then(() => console.log(userLogged))
           .catch(error => setErrorMessage(error.message))
           .then(() =>
