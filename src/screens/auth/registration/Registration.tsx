@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import * as firebase from "firebase";
 import {
@@ -25,10 +25,7 @@ type RegistrationProps = {
   getUserLogged;
 };
 
-const Registration: React.FC<RegistrationProps> = ({
-  navigation,
-  getUserLogged
-}) => {
+const Registration: React.FC<RegistrationProps> = () => {
   const styles = authStyles;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,18 +33,19 @@ const Registration: React.FC<RegistrationProps> = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleRegistration = () => {
-    name.length > 0
-      ? firebase
-          .auth()
-          .createUserWithEmailAndPassword(email, password)
-          .then(userCredentials => {
-            return userCredentials.user.updateProfile({
-              displayName: name
-            });
-          })
-          .catch(error => setErrorMessage(error.message))
-          .then(navigation.navigate("App"))
-      : setErrorMessage("The username is invalid or is badly formatted.");
+    return firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(userCredentials => {
+        return userCredentials.user.updateProfile({
+          displayName: name
+        });
+      })
+      .catch(error =>
+        name.length > 0
+          ? setErrorMessage(error.message)
+          : setErrorMessage("The username is invalid or is badly formatted.")
+      );
   };
   return (
     <View style={{ backgroundColor: "#444444" }}>

@@ -12,7 +12,7 @@ const loginStyle = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       marginHorizontal: 30,
-      marginVertical: '10%',
+      paddingVertical: 15,
     },
     error: {
       color: '#c9082a',

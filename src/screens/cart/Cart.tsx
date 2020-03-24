@@ -12,16 +12,16 @@ type CartProps = {
   userLogged: boolean;
 };
 
-const Cart: React.FC<CartProps> = ({ navigation, getUserLoggedOut, userLogged }) => {
+const Cart: React.FC<CartProps> = ({
+  getUserLoggedOut,
+}) => {
   const styles = cartStyle;
 
   const signOutUser = () => {
     firebase
       .auth()
       .signOut()
-      .then(getUserLoggedOut)
-      .then(() => console.log(userLogged))
-      .then(() => navigation.navigate("Auth"));
+      .then(getUserLoggedOut);
   };
 
   return (
@@ -33,7 +33,7 @@ const Cart: React.FC<CartProps> = ({ navigation, getUserLoggedOut, userLogged })
 };
 
 const mapStateToProps = state => ({
-  userLogged: state.user.loggedIn,
+  userLogged: state.user.loggedIn
 });
 
 const mapDispatchToProps = dispatch => ({

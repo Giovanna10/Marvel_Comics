@@ -11,6 +11,7 @@ import Releases from "./src/screens/releases/Releases";
 import Cart from "./src/screens/cart/Cart";
 import Characters from "./src/screens/characters/Characters";
 import Registration from "./src/screens/auth/registration/Registration";
+import Loading from "./src/screens/auth/loading/Loading";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpeX_EvrdMmsfocQFH84PIPy0OfnkqBTI",
@@ -23,7 +24,7 @@ const firebaseConfig = {
   measurementId: "G-RDB6RJQTBZ"
 };
 
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig);
 
 const AuthStack = createStackNavigator(
   {
@@ -106,10 +107,11 @@ const tabNavigator = createBottomTabNavigator(
 const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
+      Loading: Loading,
       Auth: AuthStack,
       App: tabNavigator
     },
-    { initialRouteName: "Auth" }
+    { initialRouteName: "Loading" }
   )
 );
 
