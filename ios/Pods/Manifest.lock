@@ -420,6 +420,7 @@ DEPENDENCIES:
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
+  - FBSDKLoginKit
   - Firebase/Analytics (= 6.8.1)
   - Firebase/Auth
   - Firebase/Core
@@ -714,6 +715,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: a98e37a576a5220bf43b8faf33cfdc129d2f441d
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: ab40a32e51bbd628cf39d94603d8a5622dd75192
+PODFILE CHECKSUM: 8794ffc18cb5b6b53fc93a76729e3c72eceb9356
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1
