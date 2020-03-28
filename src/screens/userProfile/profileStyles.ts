@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const cartStyle = StyleSheet.create({
+const profileStyles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
@@ -47,4 +47,4 @@ const cartStyle = StyleSheet.create({
   }
 });
 
-export default cartStyle
+export default profileStyles

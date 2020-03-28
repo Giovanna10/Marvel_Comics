@@ -16,7 +16,8 @@ import { getAllCharactersAction } from "../../../store/actions/charactersActions
 import authStyles from "../authStyles";
 import marvelBackground from "../../../assets/marvelBackground.jpg";
 import marvel_Logo from "../../../assets/marvel_Logo.png";
-import signUpBtn from "../../../assets/uiComponents/signUpBtn.png";
+import signUpBtn from "../../../assets/btnsCustom/signUpBtn.png";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,33 +34,35 @@ const Registration: React.FC<RegistrationProps> = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleRegistration = () => {
-    return firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        return userCredentials.user.updateProfile({
-          displayName: name
-        });
-      })
-      .catch(error =>
-        name.length > 0
-          ? setErrorMessage(error.message)
-          : setErrorMessage("The username is invalid or is badly formatted.")
-      );
+    name.length > 0
+      ? firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password)
+          .then(userCredentials => {
+            return userCredentials.user.updateProfile({
+              displayName: name
+            });
+          })
+          .catch(error => setErrorMessage(error.message))
+      : setErrorMessage("The username is invalid.");
   };
   return (
-    <View style={{ backgroundColor: "#444444" }}>
+    <View style={{ backgroundColor: "#4f4f4f" }}>
       <ImageBackground
         source={marvelBackground}
         style={{ width: width, height: height }}
         imageStyle={{ opacity: 0.2 }}
       >
         <SafeAreaView>
-          <View style={{ alignItems: "center", marginTop: "10%" }}>
-            <Image source={marvel_Logo} style={{ width: 114, height: 86 }} />
+          <View style={{ alignItems: "center", marginTop: hp('4.75%') }}>
+            <Image source={marvel_Logo} style={{ width: wp('42%'), height: hp('15%') }} />
           </View>
           <View style={styles.errorMessage}>
-            {errorMessage && <Text style={styles.error}> {errorMessage} </Text>}
+            {errorMessage ? (
+              <Text style={styles.error}> {errorMessage} </Text>
+            ) : (
+              <Text> </Text>
+            )}
           </View>
           <View>
             <Text style={styles.inputTitle}> Username </Text>
@@ -72,7 +75,7 @@ const Registration: React.FC<RegistrationProps> = () => {
             />
           </View>
           <View>
-            <Text style={styles.inputTitle}> Email Address </Text>
+            <Text style={[styles.inputTitle, {paddingTop: hp("2.75%")}]}> Email Address </Text>
             <TextInput
               clearButtonMode="always"
               style={styles.input}
@@ -82,7 +85,7 @@ const Registration: React.FC<RegistrationProps> = () => {
             />
           </View>
           <View>
-            <Text style={styles.inputTitle}> Password </Text>
+            <Text style={[styles.inputTitle, {paddingTop: hp("2.75%")}]}> Password </Text>
             <TextInput
               clearButtonMode="always"
               style={styles.input}
@@ -94,8 +97,8 @@ const Registration: React.FC<RegistrationProps> = () => {
           </View>
           <TouchableOpacity
             style={{
-              marginTop: "20%",
-              marginBottom: "5%",
+              marginTop: hp('12%'),
+              marginBottom: hp('5%'),
               alignItems: "center"
             }}
             onPress={handleRegistration}
@@ -107,7 +110,7 @@ const Registration: React.FC<RegistrationProps> = () => {
               alignSelf: "center"
             }}
           >
-            <Text style={{ color: "#fefefe", fontSize: 13 }}>
+            <Text style={{ color: "#fefefe", fontSize: wp('3.75%') }}>
               Create an account to get started!
             </Text>
           </View>

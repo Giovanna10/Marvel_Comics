@@ -20,13 +20,15 @@ import {
   getUserLoggedAction,
   getUserLoggedOutAction
 } from "../../../store/actions/userActions/userActions";
-import loginBtn from "../../../assets/uiComponents/loginBtn.png";
-import facebookBtn from "../../../assets/uiComponents/facebookBtn.png";
-import googleBtn from "../../../assets/uiComponents/googleBtn.png";
-/* import {
+import loginBtn from "../../../assets/btnsCustom/loginBtn.png";
+import facebookBtn from "../../../assets/btnsCustom/facebookBtn.png";
+import googleBtn from "../../../assets/btnsCustom/googleBtn.png";
+import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
-} from "react-native-responsive-screen"; */
+} from "react-native-responsive-screen";
+import { AccessToken, LoginManager } from "react-native-fbsdk";
+import { GoogleSignin } from "react-native-google-signin";
 
 const { width, height } = Dimensions.get("window");
 
@@ -42,6 +44,24 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      scopes: [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+      ],
+      webClientId:
+        "710067175098-nblsjk2loski11il7vecpr89fddstspv.apps.googleusercontent.com",
+      iosClientId:
+        "710067175098-tp8kii0ih5unvfsff79bbcb8nce8ramc.apps.googleusercontent.com",
+      offlineAccess: true,
+      hostedDomain: "",
+      loginHint: "",
+      forceConsentPrompt: true, //ANDROID
+      accountName: "" //ANDROID
+    });
+  }, []);
+
   const handleLogin = () => {
     return firebase
       .auth()
@@ -50,12 +70,50 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
       .catch(error => setErrorMessage(error.message));
   };
 
+  const handleFBLogin = () => {
+    LoginManager.logInWithPermissions(["public_profile", "email"])
+      .then(result => {
+        if (result.isCancelled) {
+          return Promise.reject(new Error("The User cancelled the request"));
+        }
+        return AccessToken.getCurrentAccessToken();
+      })
+      .then(data => {
+        const credential = firebase.auth.FacebookAuthProvider.credential(
+          data.accessToken
+        );
+        return firebase.auth().signInWithCredential(credential);
+      })
+      .then(() => {
+        getUserLogged();
+        navigation.navigate("App");
+      })
+      .catch(error => {
+        setErrorMessage(error.message);
+      });
+  };
+
+  const handleGoogleLogin = () => {
+    GoogleSignin.signIn()
+      .then(data => {
+        const credential = firebase.auth.GoogleAuthProvider.credential(
+          data.idToken
+        );
+        return firebase.auth().signInWithCredential(credential);
+      })
+      .then(() => {
+        getUserLogged();
+        navigation.navigate("App");
+      })
+      .catch(error => {
+        setErrorMessage(error.message);
+      });
+  };
+
   return (
     <View
       style={{
-        backgroundColor: "#444444"
-        /* width: wp("84.5%"),
-        height: hp("17%") */
+        backgroundColor: "#4f4f4f"
       }}
     >
       <ImageBackground
@@ -64,14 +122,17 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
         imageStyle={{ opacity: 0.2 }}
       >
         <SafeAreaView>
-          <View style={{ alignItems: "center", marginVertical: "5%" }}>
-            <Image source={marvel_Logo} style={{ width: 114, height: 86 }} />
+          <View style={styles.logo}>
+            <Image
+              source={marvel_Logo}
+              style={{ width: 114, height: 86 }}
+            />
           </View>
           <View style={styles.errorMessage}>
             {errorMessage ? (
               <Text style={styles.error}> {errorMessage} </Text>
             ) : (
-              <Text style={styles.error}>{" "}</Text>
+              <Text> </Text>
             )}
           </View>
           <View>
@@ -85,7 +146,10 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
             />
           </View>
           <View>
-            <Text style={styles.inputTitle}> Password </Text>
+            <Text style={[styles.inputTitle, { paddingTop: hp("2.75%") }]}>
+              {" "}
+              Password{" "}
+            </Text>
             <TextInput
               clearButtonMode="always"
               style={styles.input}
@@ -95,22 +159,22 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
               onChangeText={passwordValue => setPassword(passwordValue)}
             />
           </View>
-          <View style={{ marginTop: "5%", alignItems: "center" }}>
+          <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              style={{ marginTop: "10%", marginBottom: "2%" }}
+              style={{ marginTop: hp("8%"), marginBottom: hp("1%") }}
               onPress={handleLogin}
             >
               <Image source={loginBtn} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ marginVertical: "2%" }}
-              // onPress={handleLogin}
+              style={{ marginVertical: hp("1%") }}
+              onPress={handleFBLogin}
             >
               <Image source={facebookBtn} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ marginVertical: "2%" }}
-              // onPress={handleLogin}
+              style={{ marginTop: hp("1%") }}
+              onPress={handleGoogleLogin}
             >
               <Image source={googleBtn} />
             </TouchableOpacity>
@@ -120,17 +184,21 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "row",
-                marginTop: 35
+                marginTop: hp("2%")
               }}
             >
-              <Text style={{ color: "#fefefe", fontSize: 13 }}>
+              <Text style={{ color: "#fefefe", fontSize: wp("3.75%") }}>
                 Don’t have an account?{" "}
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("Registration")}
               >
                 <Text
-                  style={{ color: "#c9082a", fontSize: 15, fontWeight: "bold" }}
+                  style={{
+                    color: "#c9082a",
+                    fontSize: wp("4.5%"),
+                    fontWeight: "bold"
+                  }}
                 >
                   Sign Up
                 </Text>

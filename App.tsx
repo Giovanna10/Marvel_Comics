@@ -1,17 +1,18 @@
 import React from "react";
 import * as firebase from "firebase";
-import { Provider, connect } from "react-redux";
+import store from "./src/store/store";
+import { Provider } from "react-redux";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
-import Login from "./src/screens/auth/login/Login";
-import store from "./src/store/store";
-import Releases from "./src/screens/releases/Releases";
-import Cart from "./src/screens/cart/Cart";
-import Characters from "./src/screens/characters/Characters";
-import Registration from "./src/screens/auth/registration/Registration";
 import Loading from "./src/screens/auth/loading/Loading";
+import Login from "./src/screens/auth/login/Login";
+import Registration from "./src/screens/auth/registration/Registration";
+import Releases from "./src/screens/releases/Releases";
+import Characters from "./src/screens/characters/Characters";
+import UserProfile from "./src/screens/userProfile/UserProfile";
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpeX_EvrdMmsfocQFH84PIPy0OfnkqBTI",
@@ -49,32 +50,46 @@ const ReleasesStack = createStackNavigator(
       })
     }
   },
-  { headerMode: "none" }
+  { headerMode: "none", initialRouteName: "Releases"  }
 );
 
 const CharactersStack = createStackNavigator(
   {
-    Characters: Characters
+    Characters: {
+      screen: Characters,
+      navigationOptions: () => ({
+        cardStyle: {
+          backgroundColor: "#000000"
+        }
+      })
+    }
   },
-  { headerMode: "none" }
+  { headerMode: "none", initialRouteName: "Characters"  }
 );
 
-const CartStack = createStackNavigator(
+const ProfileStack = createStackNavigator(
   {
-    Cart: Cart
+    Profile: {
+      screen: UserProfile,
+      navigationOptions: () => ({
+        cardStyle: {
+          backgroundColor: "#000000"
+        }
+      })
+    }
   },
-  { headerMode: "none" }
+  { headerMode: "none", initialRouteName: "Profile"  }
 );
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
   switch (routeName) {
     case "Releases":
-      return <Icon name="home" size={30} color={tintColor} />;
+      return <Icon name="home" size={wp('8%')} color={tintColor} />;
     case "Characters":
-      return <Icon name="magnify" size={30} color={tintColor} />;
-    case "Cart":
-      return <Icon name="bookshelf" size={30} color={tintColor} />;
+      return <Icon name="magnify" size={wp('8%')} color={tintColor} />;
+    case "Profile":
+      return <Icon name="bookshelf" size={wp('8%')} color={tintColor} />;
     default:
       return null;
   }
@@ -84,7 +99,7 @@ const tabNavigator = createBottomTabNavigator(
   {
     Releases: ReleasesStack,
     Characters: CharactersStack,
-    Cart: CartStack
+    Profile: ProfileStack
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -96,7 +111,7 @@ const tabNavigator = createBottomTabNavigator(
       inactiveTintColor: "#6F6F6F",
       style: {
         backgroundColor: "#000000",
-        height: 65
+        height: hp('8%')
       }
     },
     resetOnBlur: true,

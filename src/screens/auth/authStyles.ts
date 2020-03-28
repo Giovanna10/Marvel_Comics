@@ -1,47 +1,43 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 
 const loginStyle = StyleSheet.create({
-    logo: {
-      height: 80,
-      width: 80,
-      marginTop: '5%',
-      alignSelf: 'center',
-      borderRadius: 6,
-    },
-    errorMessage: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginHorizontal: 30,
-      paddingVertical: 15,
-    },
-    error: {
-      color: '#c9082a',
-      fontWeight: "bold",
-      fontSize: 13,
-      textAlign: 'center',
-    },
-    inputContainer: {
-      marginVertical: '5%',
-    },
-    inputTitle: {
-      fontSize: 10,
-      textTransform: 'uppercase',
-      color: '#fefefe',
-      marginHorizontal: '10%',
-      paddingVertical: '5%'
-    },
-    input: {
-      borderBottomColor: '#fefefe',
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      height: 40,
-      fontSize: 15,
-      color: '#fefefe',
-      marginTop: 10,
-      marginHorizontal: '10%'
-    },
-  });
+  logo: {
+    alignItems: "center",
+    marginTop: hp("4.75%"),
+    marginBottom: hp('1%')
+  },
+  errorMessage: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: "5%",
+    marginTop: hp('1.5%'),
+    marginBottom: hp('3%'),
+    height: hp('5%')
+  },
+  error: {
+    color: "#ff0000",
+    fontWeight: 'bold',
+    fontSize: wp("3.75%"),
+    textAlign: "center"
+  },
+  inputTitle: {
+    fontSize: wp("2.75%"),
+    textTransform: "uppercase",
+    color: "#fefefe",
+    marginHorizontal: "10%",
+  },
+  input: {
+    borderBottomColor: "#fefefe",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    height: hp("8%"),
+    fontSize: wp("4.5%"),
+    color: "#fefefe",
+    marginHorizontal: "10%"
+  }
+});
 
-  export default loginStyle
-
-
-  
+export default loginStyle;

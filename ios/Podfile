@@ -12,6 +12,7 @@ target 'marvelComicsApp' do
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
   pod 'FBSDKLoginKit'
+  pod 'GoogleSignIn'
 
 
   # React Native and its dependencies
