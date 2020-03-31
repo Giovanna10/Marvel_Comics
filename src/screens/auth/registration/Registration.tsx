@@ -5,7 +5,6 @@ import {
   View,
   Text,
   ImageBackground,
-  Dimensions,
   Image,
   TextInput,
   TouchableOpacity,
@@ -13,13 +12,11 @@ import {
 } from "react-native";
 import { NavigationStackProp } from "react-navigation-stack";
 import { getAllCharactersAction } from "../../../store/actions/charactersActions/charactersActions";
-import authStyles from "../authStyles";
 import marvelBackground from "../../../assets/marvelBackground.jpg";
 import marvel_Logo from "../../../assets/marvel_Logo.png";
-import signUpBtn from "../../../assets/btnsCustom/signUpBtn.png";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
-
-const { width, height } = Dimensions.get("window");
+import { color } from "../../../utils/themes/colors";
+import authStyles from "../authStyles";
+import CornerButton from "../../../components/cornerButton/CornerButton";
 
 type RegistrationProps = {
   navigation: NavigationStackProp;
@@ -47,19 +44,19 @@ const Registration: React.FC<RegistrationProps> = () => {
       : setErrorMessage("The username is invalid.");
   };
   return (
-    <View style={{ backgroundColor: "#4f4f4f" }}>
+    <View style={styles.screenContainer}>
       <ImageBackground
         source={marvelBackground}
-        style={{ width: width, height: height }}
-        imageStyle={{ opacity: 0.2 }}
+        style={styles.imageBackground}
+        imageStyle={{ opacity: 0.1 }}
       >
         <SafeAreaView>
-          <View style={{ alignItems: "center", marginTop: hp('4.75%') }}>
-            <Image source={marvel_Logo} style={{ width: wp('42%'), height: hp('15%') }} />
+          <View style={styles.logoContainer}>
+            <Image source={marvel_Logo} style={styles.logo} />
           </View>
-          <View style={styles.errorMessage}>
+          <View style={styles.error}>
             {errorMessage ? (
-              <Text style={styles.error}> {errorMessage} </Text>
+              <Text style={styles.errorMessage}> {errorMessage} </Text>
             ) : (
               <Text> </Text>
             )}
@@ -75,7 +72,7 @@ const Registration: React.FC<RegistrationProps> = () => {
             />
           </View>
           <View>
-            <Text style={[styles.inputTitle, {paddingTop: hp("2.75%")}]}> Email Address </Text>
+            <Text style={styles.inputTitle}> Email Address </Text>
             <TextInput
               clearButtonMode="always"
               style={styles.input}
@@ -85,7 +82,7 @@ const Registration: React.FC<RegistrationProps> = () => {
             />
           </View>
           <View>
-            <Text style={[styles.inputTitle, {paddingTop: hp("2.75%")}]}> Password </Text>
+            <Text style={styles.inputTitle}> Password </Text>
             <TextInput
               clearButtonMode="always"
               style={styles.input}
@@ -96,21 +93,15 @@ const Registration: React.FC<RegistrationProps> = () => {
             />
           </View>
           <TouchableOpacity
-            style={{
-              marginTop: hp('12%'),
-              marginBottom: hp('5%'),
-              alignItems: "center"
-            }}
+            style={styles.signupBtnContainer}
             onPress={handleRegistration}
           >
-            <Image source={signUpBtn} />
+            <CornerButton textBtn='SIGN UP' btnColor={color.yellow} />
           </TouchableOpacity>
           <View
-            style={{
-              alignSelf: "center"
-            }}
+            style={styles.warningContainer}
           >
-            <Text style={{ color: "#fefefe", fontSize: wp('3.75%') }}>
+            <Text style={styles.warning}>
               Create an account to get started!
             </Text>
           </View>

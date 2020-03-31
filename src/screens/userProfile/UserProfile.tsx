@@ -5,10 +5,6 @@ import { View, Text, Button, SafeAreaView } from "react-native";
 import { NavigationStackProp } from "react-navigation-stack";
 import { getUserLoggedOutAction } from "../../store/actions/userActions/userActions";
 import profileStyle from "./profileStyles";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp
-} from "react-native-responsive-screen";
 import { LinearGradient } from "expo-linear-gradient";
 
 type ProfileProps = {
@@ -34,18 +30,9 @@ const Profile: React.FC<ProfileProps> = ({ getUserLoggedOut }) => {
       start={{ x: 1, y: -1 }}
       end={{ x: 1, y: 0.8 }}
     >
-      <SafeAreaView style={{ alignItems: "center" }}>
-        <Text style={{ color: "#fefefe", fontSize: wp("10%") }}>Profile</Text>
-        <View
-          style={{
-            width: wp("30%"),
-            height: hp("5%"),
-            borderWidth: 2,
-            borderColor: "#fff300",
-            backgroundColor: "#fff300",
-            justifyContent: "center"
-          }}
-        >
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Profile</Text>
+        <View style={styles.btnContainer}>
           <Button title="Sign Out" onPress={signOutUser} color="#000000" />
         </View>
       </SafeAreaView>

@@ -3,40 +3,75 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import { color } from "../../utils/themes/colors";
+import { size, screenDimensions } from "../../utils/themes/sizes";
 
 const loginStyle = StyleSheet.create({
-  logo: {
+  screenContainer: {
+    backgroundColor: "#1c1c1c"
+  },
+  imageBackground: {
+    width: screenDimensions.width,
+    height: screenDimensions.height
+  },
+  logoContainer: {
     alignItems: "center",
     marginTop: hp("4.75%"),
-    marginBottom: hp('1%')
+    marginBottom: hp("1%")
   },
-  errorMessage: {
+  logo: { width: 114, height: 86 },
+  error: {
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: "5%",
-    marginTop: hp('1.5%'),
-    marginBottom: hp('3%'),
-    height: hp('5%')
+    marginTop: hp("1.5%"),
+    marginBottom: hp("1%"),
+    height: hp("5%")
   },
-  error: {
-    color: "#ff0000",
-    fontWeight: 'bold',
-    fontSize: wp("3.75%"),
+  errorMessage: {
+    color: color.warning,
+    fontWeight: "bold",
+    fontSize: size.errorMex,
     textAlign: "center"
   },
   inputTitle: {
-    fontSize: wp("2.75%"),
+    fontSize: size.titleTextField,
     textTransform: "uppercase",
-    color: "#fefefe",
-    marginHorizontal: "10%",
+    color: color.title,
+    marginHorizontal: wp("10%"),
+    paddingTop: hp("2.5%")
   },
   input: {
-    borderBottomColor: "#fefefe",
+    borderBottomColor: color.white,
     borderBottomWidth: StyleSheet.hairlineWidth,
     height: hp("8%"),
-    fontSize: wp("4.5%"),
-    color: "#fefefe",
-    marginHorizontal: "10%"
+    fontSize: size.input,
+    color: color.white,
+    marginHorizontal: wp("10%")
+  },
+  loginBtnsContainer: { marginTop: hp("8.5%") },
+  loginBtnContainer: {
+    alignItems: "center",
+    marginTop: hp("1%"),
+    marginBottom: hp("4%")
+  },
+  signupBtnContainer: {
+    marginTop: hp('12%'),
+    marginBottom: hp('5%'),
+    alignItems: "center"
+  },
+  warningContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: hp("1.5%")
+  },
+  warning: { color: color.white, fontSize: size.description },
+  link: {
+    color: color.warning,
+    fontSize: size.warning,
+    fontWeight: "bold"
   }
 });
 

@@ -13,6 +13,7 @@ import Releases from "./src/screens/releases/Releases";
 import Characters from "./src/screens/characters/Characters";
 import UserProfile from "./src/screens/userProfile/UserProfile";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import { color } from "./src/utils/themes/colors";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpeX_EvrdMmsfocQFH84PIPy0OfnkqBTI",
@@ -45,7 +46,7 @@ const ReleasesStack = createStackNavigator(
       screen: Releases,
       navigationOptions: () => ({
         cardStyle: {
-          backgroundColor: "#000000"
+          backgroundColor: color.black
         }
       })
     }
@@ -59,7 +60,7 @@ const CharactersStack = createStackNavigator(
       screen: Characters,
       navigationOptions: () => ({
         cardStyle: {
-          backgroundColor: "#000000"
+          backgroundColor: color.black
         }
       })
     }
@@ -73,7 +74,7 @@ const ProfileStack = createStackNavigator(
       screen: UserProfile,
       navigationOptions: () => ({
         cardStyle: {
-          backgroundColor: "#000000"
+          backgroundColor: color.black
         }
       })
     }
@@ -107,11 +108,11 @@ const tabNavigator = createBottomTabNavigator(
         getTabBarIcon(navigation, focused, tintColor)
     }),
     tabBarOptions: {
-      activeTintColor: "#fefefe",
-      inactiveTintColor: "#6F6F6F",
+      activeTintColor: color.white,
+      inactiveTintColor: color.inactiveTab,
       style: {
-        backgroundColor: "#000000",
-        height: hp('8%')
+        backgroundColor: color.black,
+        height: hp('10%')
       }
     },
     resetOnBlur: true,

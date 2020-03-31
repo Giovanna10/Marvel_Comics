@@ -30,7 +30,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
-			<string>None</string>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.710067175098-tp8kii0ih5unvfsff79bbcb8nce8ramc</string>

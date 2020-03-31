@@ -1,15 +1,15 @@
 import React, {useEffect} from 'react';
-import {View, ActivityIndicator, Dimensions} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import * as firebase from 'firebase';
 import { NavigationStackProp } from 'react-navigation-stack';
-
-const {height} = Dimensions.get('window')
+import { loadingStyles } from './loadingStyles';
 
 type LoadingProps = {
     navigation: NavigationStackProp
 }
 
 const Loading: React.FC<LoadingProps> = ({navigation}) => {
+  const styles = loadingStyles
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -18,7 +18,7 @@ const Loading: React.FC<LoadingProps> = ({navigation}) => {
   }, []);
 
   return (
-    <View style={{backgroundColor: '#000000', height: height, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={styles.loadingContainer}>
       <ActivityIndicator />
     </View>
   );

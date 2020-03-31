@@ -5,32 +5,24 @@ import {
   View,
   Text,
   ImageBackground,
-  Dimensions,
   Image,
   SafeAreaView,
   TextInput,
   TouchableOpacity
 } from "react-native";
 import { NavigationStackProp } from "react-navigation-stack";
+import { AccessToken, LoginManager } from "react-native-fbsdk";
+import { GoogleSignin } from "react-native-google-signin";
 import { getAllCharactersAction } from "../../../store/actions/charactersActions/charactersActions";
-import authStyles from "../authStyles";
-import marvelBackground from "../../../assets/marvelBackground.jpg";
-import marvel_Logo from "../../../assets/marvel_Logo.png";
 import {
   getUserLoggedAction,
   getUserLoggedOutAction
 } from "../../../store/actions/userActions/userActions";
-import loginBtn from "../../../assets/btnsCustom/loginBtn.png";
-import facebookBtn from "../../../assets/btnsCustom/facebookBtn.png";
-import googleBtn from "../../../assets/btnsCustom/googleBtn.png";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
-import { AccessToken, LoginManager } from "react-native-fbsdk";
-import { GoogleSignin } from "react-native-google-signin";
-
-const { width, height } = Dimensions.get("window");
+import marvelBackground from "../../../assets/marvelBackground.jpg";
+import marvel_Logo from "../../../assets/marvel_Logo.png";
+import { color } from "../../../utils/themes/colors";
+import authStyles from "../authStyles";
+import CornerButton from "../../../components/cornerButton/CornerButton";
 
 type LoginProps = {
   navigation: NavigationStackProp;
@@ -111,26 +103,19 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
   };
 
   return (
-    <View
-      style={{
-        backgroundColor: "#4f4f4f"
-      }}
-    >
+    <View style={styles.screenContainer}>
       <ImageBackground
         source={marvelBackground}
-        style={{ width: width, height: height }}
-        imageStyle={{ opacity: 0.2 }}
+        style={styles.imageBackground}
+        imageStyle={{ opacity: 0.1 }}
       >
         <SafeAreaView>
-          <View style={styles.logo}>
-            <Image
-              source={marvel_Logo}
-              style={{ width: 114, height: 86 }}
-            />
+          <View style={styles.logoContainer}>
+            <Image source={marvel_Logo} style={styles.logo} />
           </View>
-          <View style={styles.errorMessage}>
+          <View style={styles.error}>
             {errorMessage ? (
-              <Text style={styles.error}> {errorMessage} </Text>
+              <Text style={styles.errorMessage}> {errorMessage} </Text>
             ) : (
               <Text> </Text>
             )}
@@ -146,10 +131,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
             />
           </View>
           <View>
-            <Text style={[styles.inputTitle, { paddingTop: hp("2.75%") }]}>
-              {" "}
-              Password{" "}
-            </Text>
+            <Text style={styles.inputTitle}> Password </Text>
             <TextInput
               clearButtonMode="always"
               style={styles.input}
@@ -159,51 +141,53 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
               onChangeText={passwordValue => setPassword(passwordValue)}
             />
           </View>
-          <View style={{ alignItems: "center" }}>
+          
+          <View style={styles.loginBtnsContainer}>
             <TouchableOpacity
-              style={{ marginTop: hp("8%"), marginBottom: hp("1%") }}
+              style={styles.loginBtnContainer}
               onPress={handleLogin}
             >
-              <Image source={loginBtn} />
+              <CornerButton textBtn="LOGIN" btnColor={color.yellow} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ marginVertical: hp("1%") }}
+              style={styles.loginBtnContainer}
               onPress={handleFBLogin}
             >
-              <Image source={facebookBtn} />
+              <CornerButton
+                social
+                fbBtn
+                textBtn="Login with Facebook"
+                btnColor="#4269A4"
+              />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ marginTop: hp("1%") }}
+              style={styles.loginBtnContainer}
               onPress={handleGoogleLogin}
             >
-              <Image source={googleBtn} />
+              <CornerButton
+                social
+                googleBtn
+                textBtn="Login with Google"
+                btnColor={color.white}
+              />
             </TouchableOpacity>
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                marginTop: hp("2%")
-              }}
+          </View>
+
+          <View
+            style={styles.warningContainer}
+          >
+            <Text style={styles.warning}>
+              Don’t have an account?{" "}
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Registration")}
             >
-              <Text style={{ color: "#fefefe", fontSize: wp("3.75%") }}>
-                Don’t have an account?{" "}
-              </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Registration")}
+              <Text
+                style={styles.link}
               >
-                <Text
-                  style={{
-                    color: "#c9082a",
-                    fontSize: wp("4.5%"),
-                    fontWeight: "bold"
-                  }}
-                >
-                  Sign Up
-                </Text>
-              </TouchableOpacity>
-            </View>
+                Sign Up
+              </Text>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </ImageBackground>

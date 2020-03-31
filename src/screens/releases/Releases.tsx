@@ -1,43 +1,23 @@
 import React from "react";
-import {
-  View,
-  Text,
-  ImageBackground,
-  SafeAreaView,
-  Dimensions
-} from "react-native";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { View, Text, ImageBackground, SafeAreaView } from "react-native";
 import releasesBg from "../../assets/screensBgs/releasesBg.png";
-
-const { width, height } = Dimensions.get("screen");
+import { releasesStyles } from "./releasesStyles";
 
 type ReleasesProps = {};
 
 const Releases: React.FC<ReleasesProps> = () => {
+  const styles = releasesStyles;
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          height: height/10
-        }}
-      >
-        <Text style={{ color: "#fefefe", fontSize: wp("10%") }}>News</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>News</Text>
       </View>
       <ImageBackground
         source={releasesBg}
         imageStyle={{ resizeMode: "contain" }}
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          width: width,
-          height: height
-        }}
+        style={styles.background}
       >
-        <Text style={{ color: "#fefefe", fontSize: wp("10%") }}>
-          Comics Flatlist
-        </Text>
+        <Text style={styles.title}>Comics Flatlist</Text>
       </ImageBackground>
     </SafeAreaView>
   );

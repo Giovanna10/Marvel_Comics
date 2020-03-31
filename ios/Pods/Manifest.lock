@@ -20,7 +20,7 @@ PODS:
     - UMFontInterface
   - EXKeepAwake (8.0.0):
     - UMCore
-  - EXLinearGradient (8.0.0):
+  - EXLinearGradient (8.1.0):
     - UMCore
   - EXLocation (8.0.0):
     - UMCore
@@ -645,7 +645,7 @@ SPEC CHECKSUMS:
   EXFileSystem: 6e0d9bb6cc4ea404dbb8f583c1a8a2dcdf4b83b6
   EXFont: 6187b5ab46ee578d5f8e7f2ea092752e78772235
   EXKeepAwake: 66e9f80b6d129633725a0e42f8d285c229876811
-  EXLinearGradient: 75f302f9d6484267a3f6d3252df2e7a5f00e716a
+  EXLinearGradient: 97d8095d1e4ad96f7893e010e564796ed8aeea42
   EXLocation: 3c75d012ca92eed94d4338778d79c49d1252393a
   EXPermissions: 9bc08859a675d291e89be9a0870155c27c16ac35
   EXSQLite: 220226a354912b100dfe913f5fe6f31762c8927e

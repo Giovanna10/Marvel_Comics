@@ -1,50 +1,22 @@
 import { StyleSheet } from "react-native";
+import { color } from "../../utils/themes/colors";
+import { size } from "../../utils/themes/sizes";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 
 const profileStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
+  container: { alignItems: "center" },
+  title: { color: color.white, fontSize: size.hero },
+  btnContainer: {
+    width: wp("30%"),
+    height: hp("5%"),
+    borderWidth: 2,
+    borderColor: "#fff300",
+    backgroundColor: "#fff300",
     justifyContent: "center",
-    backgroundColor: "#ecf0f1"
-  },
-  triangleCorner: {
-    position: "absolute",
-    top: 105,
-    left: 0,
-    width: 300,
-    height: 100,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderRightWidth: 50,
-    borderTopWidth: 80,
-    borderRightColor: "transparent",
-    borderTopColor: "gray"
-  },
-  triangleCorner1: {
-    position: "absolute",
-    top: 100,
-    left: 0,
-    width: 130,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderRightWidth: 50,
-    borderTopWidth: 90,
-    borderRightColor: "transparent",
-    borderTopColor: "green"
-  },
-  triangleCornerLayer: {
-    position: "absolute",
-    top: 107,
-    left: 0,
-    width: 297,
-    height: 100,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderRightWidth: 47,
-    borderTopWidth: 75,
-    borderRightColor: "transparent",
-    borderTopColor: "white"
   }
 });
 
-export default profileStyles
+export default profileStyles;
