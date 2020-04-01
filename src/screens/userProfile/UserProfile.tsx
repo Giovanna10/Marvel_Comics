@@ -1,11 +1,12 @@
 import React from "react";
 import * as firebase from "firebase";
 import { connect } from "react-redux";
-import { View, Text, Button, SafeAreaView } from "react-native";
+import { View, Text, Button } from "react-native";
 import { NavigationStackProp } from "react-navigation-stack";
 import { getUserLoggedOutAction } from "../../store/actions/userActions/userActions";
 import profileStyle from "./profileStyles";
 import { LinearGradient } from "expo-linear-gradient";
+import Header from "../../components/header/Header";
 
 type ProfileProps = {
   navigation: NavigationStackProp;
@@ -26,16 +27,17 @@ const Profile: React.FC<ProfileProps> = ({ getUserLoggedOut }) => {
   return (
     <LinearGradient
       style={{ flex: 1 }}
-      colors={["#ae0000", "#000000"]}
-      start={{ x: 1, y: -1 }}
-      end={{ x: 1, y: 0.8 }}
+      colors={["#000000", "#ae0000"]}
+      start={{ x: 1, y: 0.4 }}
+      end={{ x: 1, y: 2 }}
     >
-      <SafeAreaView style={styles.container}>
+      <Header />
+      <View style={styles.container}>
         <Text style={styles.title}>Profile</Text>
         <View style={styles.btnContainer}>
           <Button title="Sign Out" onPress={signOutUser} color="#000000" />
         </View>
-      </SafeAreaView>
+      </View>
     </LinearGradient>
   );
 };

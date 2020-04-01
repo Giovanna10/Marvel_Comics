@@ -1,17 +1,14 @@
 import { StyleSheet } from "react-native";
 import { screenDimensions, size } from "../../utils/themes/sizes";
 import { color } from "../../utils/themes/colors";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export const charStyles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
   background: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     width: screenDimensions.width,
-    height: screenDimensions.height
+    height: hp('80%'),
   },
   title: { color: color.white, fontSize: size.hero }
 });

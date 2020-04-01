@@ -9,5 +9,4 @@ export const color = {
     red: '#c9082a',
     yellow: '#fff300',
     inactiveTab: "#6f6f6f",
-    warning: "#c9082a"
 }

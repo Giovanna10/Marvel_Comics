@@ -29,7 +29,7 @@ const loginStyle = StyleSheet.create({
     height: hp("5%")
   },
   errorMessage: {
-    color: color.warning,
+    color: color.red,
     fontWeight: "bold",
     fontSize: size.errorMex,
     textAlign: "center"
@@ -69,7 +69,7 @@ const loginStyle = StyleSheet.create({
   },
   warning: { color: color.white, fontSize: size.description },
   link: {
-    color: color.warning,
+    color: color.red,
     fontSize: size.warning,
     fontWeight: "bold"
   }

@@ -1,25 +1,58 @@
 import React from "react";
-import { View, Text, ImageBackground, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  ImageBackground,
+  FlatList
+} from "react-native";
 import releasesBg from "../../assets/screensBgs/releasesBg.png";
 import { releasesStyles } from "./releasesStyles";
+import Header from "../../components/header/Header";
 
 type ReleasesProps = {};
 
 const Releases: React.FC<ReleasesProps> = () => {
   const styles = releasesStyles;
+
+  const listItems = [
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item",
+    "item"
+  ];
+
   return (
-    <SafeAreaView style={styles.container}>
+    <>
+      <Header />
       <View style={styles.titleContainer}>
         <Text style={styles.title}>News</Text>
       </View>
       <ImageBackground
         source={releasesBg}
-        imageStyle={{ resizeMode: "contain" }}
+        imageStyle={styles.imageStyle}
         style={styles.background}
-      >
-        <Text style={styles.title}>Comics Flatlist</Text>
-      </ImageBackground>
-    </SafeAreaView>
+      />
+      <FlatList
+        style={styles.listContainer}
+        data={listItems}
+        renderItem={({ item }) => (
+          <Text style={styles.title}>{item}</Text>
+        )}
+      />
+    </>
   );
 };
 
