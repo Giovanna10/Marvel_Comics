@@ -8,7 +8,8 @@ import {
   Image,
   SafeAreaView,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Linking
 } from "react-native";
 import { NavigationStackProp } from "react-navigation-stack";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
@@ -63,7 +64,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
   };
 
   const handleFBLogin = () => {
-    LoginManager.logInWithPermissions(["public_profile", "email"])
+    LoginManager.logInWithPermissions(["public_profile"])
       .then(result => {
         if (result.isCancelled) {
           return Promise.reject(new Error("The User cancelled the request"));
@@ -172,7 +173,6 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
               />
             </TouchableOpacity>
           </View>
-
           <View
             style={styles.warningContainer}
           >

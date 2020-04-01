@@ -7,6 +7,8 @@ import { getUserLoggedOutAction } from "../../store/actions/userActions/userActi
 import profileStyle from "./profileStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../../components/header/Header";
+import { LoginManager, AccessToken } from "react-native-fbsdk";
+import { GoogleSignin } from "react-native-google-signin";
 
 type ProfileProps = {
   navigation: NavigationStackProp;
@@ -21,7 +23,11 @@ const Profile: React.FC<ProfileProps> = ({ getUserLoggedOut }) => {
     firebase
       .auth()
       .signOut()
-      .then(getUserLoggedOut);
+      .then(() => {
+        getUserLoggedOut();
+        LoginManager.logOut();
+        GoogleSignin.signOut();
+      });
   };
 
   return (

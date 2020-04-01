@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">marvelComicsApp</string>
     <string name="facebook_app_id">204247317491391</string>
+    <string name="fb_login_protocol_scheme">fb204247317491391</string>
 </resources>
