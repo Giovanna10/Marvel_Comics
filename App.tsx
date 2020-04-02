@@ -1,5 +1,6 @@
 import React from "react";
 import * as firebase from "firebase";
+import "firebase/firestore"
 import store from "./src/store/store";
 import { Provider } from "react-redux";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -26,7 +27,8 @@ const firebaseConfig = {
   measurementId: "G-RDB6RJQTBZ"
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
+export const db = firebase.firestore(app)
 
 const AuthStack = createStackNavigator(
   {

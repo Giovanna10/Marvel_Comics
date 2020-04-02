@@ -7,7 +7,7 @@ export const headerStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     backgroundColor: color.red,
-    height: hp("15%"),
+    height: hp("12%"),
     zIndex: 0
   },
   iconContainer: {
@@ -21,10 +21,10 @@ export const headerStyles = StyleSheet.create({
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 5
+      width: 10,
+      height: 10
     },
-    shadowOpacity: 0.6,
+    shadowOpacity: 1,
     shadowRadius: 16.0
   },
   logo: {
