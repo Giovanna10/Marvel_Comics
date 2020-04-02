@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { color } from "../../../utils/themes/colors";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export const headerStyles = StyleSheet.create({
   container: {
