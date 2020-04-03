@@ -1,13 +1,19 @@
 import {
   USER_LOGGED,
-  USER_LOGGED_OUT
+  USER_LOGGED_OUT,
+  Action,
+  UserActionInterface
 } from "../../actions/actionsTypes/ActionsTypes";
+import { UserState } from "../../statesTypes/StatesTypes";
 
-const initialState = {
+const initialState: UserState = {
   loggedIn: false
 };
 
-const userReducer = (state = initialState, action) => {
+export default function userReducer(
+  state: UserState = initialState,
+  action: Action<UserActionInterface>
+) {
   switch (action.type) {
     case USER_LOGGED:
       return {
@@ -20,6 +26,4 @@ const userReducer = (state = initialState, action) => {
     default:
       return state;
   }
-};
-
-export default userReducer;
+}

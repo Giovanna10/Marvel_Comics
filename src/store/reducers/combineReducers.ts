@@ -5,8 +5,8 @@ import comicsReducer from "./comicsReducer/comicsReducer";
 
 const reducers = combineReducers({
   user: userReducer,
-  characters: charactersReducer,
-  comics: comicsReducer
+  comics: comicsReducer,
+  characters: charactersReducer
 });
 
 export default reducers;
