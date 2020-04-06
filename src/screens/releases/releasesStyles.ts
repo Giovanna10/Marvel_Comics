@@ -1,7 +1,10 @@
 import { StyleSheet } from "react-native";
 import { screenDimensions, size } from "../../utils/themes/sizes";
 import { color } from "../../utils/themes/colors";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from "react-native-responsive-screen";
 
 export const releasesStyles = StyleSheet.create({
   titleContainer: {
@@ -23,10 +26,31 @@ export const releasesStyles = StyleSheet.create({
     height: screenDimensions.height < 670 ? 330 : 400
   },
   listContainer: {
-    zIndex: 1
+    alignSelf: "center"
   },
-  listItemContainer: {
-    marginVertical: hp('10%'),
-    marginHorizontal: wp('2%')
+  comicsContainer: {
+    width: 150,
+    marginTop: hp("8%"),
+    marginHorizontal: screenDimensions.width < 414 ? wp("4%") : wp("6%"),
+  },
+  comic: {
+    width: 150,
+    height: 225,
+    borderColor: color.subtitle,
+    borderWidth: 0.7,
+    marginBottom: '5%'
+  },
+  comicTitle: {
+    color: color.title,
+    fontSize: size.comicTitle,
+    fontWeight: "800",
+  },
+  comicSubtitle: {
+    color: color.subtitle,
+    fontSize: size.comicTitle
+  },
+  comicDate: {
+    color: color.subtitle,
+    fontSize: size.comicDetails
   }
 });

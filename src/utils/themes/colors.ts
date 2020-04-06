@@ -3,7 +3,7 @@
 export const color = {
     white: '#fefefe',
     black: '#000000',
-    title: '#e3e3e3',
+    title: '#bdbdbd',
     subtitle: '#d6d6d6',
     paragraph: '#c6c6c6',
     red: '#c9082a',

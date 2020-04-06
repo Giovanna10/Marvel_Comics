@@ -1,5 +1,5 @@
 import {
-  GET_CATEGORIES,
+  GET_CHARACTERS,
   Action,
   CharactersActionInterface
 } from "../../actions/actionsTypes/ActionsTypes";
@@ -14,7 +14,7 @@ export default function(
   action: Action<CharactersActionInterface>
 ) {
   switch (action.type) {
-    case GET_CATEGORIES:
+    case GET_CHARACTERS:
       return {
         ...state,
         allCharacters: action.payload

@@ -1,6 +1,6 @@
 export const USER_LOGGED = "USER_LOGGED";
 export const USER_LOGGED_OUT = "USER_LOGGED_OUT";
-export const GET_CATEGORIES = "GET_CATEGORIES";
+export const GET_CHARACTERS = "GET_CHARACTERS";
 export const GET_YEAR_COMICS = "GET_YEAR_COMICS";
 
 export interface Action<P> {
@@ -52,8 +52,9 @@ export interface CharactersActionInterface {
 export interface Comic {
   id: number;
   title: string;
+  comicNumber: string;
   description: null;
-  modified: string;
+  creationDate: string;
   pageCount: number;
   price: number;
   thumbnail: Image;

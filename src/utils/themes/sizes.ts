@@ -12,5 +12,7 @@ export const size = {
   input: wp("4.5%"),
   errorMex: wp("3.75%"),
   warning: wp("4.5%"),
-  description: wp("3.75%")
+  description: wp("3.75%"),
+  comicTitle: wp("4%"),
+  comicDetails: wp("3%")
 };

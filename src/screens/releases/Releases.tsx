@@ -18,7 +18,7 @@ type ReleasesProps = {
 
 const Releases: React.FC<ReleasesProps> = ({
   getYearlyComics,
-  yearlyComics
+  yearlyComics,
 }) => {
   const styles = releasesStyles;
 
@@ -28,9 +28,7 @@ const Releases: React.FC<ReleasesProps> = ({
 
   const addToWishes = (title, comic) => {
     try {
-      db.collection("Cart")
-        .doc(title)
-        .set(comic);
+      db.collection("Cart").doc(title).set(comic);
     } catch (error) {
       console.log(error.message);
     }
@@ -53,16 +51,24 @@ const Releases: React.FC<ReleasesProps> = ({
           />
           <FlatList
             style={styles.listContainer}
-            horizontal
+            numColumns={2}
             data={yearlyComics}
             renderItem={({ item }) => (
-              <TouchableOpacity style={styles.listItemContainer} onPress={() => console.log(item)}>
+              <TouchableOpacity
+                style={styles.comicsContainer}
+                onPress={() => console.log(item)}
+              >
                 <Image
                   source={{
-                    uri: `${item.thumbnail.path}/portrait_xlarge.jpg`
+                    uri: `${item.thumbnail.path}/portrait_xlarge.jpg`,
                   }}
-                  style={{ width: 150, height: 225 }}
+                  style={styles.comic}
                 />
+                <Text numberOfLines={4} style={styles.comicTitle}>
+                  {item.title}
+                </Text>
+                <Text style={styles.comicSubtitle}>#{item.comicNumber}</Text>
+                <Text style={styles.comicDate}>{item.creationDate}</Text>
               </TouchableOpacity>
             )}
           />
@@ -73,11 +79,11 @@ const Releases: React.FC<ReleasesProps> = ({
 };
 
 const mapStateToProps = (state: AppState) => ({
-  yearlyComics: state.comics.yearlyComics
+  yearlyComics: state.comics.yearlyComics,
 });
 
-const mapDispatchToProps = dispatch => ({
-  getYearlyComics: () => dispatch(getYearlyComicsAction())
+const mapDispatchToProps = (dispatch) => ({
+  getYearlyComics: () => dispatch(getYearlyComicsAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Releases);
