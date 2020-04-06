@@ -10,17 +10,16 @@ import {
   TouchableOpacity,
   SafeAreaView
 } from "react-native";
-import { NavigationStackProp } from "react-navigation-stack";
-import { getAllCharactersAction } from "../../../store/actions/charactersActions/charactersActions";
 import marvelBackground from "../../../assets/marvelBackground.jpg";
 import marvel_Logo from "../../../assets/marvel_Logo.png";
 import { color } from "../../../utils/themes/colors";
 import authStyles from "../authStyles";
 import CornerButton from "../../../components/cornerButton/CornerButton";
+import { getUserLoggedAction } from "../../../store/actions/userActions/userActions";
+import { AppState } from "../../../store/store";
 
 type RegistrationProps = {
-  navigation: NavigationStackProp;
-  getUserLogged;
+  getUserLogged: typeof getUserLoggedAction;
 };
 
 const Registration: React.FC<RegistrationProps> = () => {
@@ -111,12 +110,12 @@ const Registration: React.FC<RegistrationProps> = () => {
   );
 };
 
-const mapStateToProps = state => ({
-  allCharacters: state.characters.allCharacters
+const mapStateToProps = (state:AppState) => ({
+  loggedIn: state.user.loggedIn
 });
 
 const mapDispatchToProps = dispatch => ({
-  getAllCharacters: () => dispatch(getAllCharactersAction())
+  getUserLogged: () => dispatch(getUserLoggedAction())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registration);

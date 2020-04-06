@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
-import Loading from "./src/screens/auth/loading/Loading";
+import Loading from "./src/components/loading/Loading";
 import Login from "./src/screens/auth/login/Login";
 import Registration from "./src/screens/auth/registration/Registration";
 import Releases from "./src/screens/releases/Releases";
@@ -88,11 +88,11 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
   switch (routeName) {
     case "Releases":
-      return <Icon name="home" size={wp('8%')} color={tintColor} />;
+      return <Icon name="buffer" size={wp('8%')} color={tintColor} />;
     case "Characters":
       return <Icon name="magnify" size={wp('8%')} color={tintColor} />;
     case "Profile":
-      return <Icon name="bookshelf" size={wp('8%')} color={tintColor} />;
+      return <Icon name="account-circle-outline" size={wp('8%')} color={tintColor} />;
     default:
       return null;
   }
@@ -110,7 +110,7 @@ const tabNavigator = createBottomTabNavigator(
         getTabBarIcon(navigation, focused, tintColor)
     }),
     tabBarOptions: {
-      activeTintColor: color.white,
+      activeTintColor: color.yellow,
       inactiveTintColor: color.inactiveTab,
       style: {
         backgroundColor: color.black,

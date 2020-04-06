@@ -1,15 +1,23 @@
-import { GET_YEAR_COMICS } from "../../actions/actionsTypes/ActionsTypes";
+import {
+  GET_YEAR_COMICS,
+  Action,
+  ComicsActionInterface
+} from "../../actions/actionsTypes/ActionsTypes";
+import { ComicsState } from "../../statesTypes/StatesTypes";
 
-const initialState = {
-  comicsArray: []
+const initialState: ComicsState = {
+  yearlyComics: []
 };
 
-export default function(state = initialState, action) {
+export default function(
+  state: ComicsState = initialState,
+  action: Action<ComicsActionInterface>
+) {
   switch (action.type) {
     case GET_YEAR_COMICS:
       return {
         ...state,
-        comicsArray: action.payload
+        yearlyComics: action.payload
       };
     default:
       return state;

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { color } from "../../../utils/themes/colors";
-import { screenDimensions } from "../../../utils/themes/sizes";
+import { color } from "../../utils/themes/colors";
+import { screenDimensions } from "../../utils/themes/sizes";
 
 export const loadingStyles = StyleSheet.create({
   loadingContainer: {

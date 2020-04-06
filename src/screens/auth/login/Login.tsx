@@ -9,12 +9,10 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
-  Linking
 } from "react-native";
 import { NavigationStackProp } from "react-navigation-stack";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
 import { GoogleSignin } from "react-native-google-signin";
-import { getAllCharactersAction } from "../../../store/actions/charactersActions/charactersActions";
 import {
   getUserLoggedAction,
   getUserLoggedOutAction
@@ -24,6 +22,7 @@ import marvel_Logo from "../../../assets/marvel_Logo.png";
 import { color } from "../../../utils/themes/colors";
 import authStyles from "../authStyles";
 import CornerButton from "../../../components/cornerButton/CornerButton";
+import { AppState } from "../../../store/store";
 
 type LoginProps = {
   navigation: NavigationStackProp;
@@ -142,7 +141,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
               onChangeText={passwordValue => setPassword(passwordValue)}
             />
           </View>
-          
+
           <View style={styles.loginBtnsContainer}>
             <TouchableOpacity
               style={styles.loginBtnContainer}
@@ -173,20 +172,12 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
               />
             </TouchableOpacity>
           </View>
-          <View
-            style={styles.warningContainer}
-          >
-            <Text style={styles.warning}>
-              Don’t have an account?{" "}
-            </Text>
+          <View style={styles.warningContainer}>
+            <Text style={styles.warning}>Don’t have an account? </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate("Registration")}
             >
-              <Text
-                style={styles.link}
-              >
-                Sign Up
-              </Text>
+              <Text style={styles.link}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -195,15 +186,13 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  userLogged: state.user.loggedIn,
-  allCharacters: state.characters.allCharacters
+const mapStateToProps = (state: AppState) => ({
+  userLogged: state.user.loggedIn
 });
 
 const mapDispatchToProps = dispatch => ({
   getUserLogged: () => dispatch(getUserLoggedAction()),
-  getUserLoggedOut: () => dispatch(getUserLoggedOutAction()),
-  getAllCharacters: () => dispatch(getAllCharactersAction())
+  getUserLoggedOut: () => dispatch(getUserLoggedOutAction())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
