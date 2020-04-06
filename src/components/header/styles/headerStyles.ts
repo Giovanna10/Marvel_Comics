@@ -1,13 +1,16 @@
 import { StyleSheet } from "react-native";
 import { color } from "../../../utils/themes/colors";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from "react-native-responsive-screen";
 
 export const headerStyles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
     backgroundColor: color.red,
-    height: hp("12%"),
+    height: hp("10%"),
     zIndex: 0
   },
   iconContainer: {
@@ -28,7 +31,13 @@ export const headerStyles = StyleSheet.create({
     shadowRadius: 16.0
   },
   logo: {
-    width: 65,
-    height: 50
-  }
+    width: 55,
+    height: 40
+  },
+  searchBoxInputContainer: {
+    position: "absolute",
+    marginTop: hp("9%"),
+    alignSelf: "center",
+    zIndex: 1
+  },
 });
