@@ -1,4 +1,4 @@
-import {Comic, Character} from '../actions/actionsTypes/ActionsTypes'
+import {Comic, Character, News} from '../actions/actionsTypes/ActionsTypes'
 
 
 export interface UserState {
@@ -6,7 +6,9 @@ export interface UserState {
 }
 
 export interface ComicsState{
-    yearlyComics: Comic[]
+    comicsNews: News[],
+    yearlyComics: Comic[],
+    selectedComic: Comic
 }
 
 export interface CharactersState{

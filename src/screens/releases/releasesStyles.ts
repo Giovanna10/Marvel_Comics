@@ -7,15 +7,8 @@ import {
 } from "react-native-responsive-screen";
 
 export const releasesStyles = StyleSheet.create({
-  titleContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: color.black,
-    height: hp("30%"),
-    zIndex: 2
-  },
-  title: { color: color.white, fontSize: size.hero },
-  background: {
+  //BG COMICS
+  flatlistCover: {
     justifyContent: "center",
     alignItems: "center",
     zIndex: 0
@@ -23,19 +16,16 @@ export const releasesStyles = StyleSheet.create({
   imageStyle: {
     resizeMode: "contain",
     width: screenDimensions.width,
-    height: screenDimensions.height < 670 ? 330 : 400
+    height: screenDimensions.height < 670 ? 350 : 410
   },
-  listContainer: {
-    alignSelf: "center"
-  },
-  comicsContainer: {
-    width: 150,
-    marginTop: hp("8%"),
-    marginHorizontal: screenDimensions.width < 414 ? wp("4%") : wp("6%"),
+  //COMICS FLATLIST
+  comicContainer: {
+    width: screenDimensions.height < 670 ? 120 : 150,
+    marginVertical: hp("4%"),
   },
   comic: {
-    width: 150,
-    height: 225,
+    width: screenDimensions.height < 670 ? 120 : 150,
+    height: screenDimensions.height < 670 ? 180 : 225,
     borderColor: color.subtitle,
     borderWidth: 0.7,
     marginBottom: '5%'
@@ -43,7 +33,7 @@ export const releasesStyles = StyleSheet.create({
   comicTitle: {
     color: color.title,
     fontSize: size.comicTitle,
-    fontWeight: "800",
+    fontWeight: 'bold',
   },
   comicSubtitle: {
     color: color.subtitle,

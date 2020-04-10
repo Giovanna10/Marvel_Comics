@@ -7,7 +7,7 @@ import {
 
 export const searchStyles = StyleSheet.create({
   searchBoxInput: {
-    height: hp("6%"),
+    height: 50,
     width: wp("85%"),
     justifyContent: "center",
     color: "#fefefe",

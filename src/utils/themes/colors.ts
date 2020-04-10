@@ -8,5 +8,5 @@ export const color = {
     paragraph: '#c6c6c6',
     red: '#c9082a',
     yellow: '#fff300',
-    inactiveTab: "#FCF089",
+    mattYellow: "#FCF089",
 }

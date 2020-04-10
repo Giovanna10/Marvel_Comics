@@ -5,7 +5,7 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
-  Animated
+  Animated,
 } from "react-native";
 import hamburger from "../../assets/header/hamburger.png";
 import marvel_Logo from "../../assets/marvel_Logo.png";
@@ -14,7 +14,7 @@ import { headerStyles } from "./styles/headerStyles";
 import SearchBar from "../searchBar/SearchBar";
 import {
   openSearchBoxAction,
-  closeSearchBoxAction
+  closeSearchBoxAction,
 } from "../../store/actions/searchBoxActions/searchBoxActions";
 
 type HeaderProps = {
@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({
   research,
   openSearchBox,
   closeSearchBox,
-  searchBox
+  searchBox,
 }) => {
   const styles = headerStyles;
 
@@ -47,7 +47,9 @@ const Header: React.FC<HeaderProps> = ({
           <Image source={hamburger} />
         </View>
         <View style={styles.logoContainer}>
-          <Image source={marvel_Logo} style={styles.logo} />
+          <View style={styles.shadow}>
+            <Image source={marvel_Logo} style={styles.logo} />
+          </View>
         </View>
         {research && (
           <TouchableOpacity
@@ -67,13 +69,13 @@ const Header: React.FC<HeaderProps> = ({
   );
 };
 
-const mapStateToProps = state => ({
-  searchBox: state.searchBox.searchBoxState
+const mapStateToProps = (state) => ({
+  searchBox: state.searchBox.searchBoxState,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   openSearchBox: () => dispatch(openSearchBoxAction()),
-  closeSearchBox: () => dispatch(closeSearchBoxAction())
+  closeSearchBox: () => dispatch(closeSearchBoxAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

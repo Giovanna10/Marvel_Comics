@@ -1,6 +1,6 @@
 import React from "react";
 import * as firebase from "firebase";
-import "firebase/firestore"
+import "firebase/firestore";
 import store from "./src/store/store";
 import { Provider } from "react-redux";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -13,8 +13,12 @@ import Registration from "./src/screens/auth/registration/Registration";
 import Releases from "./src/screens/releases/Releases";
 import Characters from "./src/screens/characters/Characters";
 import UserProfile from "./src/screens/userProfile/UserProfile";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { color } from "./src/utils/themes/colors";
+import ComicDetails from "./src/screens/comicDetails/ComicDetails";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpeX_EvrdMmsfocQFH84PIPy0OfnkqBTI",
@@ -24,20 +28,20 @@ const firebaseConfig = {
   storageBucket: "marvel-comics-75d9b.appspot.com",
   messagingSenderId: "710067175098",
   appId: "1:710067175098:web:6db5fc19dd7a97288c4c83",
-  measurementId: "G-RDB6RJQTBZ"
+  measurementId: "G-RDB6RJQTBZ",
 };
 
 const app = firebase.initializeApp(firebaseConfig);
-export const db = firebase.firestore(app)
+export const db = firebase.firestore(app);
 
 const AuthStack = createStackNavigator(
   {
     Login: {
-      screen: Login
+      screen: Login,
     },
     Registration: {
-      screen: Registration
-    }
+      screen: Registration,
+    },
   },
   { headerMode: "none", initialRouteName: "Login" }
 );
@@ -48,12 +52,20 @@ const ReleasesStack = createStackNavigator(
       screen: Releases,
       navigationOptions: () => ({
         cardStyle: {
-          backgroundColor: color.black
-        }
-      })
-    }
+          backgroundColor: color.black,
+        },
+      }),
+    },
+    ComicDetails: {
+      screen: ComicDetails,
+      navigationOptions: () => ({
+        cardStyle: {
+          backgroundColor: color.black,
+        },
+      }),
+    },
   },
-  { headerMode: "none", initialRouteName: "Releases"  }
+  { headerMode: "none", initialRouteName: "Releases" }
 );
 
 const CharactersStack = createStackNavigator(
@@ -62,12 +74,12 @@ const CharactersStack = createStackNavigator(
       screen: Characters,
       navigationOptions: () => ({
         cardStyle: {
-          backgroundColor: color.black
-        }
-      })
-    }
+          backgroundColor: color.black,
+        },
+      }),
+    },
   },
-  { headerMode: "none", initialRouteName: "Characters"  }
+  { headerMode: "none", initialRouteName: "Characters" }
 );
 
 const ProfileStack = createStackNavigator(
@@ -76,23 +88,25 @@ const ProfileStack = createStackNavigator(
       screen: UserProfile,
       navigationOptions: () => ({
         cardStyle: {
-          backgroundColor: color.black
-        }
-      })
-    }
+          backgroundColor: color.black,
+        },
+      }),
+    },
   },
-  { headerMode: "none", initialRouteName: "Profile"  }
+  { headerMode: "none", initialRouteName: "Profile" }
 );
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
   switch (routeName) {
     case "Releases":
-      return <Icon name="buffer" size={wp('8%')} color={tintColor} />;
+      return <Icon name="buffer" size={wp("8%")} color={tintColor} />;
     case "Characters":
-      return <Icon name="magnify" size={wp('8%')} color={tintColor} />;
+      return <Icon name="magnify" size={wp("8%")} color={tintColor} />;
     case "Profile":
-      return <Icon name="account-circle-outline" size={wp('8%')} color={tintColor} />;
+      return (
+        <Icon name="account-circle-outline" size={wp("8%")} color={tintColor} />
+      );
     default:
       return null;
   }
@@ -102,23 +116,23 @@ const tabNavigator = createBottomTabNavigator(
   {
     Releases: ReleasesStack,
     Characters: CharactersStack,
-    Profile: ProfileStack
+    Profile: ProfileStack,
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) =>
-        getTabBarIcon(navigation, focused, tintColor)
+        getTabBarIcon(navigation, focused, tintColor),
     }),
     tabBarOptions: {
       activeTintColor: color.yellow,
-      inactiveTintColor: color.inactiveTab,
+      inactiveTintColor: color.mattYellow,
       style: {
         backgroundColor: color.black,
-        height: hp('10%')
-      }
+        height: hp("10%"),
+      },
     },
     resetOnBlur: true,
-    initialRouteName: "Releases"
+    initialRouteName: "Releases",
   }
 );
 
@@ -127,7 +141,7 @@ const AppContainer = createAppContainer(
     {
       Loading: Loading,
       Auth: AuthStack,
-      App: tabNavigator
+      App: tabNavigator,
     },
     { initialRouteName: "Loading" }
   )
