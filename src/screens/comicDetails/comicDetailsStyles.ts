@@ -7,6 +7,7 @@ import {
 } from "react-native-responsive-screen";
 
 export const comicDetailsStyles = StyleSheet.create({
+  //HEADING
   headingContainer: {
     display: "flex",
     flexDirection: "row",
@@ -16,14 +17,22 @@ export const comicDetailsStyles = StyleSheet.create({
   comicContainer: {
     width: "45%",
   },
+  //LIST
+  comicListContainer: {
+    marginRight: 20
+  },
   comic: {
     width: 120,
     height: 180,
     borderColor: color.subtitle,
     borderWidth: 0.7,
-    marginBottom: "4%",
+    marginBottom: 20,
   },
-  detailsContainer: {
+  comicDescriptionContainer: {
+    width: 120,
+    marginBottom: 40
+  },
+  titlesContainer: {
     width: "55%",
   },
   comicTitle: {
@@ -68,4 +77,9 @@ export const comicDetailsStyles = StyleSheet.create({
     width: 25,
     height: 25,
   },
+
+  //DETAILS
+  detailsContainer: {
+    marginHorizontal: '5%'
+  }
 });

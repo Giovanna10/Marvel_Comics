@@ -14,11 +14,11 @@ import {
   getYearlyComicsAction,
   getComicsNewsAction,
   getComicByIdAction,
+  getRelatedComicsByCreatorsIdAction,
 } from "../../store/actions/comicsActions/comicsActions";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AppState } from "../../store/store";
-import { Comic, News } from "../../store/actions/actionsTypes/ActionsTypes";
-import Loading from "../../components/loading/Loading";
+import { Comic, News, Creator } from "../../store/actions/actionsTypes/ActionsTypes";
 import NewsList from "../../components/newsList/NewsList";
 import { NavigationStackProp } from "react-navigation-stack";
 import { color } from "../../utils/themes/colors";
@@ -30,6 +30,8 @@ type ReleasesProps = {
   getYearlyComics: typeof getYearlyComicsAction;
   yearlyComics: Comic[];
   getSelectedComic: typeof getComicByIdAction;
+  selectedComic: Comic;
+  getRelatedComics: typeof getRelatedComicsByCreatorsIdAction
 };
 
 const Releases: React.FC<ReleasesProps> = ({
@@ -56,10 +58,10 @@ const Releases: React.FC<ReleasesProps> = ({
       getYearlyComics(offset);
       setLoading(true);
     }
-  };  
+  };
 
   const handleComicPress = (item: Comic) => {
-    getSelectedComic(item.id, yearlyComics);
+    getSelectedComic(item.id, yearlyComics);    
     navigation.navigate("ComicDetails");
   };
 
@@ -83,35 +85,36 @@ const Releases: React.FC<ReleasesProps> = ({
   );
 
   return (
-      <>
-        <Header />
-        <NewsList news={news} />
-        <ImageBackground
-          source={releasesBg}
-          imageStyle={styles.imageStyle}
-          style={styles.flatlistCover}
-        />
-        <FlatList
-          columnWrapperStyle={{ justifyContent: "space-around" }}
-          numColumns={2}
-          bounces={false}
-          keyExtractor={(item) => `Key-${item.id}`}
-          data={yearlyComics}
-          renderItem={renderComic}
-          onMomentumScrollBegin={() => setLoading(false)}
-          onEndReachedThreshold={0.7}
-          onEndReached={handleLoadMore}
-          ListFooterComponent={
-            loading && <ActivityIndicator size="small" color={color.yellow} />
-          }
-        />
-      </>
+    <>
+      <Header />
+      <NewsList news={news} />
+      <ImageBackground
+        source={releasesBg}
+        imageStyle={styles.imageStyle}
+        style={styles.flatlistCover}
+      />
+      <FlatList
+        data={yearlyComics}
+        keyExtractor={(item) => `Key-${item.id}`}
+        renderItem={renderComic}
+        bounces={false}
+        columnWrapperStyle={{ justifyContent: "space-around" }}
+        numColumns={2}
+        onMomentumScrollBegin={() => setLoading(false)}
+        onEndReachedThreshold={0.7}
+        onEndReached={handleLoadMore}
+        ListFooterComponent={
+          loading && <ActivityIndicator size="small" color={color.yellow} />
+        }
+      />
+    </>
   );
 };
 
 const mapStateToProps = (state: AppState) => ({
   news: state.comics.comicsNews,
   yearlyComics: state.comics.yearlyComics,
+  selectedComic: state.comics.selectedComic
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -119,6 +122,8 @@ const mapDispatchToProps = (dispatch) => ({
   getYearlyComics: (offset: number) => dispatch(getYearlyComicsAction(offset)),
   getSelectedComic: (comicId: number, comics: Comic[]) =>
     dispatch(getComicByIdAction(comicId, comics)),
+  getRelatedComics: (creators: Creator[], offset: number) =>
+    dispatch(getRelatedComicsByCreatorsIdAction(creators, offset)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Releases);

@@ -50,6 +50,10 @@ const NewsList: React.FC<ListProps> = ({ news }) => {
   return (
     <View style={styles.newsContainer}>
       <FlatList
+        data={news}
+        keyExtractor={(item) => item.id}
+        renderItem={renderNews}
+        horizontal
         showsHorizontalScrollIndicator={false}
         onContentSizeChange={(width) => {
           setWholeWidth(width);
@@ -64,10 +68,6 @@ const NewsList: React.FC<ListProps> = ({ news }) => {
           { nativeEvent: { contentOffset: { x: indicator } } },
         ])}
         pagingEnabled
-        horizontal
-        data={news}
-        keyExtractor={(item) => item.id}
-        renderItem={renderNews}
       />
       <Animated.View
         style={[

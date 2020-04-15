@@ -1,12 +1,15 @@
 import comics from "../../../interceptors/comicsInterceptor";
-import { news } from "../../../interceptors/newsInterceptor";
+import news from "../../../interceptors/newsInterceptor";
+import relatedComics from "../../../interceptors/relatedComics";
 import {
-  GET_YEAR_COMICS,
   Comic,
   Creator,
+  Character,
+  GET_YEAR_COMICS,
   GET_NEWS,
   GET_SELECTED_COMIC,
-  Character,
+  GET_RELATED_COMICS,
+  SET_UNMOUNT
 } from "../actionsTypes/ActionsTypes";
 import {
   API_HOST_KEY as KEY,
@@ -17,6 +20,35 @@ import { format, startOfYear } from "date-fns";
 
 const today = format(new Date(), "yyyy-MM-dd");
 const beginningYear = format(startOfYear(new Date()), "yyyy-MM-dd");
+
+function usefulFunction(
+  title: string,
+  creationDate: string,
+  modificationDate: string,
+  creators: Creator[],
+  characters: Character[]
+) {
+  const characterItems = characters.map(
+    (character: Character) => character.name
+  );
+  const creatorsItems = creators.map((creator) => {
+    const id = creator.resourceURI.split("creators/")[1];
+    return {
+      resourceURI: creator.resourceURI,
+      id: id,
+      name: creator.name,
+      role: creator.role,
+    };
+  });
+  return {
+    title: title.split("#")[0],
+    comicN: title.split("#")[1],
+    creationDate: JSON.stringify(creationDate).slice(1, 11),
+    modificationDate: JSON.stringify(modificationDate).slice(1, 11),
+    creators: creatorsItems,
+    characters: characterItems,
+  };
+}
 
 export function getComicsNewsAction() {
   const params = {
@@ -60,41 +92,33 @@ export function getYearlyComicsAction(offset?: number) {
   return async (dispatch) => {
     const { data } = await comics.get("", { params });
     const yearlyComics: Comic[] = data.data.results.map((comic) => {
-      const splitTitle = comic.title.split("#");
-      const title = splitTitle[0];
-      const comicN = splitTitle[1];
-
-      const creationDate = JSON.stringify(comic.dates[0].date).slice(1, 11);
-      const modificationDate = JSON.stringify(comic.modified).slice(1, 11);
-
-      const itemsCreators: Creator[] = comic.creators.items.map((creator: Creator) => ({
-        name: creator.name,
-        role: creator.role,
-      }));
-
-      const characters = comic.characters.items.map(
-        (character: Character) => character.name
+      const usefulData = usefulFunction(
+        comic.title,
+        comic.dates[0].date,
+        comic.modified,
+        comic.creators.items,
+        comic.characters.items
       );
 
       return {
         id: comic.id,
-        title: title,
-        comicNumber: comicN,
+        title: usefulData.title,
+        comicNumber: usefulData.comicN,
         description: comic.description,
-        modificationDate: modificationDate,
-        creationDate: creationDate,
+        modificationDate: usefulData.modificationDate,
+        creationDate: usefulData.creationDate,
         pageCount: comic.pageCount,
         price: comic.prices[0].price,
         thumbnail: comic.thumbnail,
         images: comic.images,
         creators: {
-          items: itemsCreators,
+          items: usefulData.creators,
           returned: comic.creators.returned,
         },
-        characters: characters,
+        characters: usefulData.characters,
       };
     });
-    
+
     return dispatch({
       type: GET_YEAR_COMICS,
       payload: yearlyComics,
@@ -103,35 +127,79 @@ export function getYearlyComicsAction(offset?: number) {
 }
 
 export function getComicByIdAction(comicId: number, yearlyComics: Comic[]) {
-  return dispatch => {
-    const selectedComic = yearlyComics.find(comic => comic.id === comicId)
+  return (dispatch) => {
+    const selectedComic = yearlyComics.find((comic) => comic.id === comicId);
     return dispatch({
       type: GET_SELECTED_COMIC,
-      payload: selectedComic
-    })
+      payload: selectedComic,
+    });
+  };
+}
+
+export function setComponentUnmountAction(){
+  return {
+    type: SET_UNMOUNT,
+    payload: []
   }
+}
 
+export function getRelatedComicsByCreatorsIdAction(
+  creators: Creator[],
+  offset?: number
+) {
+  const params = {
+    apikey: KEY,
+    hash: HASH,
+    ts: TS,
+    offset: offset === undefined ? 0 : `${offset}`,
+    limit: "4",
+    format: "comic",
+    formatType: "comic",
+  };
+  return async (dispatch) => {
+    const data = await Promise.all(
+      creators.map((creator) =>
+        relatedComics.get(`${creator.id}/comics`, { params })
+      )
+    );
 
-  /* return async (dispatch) => {
-    const params = {
-      apikey: KEY,
-      hash: HASH,
-      ts: TS,
-    };
-    const { data } = await comics.get(`/${comicId}`, {params});
-    const comicDetails: Comic = {
-      id: data.data.results[0].id,
-  title: data.data.results[0].title,
-  comicNumber: data.data.results[0].,
-  description: data.data.results[0].,
-  modificationDate: data.data.results[0].,
-  creationDate: data.data.results[0].,
-  pageCount: data.data.results[0].,
-  price: data.data.results[0].,
-  thumbnail: data.data.results[0].,
-  images: data.data.results[0].,
-  creators: data.data.results[0].,
-  characters: data.data.results[0].,
-    }
-  }; */
+    const comicsArray = data.map((outcome) => {
+      return outcome.data.data.results;
+    });
+
+    const creatorComics = [].concat.apply([], comicsArray);
+
+    const related: Comic[] = creatorComics.map((comic) => {
+      const usefulData = usefulFunction(
+        comic.title,
+        comic.dates[0].date,
+        comic.modified,
+        comic.creators.items,
+        comic.characters.items
+      );
+      
+      return {
+        id: comic.id,
+        title: usefulData.title,
+        comicNumber: usefulData.comicN,
+        description: comic.description,
+        modificationDate: usefulData.modificationDate,
+        creationDate: usefulData.creationDate,
+        pageCount: comic.pageCount,
+        price: comic.prices[0].price,
+        thumbnail: comic.thumbnail,
+        images: comic.images,
+        creators: {
+          items: usefulData.creators,
+          returned: comic.creators.returned,
+        },
+        characters: usefulData.characters,
+      };
+    });
+
+    return dispatch({
+      type: GET_RELATED_COMICS,
+      payload: related,
+    });
+  };
 }

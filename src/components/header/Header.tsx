@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
-  Animated,
 } from "react-native";
 import hamburger from "../../assets/header/hamburger.png";
 import marvel_Logo from "../../assets/marvel_Logo.png";

@@ -3,6 +3,8 @@ export const USER_LOGGED_OUT = "USER_LOGGED_OUT";
 export const GET_CHARACTERS = "GET_CHARACTERS";
 export const GET_YEAR_COMICS = "GET_YEAR_COMICS";
 export const GET_SELECTED_COMIC = "GET_SELECTED_COMIC";
+export const GET_RELATED_COMICS = "GET_RELATED_COMICS";
+export const SET_UNMOUNT = "SET_UNMOUNT";
 export const GET_NEWS = "GET_NEWS";
 export const OPEN_SEARCH_BOX = "OPEN_SEARCH_BOX";
 export const CLOSE_SEARCH_BOX = "CLOSE_SEARCH_BOX";
@@ -67,6 +69,8 @@ export type Creators = {
 };
 
 export type Creator = {
+  resourceURI: string;
+  id: string;
   name: string;
   role?: string;
 };

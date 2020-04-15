@@ -8,7 +8,8 @@ export interface UserState {
 export interface ComicsState{
     comicsNews: News[],
     yearlyComics: Comic[],
-    selectedComic: Comic
+    selectedComic: Comic,
+    relatedComics: Comic[],
 }
 
 export interface CharactersState{
