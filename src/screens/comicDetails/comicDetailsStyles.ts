@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import { screenDimensions, size } from "../../utils/themes/sizes";
+import { StyleSheet, Platform } from "react-native";
+import { size, screenDimensions } from "../../utils/themes/sizes";
 import { color } from "../../utils/themes/colors";
 import {
   heightPercentageToDP as hp,
@@ -7,33 +7,53 @@ import {
 } from "react-native-responsive-screen";
 
 export const comicDetailsStyles = StyleSheet.create({
+  //BACKGROUND
+  background: {
+    width: "100%",
+    flex: 1,
+    height: 900,
+  },
+
   //HEADING
   headingContainer: {
     display: "flex",
     flexDirection: "row",
     marginLeft: wp("5%"),
-    marginVertical: hp("6%"),
+    marginTop: hp("6%"),
+    marginBottom: hp("3%"),
   },
   comicContainer: {
     width: "45%",
   },
-  //LIST
-  comicListContainer: {
-    marginRight: 20
+  comicInHeading: {
+    width: screenDimensions.height < 670 ? 120 : 150,
+    height: screenDimensions.height < 670 ? 180 : 225,
+    borderColor: color.subtitle,
+    borderWidth: 0.7,
+    marginBottom: 10,
   },
+
+  comicListContainer: {
+    marginRight: 20,
+  },
+
   comic: {
     width: 120,
     height: 180,
     borderColor: color.subtitle,
     borderWidth: 0.7,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   comicDescriptionContainer: {
     width: 120,
-    marginBottom: 40
   },
   titlesContainer: {
     width: "55%",
+  },
+  title: {
+    color: color.title,
+    fontSize: size.titleDetails,
+    fontWeight: "bold",
   },
   comicTitle: {
     color: color.title,
@@ -42,7 +62,7 @@ export const comicDetailsStyles = StyleSheet.create({
   },
   comicSubtitle: {
     color: color.subtitle,
-    fontSize: size.comicTitle,
+    fontSize: size.comicDetails,
   },
   comicDetails: {
     color: color.subtitle,
@@ -65,6 +85,7 @@ export const comicDetailsStyles = StyleSheet.create({
     width: "85%",
   },
   btnText: {
+    fontSize: size.btnText,
     marginTop: "2%",
     fontStyle: "italic",
     fontWeight: "bold",
@@ -80,6 +101,6 @@ export const comicDetailsStyles = StyleSheet.create({
 
   //DETAILS
   detailsContainer: {
-    marginHorizontal: '5%'
-  }
+    marginHorizontal: "5%",
+  },
 });

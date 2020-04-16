@@ -126,12 +126,13 @@ export function getYearlyComicsAction(offset?: number) {
   };
 }
 
-export function getComicByIdAction(comicId: number, yearlyComics: Comic[]) {
+export function getComicByIdAction(comicId: number, yearlyComics: Comic[], /* character?: boolean */) {
   return (dispatch) => {
     const selectedComic = yearlyComics.find((comic) => comic.id === comicId);
+    //const selectedComicCharacter = request...
     return dispatch({
       type: GET_SELECTED_COMIC,
-      payload: selectedComic,
+      payload: /* character ? selectedComicCharacter : */ selectedComic,
     });
   };
 }
@@ -152,24 +153,16 @@ export function getRelatedComicsByCreatorsIdAction(
     hash: HASH,
     ts: TS,
     offset: offset === undefined ? 0 : `${offset}`,
-    limit: "4",
+    limit: "8",
     format: "comic",
     formatType: "comic",
   };
   return async (dispatch) => {
-    const data = await Promise.all(
-      creators.map((creator) =>
-        relatedComics.get(`${creator.id}/comics`, { params })
-      )
-    );
+    const editor = creators.find(creator => creator.role === "editor")
 
-    const comicsArray = data.map((outcome) => {
-      return outcome.data.data.results;
-    });
+    const {data} = await relatedComics.get(`${editor.id}/comics`, { params })
 
-    const creatorComics = [].concat.apply([], comicsArray);
-
-    const related: Comic[] = creatorComics.map((comic) => {
+    const related: Comic[] = data.data.results.map((comic) => {
       const usefulData = usefulFunction(
         comic.title,
         comic.dates[0].date,

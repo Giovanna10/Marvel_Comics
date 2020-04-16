@@ -1,9 +1,6 @@
 import { StyleSheet, Platform } from "react-native";
 import { color } from "../../../utils/themes/colors";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export const headerStyles = StyleSheet.create({
   container: {
@@ -19,7 +16,7 @@ export const headerStyles = StyleSheet.create({
     alignItems: "center",
   },
   logoContainer: {
-    width: '60%',
+    width: "60%",
     justifyContent: "center",
     alignItems: "center",
   },

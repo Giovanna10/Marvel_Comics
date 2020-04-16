@@ -98,6 +98,7 @@ const Releases: React.FC<ReleasesProps> = ({
         keyExtractor={(item) => `Key-${item.id}`}
         renderItem={renderComic}
         bounces={false}
+        showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ justifyContent: "space-around" }}
         numColumns={2}
         onMomentumScrollBegin={() => setLoading(false)}

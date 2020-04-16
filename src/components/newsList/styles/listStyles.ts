@@ -16,16 +16,16 @@ export const listStyles = StyleSheet.create({
   },
   title: {
     color: color.title,
-    fontSize: size.comicTitle,
+    fontSize: size.paragraph,
     fontWeight: "bold",
   },
   subtitle: {
     color: color.subtitle,
-    fontSize: size.comicTitle,
+    fontSize: size.paragraph,
   },
   body: {
     color: color.subtitle,
-    fontSize: size.comicDetails,
+    fontSize: size.body,
   },
   indicator: {
     backgroundColor: color.yellow,

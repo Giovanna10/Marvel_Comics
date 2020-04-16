@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FlatList, ImageBackground, Text, Animated, View } from "react-native";
 import { News } from "../../store/actions/actionsTypes/ActionsTypes";
 import { screenDimensions } from "../../utils/themes/sizes";
-import {listStyles} from './styles/listStyles'
+import { listStyles } from "./styles/listStyles";
 
 type ListProps = {
   news: News[];
@@ -30,7 +30,7 @@ const NewsList: React.FC<ListProps> = ({ news }) => {
       imageStyle={{ opacity: 0.15 }}
     >
       <Text
-        numberOfLines={4}
+        // numberOfLines={4}
         style={[styles.title, { marginVertical: "2%" }]}
       >
         {item.title}
@@ -39,7 +39,7 @@ const NewsList: React.FC<ListProps> = ({ news }) => {
         {item.source}
       </Text>
       <Text
-        numberOfLines={screenDimensions.height < 670 ? 6 : 8}
+        numberOfLines={screenDimensions.height < 670 ? 4 : 10}
         style={styles.body}
       >
         {item.body}
@@ -93,4 +93,4 @@ const NewsList: React.FC<ListProps> = ({ news }) => {
   );
 };
 
-export default NewsList
+export default NewsList;
