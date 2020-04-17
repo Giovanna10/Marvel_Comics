@@ -99,8 +99,8 @@ const Releases: React.FC<ReleasesProps> = ({
         renderItem={renderComic}
         bounces={false}
         showsVerticalScrollIndicator={false}
-        columnWrapperStyle={{ justifyContent: "space-around" }}
         numColumns={2}
+        columnWrapperStyle={{ justifyContent: "space-around" }}
         onMomentumScrollBegin={() => setLoading(false)}
         onEndReachedThreshold={0.7}
         onEndReached={handleLoadMore}

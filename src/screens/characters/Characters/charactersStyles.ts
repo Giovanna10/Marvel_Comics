@@ -14,13 +14,12 @@ export const charactersStyles = StyleSheet.create({
     marginTop: hp('4%')
   },
   characterContainer: {
-    flexDirection: 'column',
     marginVertical: hp('2%')
   },
   characterItem: {
     width: 150,
     height: 150,
-    marginHorizontal: wp('2%'),
+    // marginHorizontal: wp('2%'),
     borderRadius: 5,
   },
   characterName: {

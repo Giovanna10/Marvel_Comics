@@ -8,7 +8,7 @@ export const characterDetailStyles = StyleSheet.create({
   },
   characterDetailImage: {
     width: wp('100%'),
-    height: hp('30%'),
+    height: 280,
     alignSelf: 'center',
     opacity: 0.30,
   },

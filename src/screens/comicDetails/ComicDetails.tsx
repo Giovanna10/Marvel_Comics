@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import Header from "../../components/header/Header";
 import cartPlus from "../../assets/comic/cart-plus.png";
-import addWhish from "../../assets/comic/add_wishlist.png";
+import addWhish from "../../assets/comic/add_whishlist.png";
 import { comicDetailsStyles } from "./comicDetailsStyles";
 import {
   getRelatedComicsByCreatorsIdAction,
@@ -53,9 +53,9 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
     }
   };
 
-  const addToWishes = (title: string, comic: Comic) => {
+  const addToWhishes = (title: string, comic: Comic) => {
     try {
-      db.collection("Wishlist").doc(title).set(comic);
+      db.collection("Whishlist").doc(title).set(comic);
     } catch (error) {
       console.log(error.message);
     }
@@ -64,7 +64,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
   const [offset, setOffset] = useState<number>(8);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
+  useEffect(() => {    
     getRelatedComics(selectedComic.creators.items);
     return () => setComponentUnmount();
   }, [getRelatedComics, selectedComic]);
@@ -110,7 +110,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
     <>
       <Header />
       <ImageBackground source={comicDetailsBg} style={styles.background}>
-        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} bounces={false}>
           {/* HEADING */}
           <View style={styles.headingContainer}>
             <View style={styles.comicContainer}>
@@ -154,7 +154,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => addToWishes(selectedComic.title, selectedComic)}
+                onPress={() => addToWhishes(selectedComic.title, selectedComic)}
               >
                 <View style={styles.btnTextContainer}>
                   <Text style={styles.btnText}>Add to Whishlist</Text>
@@ -173,7 +173,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
                   Summary
                 </Text>
                 <Text style={[styles.comicSubtitle, { marginBottom: "5%" }]}>
-                  {selectedComic.description}
+                  {selectedComic.description.replace(/<br>/gi, '')}
                 </Text>
               </>
             ) : null}

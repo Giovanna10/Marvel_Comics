@@ -2,6 +2,9 @@ export const USER_LOGGED = "USER_LOGGED";
 export const USER_LOGGED_OUT = "USER_LOGGED_OUT";
 export const GET_ALL_CHARACTERS = "GET_ALL_CHARACTERS";
 export const GET_SINGLE_CHARACTER = "GET_SINGLE_CHARACTER";
+export const USER_INFO = "USER_INFO";
+export const GET_USER_COMICS = "GET_USER_COMICS";
+export const GET_CHARACTERS = "GET_CHARACTERS";
 export const GET_YEAR_COMICS = "GET_YEAR_COMICS";
 export const GET_SELECTED_COMIC = "GET_SELECTED_COMIC";
 export const GET_RELATED_COMICS = "GET_RELATED_COMICS";
@@ -17,7 +20,19 @@ export interface Action<P> {
 //USER ACTIONS
 export interface UserActionInterface {
   loggedIn: boolean;
+  user: User;
+  userComics: UserComics
 }
+export interface User {
+  name: string;
+  image: string;
+}
+
+export interface UserComics {
+  wished: Comic[],
+  inCart: Comic[]
+}
+
 
 //CHARACTERS ACTION
 export type Character = {

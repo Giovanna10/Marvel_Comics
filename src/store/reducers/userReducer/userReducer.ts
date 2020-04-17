@@ -2,12 +2,22 @@ import {
   USER_LOGGED,
   USER_LOGGED_OUT,
   Action,
-  UserActionInterface
+  UserActionInterface,
+  USER_INFO,
+  GET_USER_COMICS,
 } from "../../actions/actionsTypes/ActionsTypes";
 import { UserState } from "../../statesTypes/StatesTypes";
 
 const initialState: UserState = {
-  loggedIn: false
+  loggedIn: false,
+  user: {
+    name: "",
+    image: "",
+  },
+  userComics: {
+    wished: [],
+    inCart: [],
+  },
 };
 
 export default function userReducer(
@@ -17,11 +27,23 @@ export default function userReducer(
   switch (action.type) {
     case USER_LOGGED:
       return {
-        loggedIn: action.payload
+        ...state,
+        loggedIn: action.payload,
       };
     case USER_LOGGED_OUT:
       return {
-        loggedIn: action.payload
+        ...state,
+        loggedIn: action.payload,
+      };
+    case USER_INFO:
+      return {
+        ...state,
+        user: action.payload,
+      };
+    case GET_USER_COMICS:
+      return {
+        ...state,
+        userComics: action.payload,
       };
     default:
       return state;

@@ -1,8 +1,10 @@
-import {Comic, Character, News} from '../actions/actionsTypes/ActionsTypes'
+import {Comic, Character, News, User, UserComics} from '../actions/actionsTypes/ActionsTypes'
 
 
 export interface UserState {
-    loggedIn: boolean
+    loggedIn: boolean,
+    user: User,
+    userComics: UserComics
 }
 
 export interface ComicsState{

@@ -27,7 +27,6 @@ const initialState: ComicsState = {
     characters: [],
   },
   relatedComics: [],
-  // mount: true,
 };
 
 export default function (
