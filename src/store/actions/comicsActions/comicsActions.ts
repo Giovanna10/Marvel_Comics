@@ -136,23 +136,31 @@ export function getComicByIdAction(comicId: number, yearlyComics: Comic[], chara
   return async dispatch => {
     const selectedComic = yearlyComics.find((comic) => comic.id === comicId);
     const { data } = await comics.get(`/${comicId}`, { params })    
-    const selectedComicCharacter: Comic =  {
-        id: data.data.results[0].id,
-        title: data.data.results[0].title,
-        comicNumber: data.data.results[0].comicNumber,
-        description: data.data.results[0].description,
-        modificationDate: data.data.results[0].modificationDate,
-        creationDate: data.data.results[0].creationDate,
-        pageCount: data.data.results[0].pageCount,
-        price: data.data.results[0].prices[0].price,
-        thumbnail: {
-          path: data.data.results[0].thumbnail.path,
-          extension: data.data.results[0].thumbnail.extension,
+    const result = data.data.results[0]
+    const usefulData = usefulFunction(
+      result.title,
+      result.dates[0].date,
+      result.modified,
+      result.creators.items,
+      result.characters.items
+    );
+    const selectedComicCharacter: Comic =  {      
+        id: result.id,
+        title: usefulData.title,
+        comicNumber: usefulData.comicN,
+        description: result.description,
+        modificationDate: usefulData.modificationDate,
+        creationDate: usefulData.creationDate,
+        pageCount: result.pageCount,
+        price: result.prices[0].price,
+        thumbnail: result.thumbnail,
+        images: result.images,
+        creators: {
+          items: usefulData.creators,
+          returned: result.creators.returned,
         },
-        images: data.data.results[0].images,
-        creators: data.data.results[0].creators,
-        characters: data.data.results[0].characters,
-    }
+        characters: usefulData.characters,
+      }
     return dispatch({
       type: GET_SELECTED_COMIC,
       payload: characterState ? selectedComicCharacter : selectedComic,

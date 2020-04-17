@@ -13,7 +13,7 @@ export const characterDetailStyles = StyleSheet.create({
     opacity: 0.30,
   },
   characterDetailName: {
-    fontSize: 30,
+    fontSize: 20,
     textTransform: 'uppercase',
     color: color.yellow,
     fontWeight: 'bold',

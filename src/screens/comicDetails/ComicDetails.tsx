@@ -67,7 +67,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
   useEffect(() => {
     getRelatedComics(selectedComic.creators.items);
     return () => setComponentUnmount();
-  }, []);
+  }, [getRelatedComics, selectedComic]);
 
   const handleLoadMore = () => {
     setOffset(offset + 8);
@@ -103,6 +103,9 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
     </TouchableOpacity>
   );
 
+  console.log(relatedComics);
+
+
   return (
     <>
       <Header />
@@ -131,8 +134,8 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
                       selectedComic.title.length > 40
                         ? "10%"
                         : selectedComic.title.length > 19
-                        ? "15%"
-                        : "20%",
+                          ? "15%"
+                          : "20%",
                   },
                 ]}
               >
@@ -187,26 +190,30 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
                 </Text>
               ))}
             </View>
-            <Text style={[styles.title, { marginVertical: "5%" }]}>
-              Related Comics
+            {relatedComics.length > 0 ? (
+              <>
+                <Text style={[styles.title, { marginVertical: "5%" }]}>
+                  Related Comics
             </Text>
-            <FlatList
-              data={relatedComics}
-              keyExtractor={(item) => `Key-${item.id}`}
-              renderItem={renderComic}
-              horizontal
-              bounces={false}
-              showsHorizontalScrollIndicator={false}
-              style={{ marginBottom: 5 }}
-              onMomentumScrollBegin={() => setLoading(false)}
-              onEndReachedThreshold={0.7}
-              onEndReached={handleLoadMore}
-              ListFooterComponent={
-                loading && (
-                  <ActivityIndicator size="small" color={color.yellow} />
-                )
-              }
-            />
+                <FlatList
+                  data={relatedComics}
+                  keyExtractor={(item) => `Key-${item.id}`}
+                  renderItem={renderComic}
+                  horizontal
+                  bounces={false}
+                  showsHorizontalScrollIndicator={false}
+                  style={{ marginBottom: 5 }}
+                  onMomentumScrollBegin={() => setLoading(false)}
+                  onEndReachedThreshold={0.7}
+                  onEndReached={handleLoadMore}
+                  ListFooterComponent={
+                    loading && (
+                      <ActivityIndicator size="small" color={color.yellow} />
+                    )
+                  }
+                />
+              </>
+            ) : null}
           </View>
         </ScrollView>
       </ImageBackground>
