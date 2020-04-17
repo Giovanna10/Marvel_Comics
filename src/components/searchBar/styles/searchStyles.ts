@@ -7,11 +7,11 @@ import {
 
 export const searchStyles = StyleSheet.create({
   searchBoxInput: {
-    height: 50,
-    width: wp("85%"),
+    height: hp("6%"),
+    width: wp("75%"),
     justifyContent: "center",
-    color: "#fefefe",
-    fontSize: 18,
+    color: color.yellow,
+    fontSize: 15,
     backgroundColor: color.black,
     borderColor: color.yellow,
     borderWidth: 1,

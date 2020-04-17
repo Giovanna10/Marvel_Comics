@@ -1,6 +1,7 @@
 export const USER_LOGGED = "USER_LOGGED";
 export const USER_LOGGED_OUT = "USER_LOGGED_OUT";
-export const GET_CHARACTERS = "GET_CHARACTERS";
+export const GET_ALL_CHARACTERS = "GET_ALL_CHARACTERS";
+export const GET_SINGLE_CHARACTER = "GET_SINGLE_CHARACTER";
 export const GET_YEAR_COMICS = "GET_YEAR_COMICS";
 export const GET_SELECTED_COMIC = "GET_SELECTED_COMIC";
 export const GET_RELATED_COMICS = "GET_RELATED_COMICS";
@@ -43,9 +44,16 @@ export interface ComicsItem {
   name: string;
 }
 
-export interface CharactersActionInterface {
-  characters: Character[];
+export interface AllCharactersActionInterface {
+  allCharacters: Character[];
 }
+
+export interface SingleCharactersActionInterface {
+  singleCharacter: Character
+}
+
+
+
 
 //COMICS ACTIONS
 export interface Comic {

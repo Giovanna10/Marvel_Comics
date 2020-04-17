@@ -11,12 +11,10 @@ import Loading from "./src/components/loading/Loading";
 import Login from "./src/screens/auth/login/Login";
 import Registration from "./src/screens/auth/registration/Registration";
 import Releases from "./src/screens/releases/Releases";
-import Characters from "./src/screens/characters/Characters";
+import Characters from "./src/screens/characters/Characters/Characters";
+import CharacterDetail from "./src/screens/characters/Character Detail/CharacterDetail";
 import UserProfile from "./src/screens/userProfile/UserProfile";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { color } from "./src/utils/themes/colors";
 import ComicDetails from "./src/screens/comicDetails/ComicDetails";
 
@@ -72,6 +70,22 @@ const CharactersStack = createStackNavigator(
   {
     Characters: {
       screen: Characters,
+      navigationOptions: () => ({
+        cardStyle: {
+          backgroundColor: color.black
+        }
+      })
+    },
+    CharacterDetail: {
+      screen: CharacterDetail,
+      navigationOptions: () => ({
+        cardStyle: {
+          backgroundColor: color.black
+        }
+      })
+    },
+    ComicDetails: {
+      screen: ComicDetails,
       navigationOptions: () => ({
         cardStyle: {
           backgroundColor: color.black,

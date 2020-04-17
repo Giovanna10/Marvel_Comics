@@ -17,6 +17,7 @@ import {
   API_HOST_TS as TS,
 } from "react-native-dotenv";
 import { format, startOfYear } from "date-fns";
+import Axios from "axios";
 
 const today = format(new Date(), "yyyy-MM-dd");
 const beginningYear = format(startOfYear(new Date()), "yyyy-MM-dd");
@@ -126,18 +127,40 @@ export function getYearlyComicsAction(offset?: number) {
   };
 }
 
-export function getComicByIdAction(comicId: number, yearlyComics: Comic[], /* character?: boolean */) {
-  return (dispatch) => {
+export function getComicByIdAction(comicId: number, yearlyComics: Comic[], characterState?: boolean) {
+  const params = {
+    apikey: KEY,
+    hash: HASH,
+    ts: TS,
+  }
+  return async dispatch => {
     const selectedComic = yearlyComics.find((comic) => comic.id === comicId);
-    //const selectedComicCharacter = request...
+    const { data } = await comics.get(`/${comicId}`, { params })    
+    const selectedComicCharacter: Comic =  {
+        id: data.data.results[0].id,
+        title: data.data.results[0].title,
+        comicNumber: data.data.results[0].comicNumber,
+        description: data.data.results[0].description,
+        modificationDate: data.data.results[0].modificationDate,
+        creationDate: data.data.results[0].creationDate,
+        pageCount: data.data.results[0].pageCount,
+        price: data.data.results[0].prices[0].price,
+        thumbnail: {
+          path: data.data.results[0].thumbnail.path,
+          extension: data.data.results[0].thumbnail.extension,
+        },
+        images: data.data.results[0].images,
+        creators: data.data.results[0].creators,
+        characters: data.data.results[0].characters,
+    }
     return dispatch({
       type: GET_SELECTED_COMIC,
-      payload: /* character ? selectedComicCharacter : */ selectedComic,
+      payload: characterState ? selectedComicCharacter : selectedComic,
     });
   };
 }
 
-export function setComponentUnmountAction(){
+export function setComponentUnmountAction() {
   return {
     type: SET_UNMOUNT,
     payload: []
@@ -160,7 +183,7 @@ export function getRelatedComicsByCreatorsIdAction(
   return async (dispatch) => {
     const editor = creators.find(creator => creator.role === "editor")
 
-    const {data} = await relatedComics.get(`${editor.id}/comics`, { params })
+    const { data } = await relatedComics.get(`${editor.id}/comics`, { params })
 
     const related: Comic[] = data.data.results.map((comic) => {
       const usefulData = usefulFunction(
@@ -170,7 +193,7 @@ export function getRelatedComicsByCreatorsIdAction(
         comic.creators.items,
         comic.characters.items
       );
-      
+
       return {
         id: comic.id,
         title: usefulData.title,

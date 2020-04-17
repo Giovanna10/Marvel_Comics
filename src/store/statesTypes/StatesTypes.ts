@@ -12,6 +12,11 @@ export interface ComicsState{
     relatedComics: Comic[],
 }
 
-export interface CharactersState{
+export interface AllCharactersState {
     allCharacters: Character[]
 }
+
+export interface SingleCharacterState {
+    singleCharacter: Character
+}
+
