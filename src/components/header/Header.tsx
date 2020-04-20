@@ -15,12 +15,16 @@ import {
   openSearchBoxAction,
   closeSearchBoxAction,
 } from "../../store/actions/searchBoxActions/searchBoxActions";
+import { AppState } from "../../store/store";
+import { withNavigation } from "react-navigation";
+import { NavigationStackProp } from "react-navigation-stack";
 
 type HeaderProps = {
   research?: boolean;
   openSearchBox: typeof openSearchBoxAction;
   closeSearchBox: typeof closeSearchBoxAction;
   searchBox: boolean;
+  navigation?: NavigationStackProp,
 };
 
 const Header: React.FC<HeaderProps> = ({
@@ -28,10 +32,11 @@ const Header: React.FC<HeaderProps> = ({
   openSearchBox,
   closeSearchBox,
   searchBox,
+  navigation
 }) => {
   const styles = headerStyles;
 
-  const openSearchBoxInput = () => {
+  const SearchBoxState = () => {
     if (searchBox === false) {
       openSearchBox();
     } else {
@@ -39,12 +44,18 @@ const Header: React.FC<HeaderProps> = ({
     }
   };
 
+  const SideBarState = () => {
+    navigation.toggleDrawer()
+  }
+
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <View style={styles.iconContainer}>
+        <TouchableOpacity
+          onPress={SideBarState}
+          style={styles.iconContainer}>
           <Image source={hamburger} />
-        </View>
+        </TouchableOpacity>
         <View style={styles.logoContainer}>
           <View style={styles.shadow}>
             <Image source={marvel_Logo} style={styles.logo} />
@@ -52,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({
         </View>
         {research && (
           <TouchableOpacity
-            onPress={openSearchBoxInput}
+            onPress={SearchBoxState}
             style={styles.iconContainer}
           >
             <Image source={search} />
@@ -68,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppState) => ({
   searchBox: state.searchBox.searchBoxState,
 });
 
@@ -77,4 +88,4 @@ const mapDispatchToProps = (dispatch) => ({
   closeSearchBox: () => dispatch(closeSearchBoxAction()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(Header));

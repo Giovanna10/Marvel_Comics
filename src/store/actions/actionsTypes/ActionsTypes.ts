@@ -9,6 +9,7 @@ export const SET_UNMOUNT = "SET_UNMOUNT";
 export const GET_NEWS = "GET_NEWS";
 export const OPEN_SEARCH_BOX = "OPEN_SEARCH_BOX";
 export const CLOSE_SEARCH_BOX = "CLOSE_SEARCH_BOX";
+
 export interface Action<P> {
   type: string;
   payload: P;
