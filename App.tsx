@@ -6,7 +6,6 @@ import { Provider } from "react-redux";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { createBottomTabNavigator } from "react-navigation-tabs";
 import Loading from "./src/components/loading/Loading";
 import Login from "./src/screens/auth/login/Login";
 import Registration from "./src/screens/auth/registration/Registration";
@@ -17,6 +16,7 @@ import UserProfile from "./src/screens/userProfile/UserProfile";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { color } from "./src/utils/themes/colors";
 import ComicDetails from "./src/screens/comicDetails/ComicDetails";
+import { createDrawerNavigator } from 'react-navigation-drawer';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpeX_EvrdMmsfocQFH84PIPy0OfnkqBTI",
@@ -110,52 +110,48 @@ const ProfileStack = createStackNavigator(
   { headerMode: "none", initialRouteName: "Profile" }
 );
 
-const getTabBarIcon = (navigation, focused, tintColor) => {
-  const { routeName } = navigation.state;
-  switch (routeName) {
-    case "Releases":
-      return <Icon name="buffer" size={wp("8%")} color={tintColor} />;
-    case "Characters":
-      return <Icon name="magnify" size={wp("8%")} color={tintColor} />;
-    case "Profile":
-      return (
-        <Icon name="account-circle-outline" size={wp("8%")} color={tintColor} />
-      );
-    default:
-      return null;
-  }
-};
-
-const tabNavigator = createBottomTabNavigator(
+const DrawerNavigationStack = createDrawerNavigator(
   {
-    Releases: ReleasesStack,
-    Characters: CharactersStack,
-    Profile: ProfileStack,
-  },
-  {
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) =>
-        getTabBarIcon(navigation, focused, tintColor),
-    }),
-    tabBarOptions: {
-      activeTintColor: color.yellow,
-      inactiveTintColor: color.mattYellow,
-      style: {
-        backgroundColor: color.black,
-        height: hp("10%"),
+    Releases: {
+      screen: ReleasesStack,
+      navigationOptions: {
+        drawerLabel: 'Releases',
+        drawerIcon: <Icon name="buffer" size={wp("6%")} color={color.yellow} />
       },
     },
+    Characters: {
+      screen: CharactersStack,
+      navigationOptions: {
+        drawerLabel: 'Characters',
+        drawerIcon: <Icon name="magnify" size={wp("6%")} color={color.yellow} />
+      },
+    },
+    Profile: {
+      screen: ProfileStack,
+      navigationOptions: {
+        drawerLabel: 'Profile',
+        drawerIcon: <Icon name="account-circle-outline" size={wp("6%")} color={color.yellow} />
+      },
+    },
+  },
+  {
+    initialRouteName: 'Releases',
     resetOnBlur: true,
-    initialRouteName: "Releases",
-  }
-);
+    drawerWidth: wp('50%'),
+    drawerType: 'back',
+    drawerBackgroundColor: color.black,
+    contentOptions: {
+      activeTintColor: color.yellow,
+      inactiveTintColor: color.white,
+    }
+  })
 
 const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
       Loading: Loading,
       Auth: AuthStack,
-      App: tabNavigator,
+      App: DrawerNavigationStack,
     },
     { initialRouteName: "Loading" }
   )

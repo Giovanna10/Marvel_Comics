@@ -34,8 +34,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchBox, navigation }) => {
 
   const searchCharacterDetail = (characterName) => {
     navigation.navigate('CharacterDetail', characterName)
-  }
-
+  }  
 
   return (
     <Animated.View
