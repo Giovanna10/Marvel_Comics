@@ -8,7 +8,7 @@ export const charactersStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: screenDimensions.width,
-    height: hp('80%'),
+    height: hp('90%'),
   },
   charactersList: {
     marginTop: hp('4%')
