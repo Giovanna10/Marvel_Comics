@@ -13,14 +13,27 @@ const profileStyles = StyleSheet.create({
     flexDirection: "row",
     paddingLeft: "5%",
     alignItems: "center",
-    paddingTop: "15%",
   },
   userImageContainer: { width: "20%" },
   userImage: { width: 60, height: 60, borderRadius: 50 },
   userNameContainer: { width: "80%" },
   userName: { color: color.title, fontSize: size.subtitle },
   //LISTS
+  cartListTitleContainer: {
+    borderTopWidth: 0.2,
+    borderTopColor: color.mattYellow,
+    marginBottom: "4%",
+  },
+  cartTitleContainer: {
+    width: 60,
+    alignSelf: "flex-end",
+    marginRight: "4%",
+    backgroundColor: color.black,
+    paddingVertical: "1%",
+  },
   listTitleContainer: {
+    borderTopWidth: 0.2,
+    borderTopColor: color.mattYellow,
     paddingVertical: "1%",
     backgroundColor: "#bdbdbd1c",
     marginBottom: "4%",
@@ -37,7 +50,12 @@ const profileStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
-  comicListContainer: {
+  comicContainerCart: {
+    display: "flex",
+    flexDirection: "row",
+    // marginHorizontal: 30,
+  },
+  comicContainerWhish: {
     marginHorizontal: 20,
   },
   comic: {
@@ -47,7 +65,11 @@ const profileStyles = StyleSheet.create({
     borderWidth: 0.7,
     marginBottom: 10,
   },
-  comicDescriptionContainer: {
+  comicDescriptionContainerCart: {
+    width: 120,
+    marginLeft: 20,
+  },
+  comicDescriptionContainerWhish: {
     width: 120,
   },
   comicTitle: {
@@ -63,29 +85,52 @@ const profileStyles = StyleSheet.create({
     color: color.subtitle,
     fontSize: size.comicDetails,
   },
+  qntContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: "10%",
+    width: 60,
+    height: 30,
+    borderRadius: 6,
+    backgroundColor: color.white,
+  },
+  iconContainer: {
+    display: "flex",
+    flexDirection: "row",
+    width: 120,
+    marginTop: 5,
+  },
+  cartIconContainer: { width: "85%" },
+  smallTrashIconContainer: { width: "15%" },
+  trashIconContainer: {
+    justifyContent: "center",
+    marginLeft: 40,
+  },
+  icon: { width: 30, height: 30 },
+  smallIcon: { width: 20, height: 20 },
   //SEPARATORS
   verticalSeparatorCart: {
-    height: 200,
-    borderWidth: 0.3,
-    borderColor: color.white,
-    borderRadius: 5,
+    height: 130,
+    borderRightWidth: 0.8,
+    borderRightColor: color.white,
+    opacity: 0.4,
+    marginTop: "6%",
+  },
+  verticalSeparatorWhish: {
+    height: 260,
+    borderRightWidth: 0.8,
+    borderRightColor: color.white,
     opacity: 0.4,
     marginTop: "5%",
   },
-  verticalSeparatorWhish: {
-    height: 220,
-    borderWidth: 0.3,
-    borderColor: color.white,
-    borderRadius: 5,
-    opacity: 0.4,
-    marginTop: "10%",
-  },
   horizontalSeparator: {
-    marginVertical: "10%",
-    width: 140,
-    borderWidth: 0.3,
-    borderColor: color.white,
-    borderRadius: 5,
+    marginHorizontal: 10,
+    marginTop: "5%",
+    marginBottom: "7.5%",
+    width: 260,
+    borderBottomWidth: 0.8,
+    borderBottomColor: color.white,
     opacity: 0.4,
   },
 });

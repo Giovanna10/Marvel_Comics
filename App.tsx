@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import store from "./src/store/store";
@@ -16,7 +16,12 @@ import UserProfile from "./src/screens/userProfile/UserProfile";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { color } from "./src/utils/themes/colors";
 import ComicDetails from "./src/screens/comicDetails/ComicDetails";
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
+import { Button, SafeAreaView, View } from "react-native";
+import { LoginManager } from "react-native-fbsdk";
+import { GoogleSignin } from "react-native-google-signin";
+import { getUserLoggedOutAction } from "./src/store/actions/userActions/userActions";
+import NavigationBar from 'react-native-navbar-color'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpeX_EvrdMmsfocQFH84PIPy0OfnkqBTI",
@@ -110,6 +115,26 @@ const ProfileStack = createStackNavigator(
   { headerMode: "none", initialRouteName: "Profile" }
 );
 
+const signOutUser = () => {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      getUserLoggedOutAction();
+      LoginManager.logOut();
+      GoogleSignin.signOut();
+    });
+};
+
+const DrawerContentComponent = props => (
+  <SafeAreaView style={{ flex: 1 }}>
+    <DrawerItems {...props} />
+    <View style={{ paddingTop: 485 }}>
+      <Button title="Sign Out" onPress={signOutUser} color={color.red} />
+    </View>
+  </SafeAreaView>
+)
+
 const DrawerNavigationStack = createDrawerNavigator(
   {
     Releases: {
@@ -138,12 +163,13 @@ const DrawerNavigationStack = createDrawerNavigator(
     initialRouteName: 'Releases',
     resetOnBlur: true,
     drawerWidth: wp('50%'),
-    drawerType: 'back',
+    drawerType: 'front',
     drawerBackgroundColor: color.black,
     contentOptions: {
       activeTintColor: color.yellow,
       inactiveTintColor: color.white,
-    }
+    },
+    contentComponent: DrawerContentComponent
   })
 
 const AppContainer = createAppContainer(
@@ -158,6 +184,11 @@ const AppContainer = createAppContainer(
 );
 
 export default function App() {
+
+  useEffect(() => {
+    NavigationBar.setColor(color.black)
+  }, [])
+
   return (
     <Provider store={store}>
       <AppContainer />
