@@ -9,16 +9,14 @@ export const characterDetailStyles = StyleSheet.create({
   characterDetailImage: {
     width: wp('100%'),
     height: 280,
-    alignSelf: 'center',
-    opacity: 0.30,
   },
   characterDetailName: {
+    top: 265,
     fontSize: 20,
     textTransform: 'uppercase',
     color: color.yellow,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: hp('3%'),
     textShadowColor: color.red,
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
@@ -31,10 +29,10 @@ export const characterDetailStyles = StyleSheet.create({
     borderColor: color.red,
     borderRadius: 5,
     justifyContent: 'center',
-    marginHorizontal: wp('3%'),
     marginVertical: hp('3%')
   },
   comicName: {
+    marginHorizontal: '3%',
     textAlign: 'center',
     fontSize: 13,
     color: color.yellow,

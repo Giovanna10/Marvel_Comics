@@ -9,7 +9,7 @@ import {
   GET_NEWS,
   GET_SELECTED_COMIC,
   GET_RELATED_COMICS,
-  SET_UNMOUNT
+  RESET_RELATED,
 } from "../actionsTypes/ActionsTypes";
 import {
   API_HOST_KEY as KEY,
@@ -17,7 +17,6 @@ import {
   API_HOST_TS as TS,
 } from "react-native-dotenv";
 import { format, startOfYear } from "date-fns";
-import Axios from "axios";
 
 const today = format(new Date(), "yyyy-MM-dd");
 const beginningYear = format(startOfYear(new Date()), "yyyy-MM-dd");
@@ -127,16 +126,20 @@ export function getYearlyComicsAction(offset?: number) {
   };
 }
 
-export function getComicByIdAction(comicId: number, yearlyComics: Comic[], characterState?: boolean) {
+export function getComicByIdAction(
+  comicId: number,
+  comicsArray: Comic[],
+  characterState?: boolean
+) {
   const params = {
     apikey: KEY,
     hash: HASH,
     ts: TS,
-  }
-  return async dispatch => {
-    const selectedComic = yearlyComics.find((comic) => comic.id === comicId);
-    const { data } = await comics.get(`/${comicId}`, { params })    
-    const result = data.data.results[0]
+  };
+  return async (dispatch) => {
+    const selectedComic = comicsArray.find((comic) => comic.id === comicId);
+    const { data } = await comics.get(`/${comicId}`, { params });
+    const result = data.data.results[0];
     const usefulData = usefulFunction(
       result.title,
       result.dates[0].date,
@@ -144,35 +147,28 @@ export function getComicByIdAction(comicId: number, yearlyComics: Comic[], chara
       result.creators.items,
       result.characters.items
     );
-    const selectedComicCharacter: Comic =  {      
-        id: result.id,
-        title: usefulData.title,
-        comicNumber: usefulData.comicN,
-        description: result.description,
-        modificationDate: usefulData.modificationDate,
-        creationDate: usefulData.creationDate,
-        pageCount: result.pageCount,
-        price: result.prices[0].price,
-        thumbnail: result.thumbnail,
-        images: result.images,
-        creators: {
-          items: usefulData.creators,
-          returned: result.creators.returned,
-        },
-        characters: usefulData.characters,
-      }
+    const selectedComicCharacter: Comic = {
+      id: result.id,
+      title: usefulData.title,
+      comicNumber: usefulData.comicN,
+      description: result.description,
+      modificationDate: usefulData.modificationDate,
+      creationDate: usefulData.creationDate,
+      pageCount: result.pageCount,
+      price: result.prices[0].price,
+      thumbnail: result.thumbnail,
+      images: result.images,
+      creators: {
+        items: usefulData.creators,
+        returned: result.creators.returned,
+      },
+      characters: usefulData.characters,
+    };
     return dispatch({
       type: GET_SELECTED_COMIC,
       payload: characterState ? selectedComicCharacter : selectedComic,
     });
   };
-}
-
-export function setComponentUnmountAction() {
-  return {
-    type: SET_UNMOUNT,
-    payload: []
-  }
 }
 
 export function getRelatedComicsByCreatorsIdAction(
@@ -189,9 +185,9 @@ export function getRelatedComicsByCreatorsIdAction(
     formatType: "comic",
   };
   return async (dispatch) => {
-    const editor = creators.find(creator => creator.role === "editor")
+    const editor = creators.find((creator) => creator.role === "editor");
 
-    const { data } = await relatedComics.get(`${editor.id}/comics`, { params })
+    const { data } = await relatedComics.get(`${editor.id}/comics`, { params });
 
     const related: Comic[] = data.data.results.map((comic) => {
       const usefulData = usefulFunction(
@@ -225,5 +221,12 @@ export function getRelatedComicsByCreatorsIdAction(
       type: GET_RELATED_COMICS,
       payload: related,
     });
+  };
+}
+
+export function resetRelatedComicsAction() {
+  return {
+    type: RESET_RELATED,
+    payload: [],
   };
 }

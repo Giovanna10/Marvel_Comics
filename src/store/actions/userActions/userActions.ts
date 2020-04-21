@@ -3,6 +3,7 @@ import {
   USER_LOGGED_OUT,
   USER_INFO,
   GET_USER_COMICS,
+  UserComics,
 } from "../actionsTypes/ActionsTypes";
 import * as firebase from "firebase";
 import { db } from "../../../../App";

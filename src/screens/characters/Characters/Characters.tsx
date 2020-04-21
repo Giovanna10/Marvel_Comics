@@ -54,30 +54,28 @@ const Characters: React.FC<CharactersProps> = ({
   const renderCharacters = ({ item }) => (
     <TouchableOpacity onPress={() => goToCharacterDetail(item.name)}>
       <View style={styles.characterContainer}>
-        {item.thumbnail.extension === "jpg" ? (
-          <Image
-            source={{
-              uri: `${item.thumbnail.path}/standard_fantastic.jpg`,
-            }}
-            style={styles.characterItem}
-          />
-        ) : (
-          <Image
-            source={{ uri: `${item.thumbnail.path}.gif` }}
-            style={styles.characterItem}
-          />
-        )}
+        <Image
+          source={{
+            uri: `${item.thumbnail.path}${
+              item.thumbnail.extension === "jpg"
+                ? "/standard_fantastic.jpg"
+                : ".gif"
+            }`,
+          }}
+          style={styles.characterItem}
+        />
+
         <Text style={styles.characterName}> {item.name} </Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <View style={{ position: "absolute" }}>
+    <>
       <Header research />
       <ImageBackground
         source={charactersBg}
-        imageStyle={{ resizeMode: "cover" }}
+        imageStyle={styles.imageStyle}
         style={styles.background}
       >
         <FlatList
@@ -103,7 +101,7 @@ const Characters: React.FC<CharactersProps> = ({
           }
         />
       </ImageBackground>
-    </View>
+    </>
   );
 };
 

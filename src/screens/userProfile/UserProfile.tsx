@@ -1,46 +1,42 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import * as firebase from "firebase";
-import { db } from "../../../App";
 import {
   getUserLoggedOutAction,
   getUserInfoAction,
-  getUserComicsAction,
 } from "../../store/actions/userActions/userActions";
-import { LoginManager, AccessToken } from "react-native-fbsdk";
+import { LoginManager } from "react-native-fbsdk";
 import { GoogleSignin } from "react-native-google-signin";
 import { AppState } from "../../store/store";
-import { User, UserComics } from "../../store/actions/actionsTypes/ActionsTypes";
-import { View, Text, Button, Image } from "react-native";
+import {
+  User,
+  UserComics,
+} from "../../store/actions/actionsTypes/ActionsTypes";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  SectionList,
+  ScrollView,
+} from "react-native";
 import Header from "../../components/header/Header";
 import { LinearGradient } from "expo-linear-gradient";
 import profileStyle from "./profileStyles";
 
-
 type ProfileProps = {
   getUserLoggedOut: typeof getUserLoggedOutAction;
   userLogged: boolean;
-  getUserInfo: typeof getUserInfoAction;
   userInfo: User;
-  getUserComics: typeof getUserComicsAction;
-  userComics: UserComics
+  userComics: UserComics;
 };
 
 const Profile: React.FC<ProfileProps> = ({
   getUserLoggedOut,
-  getUserInfo,
   userInfo,
-  getUserComics,
-  userComics
+  userComics,
 }) => {
   const styles = profileStyle;
-
-  //MANAGE UPDATING USER COMICS
-
-  useEffect(() => {
-    getUserInfo();  
-    getUserComics();  
-  }, []);
 
   const signOutUser = () => {
     firebase
@@ -52,6 +48,54 @@ const Profile: React.FC<ProfileProps> = ({
         GoogleSignin.signOut();
       });
   };
+
+  const renderCartComics = ({ item, index }) => (
+    <View style={styles.comic_separator_container}>
+      <View style={styles.comicListContainer}>
+        <Image
+          source={{
+            uri: `${item.thumbnail.path}/portrait_xlarge.jpg`,
+          }}
+          style={styles.comic}
+        />
+        <View style={styles.comicDescriptionContainer}>
+          <Text numberOfLines={4} style={styles.comicTitle}>
+            {item.title}
+          </Text>
+          <Text style={styles.comicDetails}>Price: {item.price}</Text>
+        </View>
+        {index < userComics.inCart.length - 1 ? (
+          <View style={styles.horizontalSeparator} />
+        ) : (
+          <View style={{ marginTop: "20%" }} />
+        )}
+      </View>
+      <View style={styles.verticalSeparatorCart} />
+    </View>
+  );
+
+
+  const renderWhishedComics = ({ item, index }) => (
+    <View style={styles.comic_separator_container}>
+      <View style={styles.comicListContainer}>
+        <Image
+          source={{
+            uri: `${item.thumbnail.path}/portrait_xlarge.jpg`,
+          }}
+          style={styles.comic}
+        />
+        <View style={styles.comicDescriptionContainer}>
+          <Text numberOfLines={4} style={styles.comicTitle}>
+            {item.title}
+          </Text>
+          <Text style={styles.comicDetails}>Price: {item.price}</Text>
+        </View>
+      </View>
+      {index < userComics.whished.length - 1 ? (
+        <View style={styles.verticalSeparatorWhish} />
+      ) : null}
+    </View>
+  );
 
   return (
     <LinearGradient
@@ -76,14 +120,31 @@ const Profile: React.FC<ProfileProps> = ({
           <Text style={styles.userName}>{userInfo.name}</Text>
         </View>
       </View>
-      {/* WISHLIST */}
-      <View>
-        <Text style={styles.listTitle}>WISHLIST</Text>
-
-      </View>
       {/* CART */}
-      <View>
-        <Text style={styles.listTitle}>CART</Text>
+      <FlatList
+        data={userComics.inCart}
+        keyExtractor={(item) => `Key-${item.id}`}
+        renderItem={renderCartComics}
+        ListHeaderComponent={() => (
+          <View style={styles.listTitleContainer}>
+            <Text style={styles.listTitle}>CART</Text>
+          </View>
+        )}
+        stickyHeaderIndices={[0]}
+        showsVerticalScrollIndicator={false}
+      />
+      {/* WHISHLIST */}
+      <View style={{ marginBottom: "1%" }}>
+        <View style={styles.listTitleContainer}>
+          <Text style={styles.listTitle}>WHISHLIST</Text>
+        </View>
+        <FlatList
+          data={userComics.whished}
+          keyExtractor={(item) => `Key-${item.id}`}
+          renderItem={renderWhishedComics}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
       </View>
     </LinearGradient>
   );
@@ -92,15 +153,13 @@ const Profile: React.FC<ProfileProps> = ({
 const mapStateToProps = (state: AppState) => ({
   userLogged: state.user.loggedIn,
   userInfo: state.user.user,
-  userComics: state.user.userComics
+  userComics: state.user.userComics,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getUserLoggedOut: () => {
     dispatch(getUserLoggedOutAction());
   },
-  getUserInfo: () => dispatch(getUserInfoAction()),
-  getUserComics: () => dispatch(getUserComicsAction())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

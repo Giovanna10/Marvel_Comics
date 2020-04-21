@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { db } from "../../../App";
 import { connect } from "react-redux";
 import { AppState } from "../../store/store";
-import { Comic, Creator } from "../../store/actions/actionsTypes/ActionsTypes";
+import {
+  Comic,
+  Creator,
+  UserComics,
+} from "../../store/actions/actionsTypes/ActionsTypes";
 import {
   View,
   Text,
@@ -20,11 +24,13 @@ import { comicDetailsStyles } from "./comicDetailsStyles";
 import {
   getRelatedComicsByCreatorsIdAction,
   getComicByIdAction,
-  setComponentUnmountAction,
+  resetRelatedComicsAction,
 } from "../../store/actions/comicsActions/comicsActions";
 import { NavigationStackProp } from "react-navigation-stack";
 import { color } from "../../utils/themes/colors";
 import comicDetailsBg from "../../assets/screensBgs/comicDetailsBg.png";
+import { getUserComicsAction } from "../../store/actions/userActions/userActions";
+import Loading from "../../components/loading/Loading";
 
 type ComicDetailsProps = {
   navigation: NavigationStackProp;
@@ -32,7 +38,9 @@ type ComicDetailsProps = {
   selectedComic: Comic;
   getRelatedComics: typeof getRelatedComicsByCreatorsIdAction;
   relatedComics: Comic[];
-  setComponentUnmount: typeof setComponentUnmountAction;
+  resetRelatedComics: typeof resetRelatedComicsAction;
+  getUserComics: typeof getUserComicsAction;
+  userComics: UserComics;
 };
 
 const ComicDetails: React.FC<ComicDetailsProps> = ({
@@ -41,33 +49,56 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
   selectedComic,
   getRelatedComics,
   relatedComics,
-  setComponentUnmount,
+  resetRelatedComics,
+  getUserComics,
+  userComics,
 }) => {
   const styles = comicDetailsStyles;
 
-  const addToCart = (title: string, comic: Comic) => {
-    try {
-      db.collection("Cart").doc(title).set(comic);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const addToWhishes = (title: string, comic: Comic) => {
-    try {
-      db.collection("Whishlist").doc(title).set(comic);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   const [offset, setOffset] = useState<number>(8);
   const [loading, setLoading] = useState<boolean>(true);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [addedToWhish, setAddedToWhish] = useState(false);
 
-  useEffect(() => {    
+  useEffect(() => {
+    const comicFoundInCart = userComics.inCart.find(
+      (comic) => comic.id === selectedComic.id
+    );
+    comicFoundInCart && setAddedToCart(true);
+
+    const comicFoundInWhish = userComics.whished.find(
+      (comic) => comic.id === selectedComic.id
+    );
+    comicFoundInWhish && setAddedToWhish(true);
+  }, [selectedComic, userComics]);
+
+  useEffect(() => {
     getRelatedComics(selectedComic.creators.items);
-    return () => setComponentUnmount();
-  }, [getRelatedComics, selectedComic]);
+  }, [selectedComic]);
+
+  useEffect(() => {
+    return () => {
+      resetRelatedComics();
+    };
+  }, [selectedComic]);
+
+  const addToCartList = () => {
+    try {
+      db.collection("Cart").doc(selectedComic.title).set(selectedComic);
+    } catch (error) {
+      console.log(error.message);
+    }
+    getUserComics();
+  };
+
+  const addToWhishes = () => {
+    try {
+      db.collection("Whishlist").doc(selectedComic.title).set(selectedComic);
+    } catch (error) {
+      console.log(error.message);
+    }
+    getUserComics();
+  };
 
   const handleLoadMore = () => {
     setOffset(offset + 8);
@@ -77,14 +108,16 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
     }
   };
 
-  const handleComicPress = (item: Comic) => {
-    getSelectedComic(item.id, relatedComics);
+  const handleComicPress = (id: number) => {
+    setAddedToCart(false);
+    setAddedToWhish(false);
+    getSelectedComic(id, relatedComics);
     navigation.navigate("ComicDetails");
   };
 
   const renderComic = ({ item }) => (
     <TouchableOpacity
-      onPress={() => handleComicPress(item)}
+      onPress={() => handleComicPress(item.id)}
       style={styles.comicListContainer}
     >
       <Image
@@ -103,120 +136,145 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
     </TouchableOpacity>
   );
 
-  console.log(relatedComics);
-
-
   return (
     <>
       <Header />
-      <ImageBackground source={comicDetailsBg} style={styles.background}>
-        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} bounces={false}>
-          {/* HEADING */}
-          <View style={styles.headingContainer}>
-            <View style={styles.comicContainer}>
-              <Image
-                source={{
-                  uri: `${selectedComic.thumbnail.path}/portrait_xlarge.jpg`,
-                }}
-                style={styles.comicInHeading}
-              />
-              <Text style={styles.comicDetails}>
-                {selectedComic.pageCount} pages
-              </Text>
-            </View>
-            <View style={styles.titlesContainer}>
-              <Text style={styles.title}>{selectedComic.title}</Text>
-              <Text
-                style={[
-                  styles.title,
-                  {
-                    marginVertical:
-                      selectedComic.title.length > 40
-                        ? "10%"
-                        : selectedComic.title.length > 19
-                          ? "15%"
-                          : "20%",
-                  },
-                ]}
-              >
-                Cost: {selectedComic.price} $
-              </Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => addToCart(selectedComic.title, selectedComic)}
-              >
-                <View style={styles.btnTextContainer}>
-                  <Text style={styles.btnText}>Add to Cart</Text>
-                </View>
-                <View style={styles.btnIconContainer}>
-                  <Image source={cartPlus} style={styles.btnIcon} />
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => addToWhishes(selectedComic.title, selectedComic)}
-              >
-                <View style={styles.btnTextContainer}>
-                  <Text style={styles.btnText}>Add to Whishlist</Text>
-                </View>
-                <View style={styles.btnIconContainer}>
-                  <Image source={addWhish} style={styles.btnIcon} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-          {/* DETAILS */}
-          <View style={styles.detailsContainer}>
-            {selectedComic.description !== null ? (
-              <>
-                <Text style={[styles.title, { marginBottom: "5%" }]}>
-                  Summary
-                </Text>
-                <Text style={[styles.comicSubtitle, { marginBottom: "5%" }]}>
-                  {selectedComic.description.replace(/<br>/gi, '')}
-                </Text>
-              </>
-            ) : null}
-
-            <Text style={[styles.title, { marginBottom: "5%" }]}>Creators</Text>
-            <View>
-              {selectedComic.creators.items.map((creator) => (
-                <Text
-                  key={creator.name}
-                  style={[styles.comicSubtitle, { marginBottom: "0.5%" }]}
-                >
-                  {"   "}· {creator.name}{" "}
-                  {creator.role && ` -  ${creator.role}`}
-                </Text>
-              ))}
-            </View>
-            {relatedComics.length > 0 ? (
-              <>
-                <Text style={[styles.title, { marginVertical: "5%" }]}>
-                  Related Comics
-            </Text>
-                <FlatList
-                  data={relatedComics}
-                  keyExtractor={(item) => `Key-${item.id}`}
-                  renderItem={renderComic}
-                  horizontal
-                  bounces={false}
-                  showsHorizontalScrollIndicator={false}
-                  style={{ marginBottom: 5 }}
-                  onMomentumScrollBegin={() => setLoading(false)}
-                  onEndReachedThreshold={0.7}
-                  onEndReached={handleLoadMore}
-                  ListFooterComponent={
-                    loading && (
-                      <ActivityIndicator size="small" color={color.yellow} />
-                    )
-                  }
+      {selectedComic ? (
+        <ImageBackground source={comicDetailsBg} style={styles.background}>
+          <ScrollView
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+          >
+            {/* HEADING */}
+            <View style={styles.headingContainer}>
+              <View style={styles.comicContainer}>
+                <Image
+                  source={{
+                    uri: `${selectedComic.thumbnail.path}/portrait_xlarge.jpg`,
+                  }}
+                  style={styles.comicInHeading}
                 />
-              </>
-            ) : null}
-          </View>
-        </ScrollView>
-      </ImageBackground>
+                {selectedComic.pageCount !== 0 ? (
+                  <Text style={styles.comicDetails}>
+                    {selectedComic.pageCount} pages
+                  </Text>
+                ) : null}
+              </View>
+              <View style={styles.titlesContainer}>
+                <Text style={[styles.title, { position: "absolute" }]}>
+                  {selectedComic.title}
+                </Text>
+                {selectedComic.price !== 0 ? (
+                  <Text
+                    style={[styles.title, { position: "absolute", top: "40%" }]}
+                  >
+                    Cost: {selectedComic.price} $
+                  </Text>
+                ) : null}
+                {/* BUTTONS */}
+                <View style={{ position: "absolute", bottom: "6%" }}>
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      {
+                        backgroundColor: addedToCart ? "#4EAF24" : color.yellow,
+                      },
+                    ]}
+                    onPress={() => addToCartList()}
+                  >
+                    <View style={styles.btnTextContainer}>
+                      <Text style={styles.btnText}>
+                        {addedToCart ? "Added to Cart" : "Add to Cart"}
+                      </Text>
+                    </View>
+                    <View style={styles.btnIconContainer}>
+                      <Image source={cartPlus} style={styles.btnIcon} />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      {
+                        backgroundColor: addedToWhish
+                          ? "#4EAF24"
+                          : color.yellow,
+                      },
+                    ]}
+                    onPress={() => addToWhishes()}
+                  >
+                    <View style={styles.btnTextContainer}>
+                      <Text style={styles.btnText}>
+                        {addedToWhish ? "Added to Whishes" : "Add to Whishlist"}
+                      </Text>
+                    </View>
+                    <View style={styles.btnIconContainer}>
+                      <Image source={addWhish} style={styles.btnIcon} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            {/* DETAILS */}
+            <View style={styles.detailsContainer}>
+              {selectedComic.description !== null ? (
+                <>
+                  <Text style={[styles.title, { marginBottom: "5%" }]}>
+                    Summary
+                  </Text>
+                  <Text
+                    numberOfLines={8}
+                    style={[styles.comicSubtitle, { marginBottom: "5%" }]}
+                  >
+                    {selectedComic.description.replace(/<br>/gi, "")}
+                  </Text>
+                </>
+              ) : null}
+
+              <Text style={[styles.title, { marginBottom: "5%" }]}>
+                Creators
+              </Text>
+              <View>
+                {selectedComic.creators.items.map((creator) => (
+                  <Text
+                    key={creator.name}
+                    style={[styles.comicSubtitle, { marginBottom: "0.5%" }]}
+                  >
+                    {"   "}· {creator.name}{" "}
+                    {creator.role && ` -  ${creator.role}`}
+                  </Text>
+                ))}
+              </View>
+              {relatedComics.length > 0 ? (
+                <>
+                  <Text style={[styles.title, { marginVertical: "5%" }]}>
+                    Related Comics
+                  </Text>
+                  <FlatList
+                    data={relatedComics}
+                    keyExtractor={(item) => `Key-${item.id}`}
+                    renderItem={renderComic}
+                    horizontal
+                    bounces={false}
+                    showsHorizontalScrollIndicator={false}
+                    style={{ marginBottom: 5 }}
+                    onMomentumScrollBegin={() => setLoading(false)}
+                    onEndReachedThreshold={0.7}
+                    onEndReached={handleLoadMore}
+                    ListFooterComponent={
+                      loading && (
+                        <ActivityIndicator size="small" color={color.yellow} />
+                      )
+                    }
+                  />
+                </>
+              ) : null}
+            </View>
+          </ScrollView>
+        </ImageBackground>
+      ) : (
+        <Loading />
+      )}
     </>
   );
 };
@@ -224,6 +282,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
 const mapStateToProps = (state: AppState) => ({
   selectedComic: state.comics.selectedComic,
   relatedComics: state.comics.relatedComics,
+  userComics: state.user.userComics,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -231,7 +290,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(getComicByIdAction(comicId, comics)),
   getRelatedComics: (creators: Creator[], offset: number) =>
     dispatch(getRelatedComicsByCreatorsIdAction(creators, offset)),
-  setComponentUnmount: () => dispatch(setComponentUnmountAction()),
+  resetRelatedComics: () => dispatch(resetRelatedComicsAction()),
+  getUserComics: () => dispatch(getUserComicsAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ComicDetails);

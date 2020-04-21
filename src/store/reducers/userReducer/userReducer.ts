@@ -15,7 +15,7 @@ const initialState: UserState = {
     image: "",
   },
   userComics: {
-    wished: [],
+    whished: [],
     inCart: [],
   },
 };

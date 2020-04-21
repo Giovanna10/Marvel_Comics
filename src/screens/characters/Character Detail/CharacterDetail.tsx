@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -24,6 +25,7 @@ import {
 } from "../../../store/actions/actionsTypes/ActionsTypes";
 import { getComicByIdAction } from "../../../store/actions/comicsActions/comicsActions";
 import { color } from "../../../utils/themes/colors";
+import { screenDimensions } from "../../../utils/themes/sizes";
 
 type CharacterDetailProps = {
   singleCharacter: Character;
@@ -42,12 +44,16 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
 }) => {
   const styles = characterDetailStyles;
 
-  const [characterState, setCharacterState] = useState(true);
+  const characterState = true;
+
+  const extension =
+    singleCharacter.thumbnail.extension === "jpg"
+      ? "/landscape_xlarge.jpg"
+      : ".gif";
 
   useEffect(() => {
-    navigation.state.params.length > 0 &&
-      getSingleCharacter(navigation.state.params);
-  }, [getSingleCharacter]);
+    getSingleCharacter(navigation.state.params);
+  }, [navigation.state.params]);
 
   const handleComicPress = (uri) => {
     const comicId = uri;
@@ -56,57 +62,47 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
     navigation.navigate("ComicDetails");
   };
 
+  const renderHeader = () => (
+    <ImageBackground
+      source={{
+        uri: `${singleCharacter.thumbnail.path}${extension}`,
+      }}
+      imageStyle={{ opacity: 0.3 }}
+      style={styles.characterDetailImage}
+    >
+      <Text style={styles.characterDetailName}> {singleCharacter.name} </Text>
+    </ImageBackground>
+  );
+
   const renderComics = ({ item }) => (
-    <TouchableOpacity onPress={() => handleComicPress(item.resourceURI)}>
-      <View style={styles.comicContainer}>
-        <Text style={styles.comicName}> {item.name} </Text>
-      </View>
+    <TouchableOpacity
+      style={styles.comicContainer}
+      onPress={() => handleComicPress(item.resourceURI)}
+    >
+      <Text style={styles.comicName}> {item.name} </Text>
     </TouchableOpacity>
   );
 
   return (
     <>
       <Header />
-      <View style={styles.characterDetailContainer}>
-        <LinearGradient
-          style={{ height: hp("100%"), width: wp("100%") }}
-          colors={["#000000", "#ae0000"]}
-          start={{ x: 1, y: 0.4 }}
-          end={{ x: 1, y: 2 }}
-        >
-          <ScrollView bounces={false}>
-            {singleCharacter.thumbnail.extension === "jpg" ? (
-              <Image
-                source={{
-                  uri: `${singleCharacter.thumbnail.path}/landscape_xlarge.jpg`,
-                }}
-                style={styles.characterDetailImage}
-              />
-            ) : (
-              <Image
-                source={{ uri: `${singleCharacter.thumbnail.path}.gif` }}
-                style={styles.characterDetailImage}
-              />
-            )}
-            <FlatList
-              data={singleCharacter.comics.items}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderComics}
-              bounces={false}
-              showsVerticalScrollIndicator={false}
-              numColumns={2}
-              columnWrapperStyle={{ justifyContent: "space-around" }}
-              style={{ marginBottom: hp("24%") }}
-              ListHeaderComponent={
-                <Text style={styles.characterDetailName}>
-                  {" "}
-                  {singleCharacter.name}{" "}
-                </Text>
-              }
-            />
-          </ScrollView>
-        </LinearGradient>
-      </View>
+      <LinearGradient
+        style={{ flex: 1 }}
+        colors={["#000000", "#ae0000"]}
+        start={{ x: 1, y: 0.4 }}
+        end={{ x: 1, y: 2 }}
+      >
+        <FlatList
+          data={singleCharacter.comics.items}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={renderComics}
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          numColumns={2}
+          columnWrapperStyle={{ justifyContent: "space-around" }}
+          ListHeaderComponent={renderHeader}
+        />
+      </LinearGradient>
     </>
   );
 };

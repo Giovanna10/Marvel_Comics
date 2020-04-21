@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
+  View,
 } from "react-native";
 import releasesBg from "../../assets/screensBgs/releasesBg.png";
 import { releasesStyles } from "./releasesStyles";
@@ -14,28 +15,43 @@ import {
   getYearlyComicsAction,
   getComicsNewsAction,
   getComicByIdAction,
-  getRelatedComicsByCreatorsIdAction,
 } from "../../store/actions/comicsActions/comicsActions";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AppState } from "../../store/store";
-import { Comic, News, Creator } from "../../store/actions/actionsTypes/ActionsTypes";
+import {
+  Comic,
+  News,
+  UserComics,
+  User,
+} from "../../store/actions/actionsTypes/ActionsTypes";
 import NewsList from "../../components/newsList/NewsList";
 import { NavigationStackProp } from "react-navigation-stack";
 import { color } from "../../utils/themes/colors";
+import {
+  getUserComicsAction,
+  getUserInfoAction,
+} from "../../store/actions/userActions/userActions";
 
 type ReleasesProps = {
   navigation: NavigationStackProp;
+  getUserInfo: typeof getUserInfoAction;
+  userInfo: User;
+  getUserComics: typeof getUserComicsAction;
+  userComics: UserComics;
   getComicsNews: typeof getComicsNewsAction;
   news: News[];
   getYearlyComics: typeof getYearlyComicsAction;
   yearlyComics: Comic[];
   getSelectedComic: typeof getComicByIdAction;
   selectedComic: Comic;
-  getRelatedComics: typeof getRelatedComicsByCreatorsIdAction
 };
 
 const Releases: React.FC<ReleasesProps> = ({
   navigation,
+  getUserInfo,
+  userInfo,
+  getUserComics,
+  userComics,
   getComicsNews,
   news,
   getYearlyComics,
@@ -50,6 +66,8 @@ const Releases: React.FC<ReleasesProps> = ({
   useEffect(() => {
     news.length === 0 && getComicsNews();
     yearlyComics.length === 0 && getYearlyComics();
+    userInfo.name.length === 0 && getUserInfo();
+    userComics && userComics.whished.length === 0 && getUserComics();
   }, []);
 
   const handleLoadMore = () => {
@@ -61,7 +79,7 @@ const Releases: React.FC<ReleasesProps> = ({
   };
 
   const handleComicPress = (item: Comic) => {
-    getSelectedComic(item.id, yearlyComics);    
+    getSelectedComic(item.id, yearlyComics);
     navigation.navigate("ComicDetails");
   };
 
@@ -105,7 +123,13 @@ const Releases: React.FC<ReleasesProps> = ({
         onEndReachedThreshold={0.7}
         onEndReached={handleLoadMore}
         ListFooterComponent={
-          loading && <ActivityIndicator size="small" color={color.yellow} />
+          loading && (
+            <ActivityIndicator
+              size="small"
+              color={color.yellow}
+              style={{ marginBottom: "8%" }}
+            />
+          )
         }
       />
     </>
@@ -115,16 +139,18 @@ const Releases: React.FC<ReleasesProps> = ({
 const mapStateToProps = (state: AppState) => ({
   news: state.comics.comicsNews,
   yearlyComics: state.comics.yearlyComics,
-  selectedComic: state.comics.selectedComic
+  selectedComic: state.comics.selectedComic,
+  userInfo: state.user.user,
+  userComics: state.user.userComics,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getUserInfo: () => dispatch(getUserInfoAction()),
+  getUserComics: () => dispatch(getUserComicsAction()),
   getComicsNews: () => dispatch(getComicsNewsAction()),
   getYearlyComics: (offset: number) => dispatch(getYearlyComicsAction(offset)),
   getSelectedComic: (comicId: number, comics: Comic[]) =>
     dispatch(getComicByIdAction(comicId, comics)),
-  getRelatedComics: (creators: Creator[], offset: number) =>
-    dispatch(getRelatedComicsByCreatorsIdAction(creators, offset)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Releases);

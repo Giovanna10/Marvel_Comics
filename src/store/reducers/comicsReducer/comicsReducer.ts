@@ -5,7 +5,7 @@ import {
   GET_NEWS,
   GET_SELECTED_COMIC,
   GET_RELATED_COMICS,
-  SET_UNMOUNT,
+  RESET_RELATED,
 } from "../../actions/actionsTypes/ActionsTypes";
 import { ComicsState } from "../../statesTypes/StatesTypes";
 
@@ -52,7 +52,7 @@ export default function (
         ...state,
         selectedComic: action.payload,
       };
-    case SET_UNMOUNT:
+    case RESET_RELATED:
       return {
         ...state,
         relatedComics: action.payload,
