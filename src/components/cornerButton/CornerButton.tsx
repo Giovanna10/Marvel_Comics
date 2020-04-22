@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import { styles } from "./styles/cornerBtnStyles";
-import { color } from "../../utils/themes/colors";
 import fbIcon from "../../assets/socialIcons/facebookIcon.png";
 import googleIcon from "../../assets/socialIcons/googleIcon.png";
 
@@ -11,6 +10,7 @@ type ButtonProps = {
   googleBtn?: boolean;
   textBtn: string;
   btnColor: string;
+  textColor: string;
 };
 
 const CornerButton: React.FC<ButtonProps> = ({
@@ -18,7 +18,8 @@ const CornerButton: React.FC<ButtonProps> = ({
   fbBtn,
   googleBtn,
   textBtn,
-  btnColor
+  btnColor,
+  textColor
 }) => (
   <>
     <View style={styles.borderCornerBtn}>
@@ -41,7 +42,7 @@ const CornerButton: React.FC<ButtonProps> = ({
               source={fbBtn ? fbIcon : googleBtn && googleIcon}
               style={styles.icon}
             />
-            <Text style={[styles.text, { color: fbBtn && color.white }]}>
+            <Text style={[styles.text, { color: textColor }]}>
               {textBtn}
             </Text>
           </View>

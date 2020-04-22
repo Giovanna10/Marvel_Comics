@@ -17,24 +17,24 @@ import {
 } from "../../store/actions/searchBoxActions/searchBoxActions";
 import { AppState } from "../../store/store";
 import { withNavigation } from "react-navigation";
-import { NavigationStackProp } from "react-navigation-stack";
+import {NavigationDrawerProp} from 'react-navigation-drawer'
 
 type HeaderProps = {
+  navigation?: NavigationDrawerProp,
   research?: boolean;
   openSearchBox: typeof openSearchBoxAction;
   closeSearchBox: typeof closeSearchBoxAction;
   searchBox: boolean;
-  navigation?: NavigationStackProp,
 };
 
 const Header: React.FC<HeaderProps> = ({
+  navigation,
   research,
   openSearchBox,
   closeSearchBox,
   searchBox,
-  navigation
 }) => {
-  const styles = headerStyles;
+  const styles = headerStyles;  
 
   const SearchBoxState = () => {
     if (searchBox === false) {

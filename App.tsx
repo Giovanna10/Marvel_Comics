@@ -13,15 +13,16 @@ import Releases from "./src/screens/releases/Releases";
 import Characters from "./src/screens/characters/Characters/Characters";
 import CharacterDetail from "./src/screens/characters/Character Detail/CharacterDetail";
 import UserProfile from "./src/screens/userProfile/UserProfile";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import { color } from "./src/utils/themes/colors";
 import ComicDetails from "./src/screens/comicDetails/ComicDetails";
-import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
-import { Button, SafeAreaView, View } from "react-native";
-import { LoginManager } from "react-native-fbsdk";
-import { GoogleSignin } from "react-native-google-signin";
-import { getUserLoggedOutAction } from "./src/store/actions/userActions/userActions";
-import NavigationBar from 'react-native-navbar-color'
+import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
+import { StatusBar, SafeAreaView, View } from "react-native";
+import NavigationBar from "react-native-navbar-color";
+import { screenDimensions } from "./src/utils/themes/sizes";
+import Logout from "./src/screens/auth/logout/Logout";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpeX_EvrdMmsfocQFH84PIPy0OfnkqBTI",
@@ -45,6 +46,9 @@ const AuthStack = createStackNavigator(
     Registration: {
       screen: Registration,
     },
+    Logout: {
+      screen: Logout,
+    },
   },
   { headerMode: "none", initialRouteName: "Login" }
 );
@@ -67,6 +71,9 @@ const ReleasesStack = createStackNavigator(
         },
       }),
     },
+    Logout: {
+      screen: Logout,
+    },
   },
   { headerMode: "none", initialRouteName: "Releases" }
 );
@@ -77,17 +84,17 @@ const CharactersStack = createStackNavigator(
       screen: Characters,
       navigationOptions: () => ({
         cardStyle: {
-          backgroundColor: color.black
-        }
-      })
+          backgroundColor: color.black,
+        },
+      }),
     },
     CharacterDetail: {
       screen: CharacterDetail,
       navigationOptions: () => ({
         cardStyle: {
-          backgroundColor: color.black
-        }
-      })
+          backgroundColor: color.black,
+        },
+      }),
     },
     ComicDetails: {
       screen: ComicDetails,
@@ -115,62 +122,84 @@ const ProfileStack = createStackNavigator(
   { headerMode: "none", initialRouteName: "Profile" }
 );
 
-const signOutUser = () => {
-  firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      getUserLoggedOutAction();
-      LoginManager.logOut();
-      GoogleSignin.signOut();
-    });
-};
-
-const DrawerContentComponent = props => (
+const DrawerContentComponent = (props) => (
   <SafeAreaView style={{ flex: 1 }}>
-    <DrawerItems {...props} />
-    <View style={{ paddingTop: 485 }}>
-      <Button title="Sign Out" onPress={signOutUser} color={color.red} />
+    <View
+      style={{
+        paddingTop:
+          screenDimensions.height < 570
+            ? 300
+            : screenDimensions.height < 670
+            ? 400
+            : 550,
+      }}
+    >
+      <View style={{ backgroundColor: "#000000cc" }}>
+        <DrawerItems {...props} />
+      </View>
     </View>
   </SafeAreaView>
-)
+);
 
 const DrawerNavigationStack = createDrawerNavigator(
   {
     Releases: {
       screen: ReleasesStack,
       navigationOptions: {
-        drawerLabel: 'Releases',
-        drawerIcon: <Icon name="buffer" size={wp("6%")} color={color.yellow} />
+        drawerLabel: "Releases",
+        drawerIcon: <Icon name="buffer" size={wp("6%")} color={color.yellow} />,
       },
     },
     Characters: {
       screen: CharactersStack,
       navigationOptions: {
-        drawerLabel: 'Characters',
-        drawerIcon: <Icon name="magnify" size={wp("6%")} color={color.yellow} />
+        drawerLabel: "Characters",
+        drawerIcon: (
+          <Icon name="magnify" size={wp("6%")} color={color.yellow} />
+        ),
       },
     },
     Profile: {
       screen: ProfileStack,
       navigationOptions: {
-        drawerLabel: 'Profile',
-        drawerIcon: <Icon name="account-circle-outline" size={wp("6%")} color={color.yellow} />
+        drawerLabel: "Profile",
+        drawerIcon: (
+          <Icon
+            name="account-circle-outline"
+            size={wp("6%")}
+            color={color.yellow}
+          />
+        ),
       },
     },
+    Logout: {
+      screen: Logout,
+      navigationOptions: {
+        drawerLabel: "",
+        drawerIcon: (
+          <Icon
+            name="undo-variant"
+            size={wp("6%")}
+            color={color.yellow}
+          />
+        ),
+      },
+      
+    }
   },
   {
-    initialRouteName: 'Releases',
+    initialRouteName: "Releases",
     resetOnBlur: true,
-    drawerWidth: wp('50%'),
-    drawerType: 'front',
-    drawerBackgroundColor: color.black,
+    drawerWidth: wp("50%"),
+    drawerType: "front",
+    drawerBackgroundColor: "#000000cc",
     contentOptions: {
       activeTintColor: color.yellow,
-      inactiveTintColor: color.white,
+      inactiveTintColor: color.mattYellow,
     },
-    contentComponent: DrawerContentComponent
-  })
+    contentComponent: DrawerContentComponent,
+  }
+);
 
 const AppContainer = createAppContainer(
   createSwitchNavigator(
@@ -184,13 +213,13 @@ const AppContainer = createAppContainer(
 );
 
 export default function App() {
-
   useEffect(() => {
-    NavigationBar.setColor(color.black)
-  }, [])
+    NavigationBar.setColor(color.black);
+  }, []);
 
   return (
     <Provider store={store}>
+      <StatusBar barStyle="light-content" backgroundColor={color.black} />
       <AppContainer />
     </Provider>
   );

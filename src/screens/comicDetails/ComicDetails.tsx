@@ -25,17 +25,21 @@ import {
   getRelatedComicsByCreatorsIdAction,
   getComicByIdAction,
   resetRelatedComicsAction,
+  resetSelectedComicAction,
 } from "../../store/actions/comicsActions/comicsActions";
 import { NavigationStackProp } from "react-navigation-stack";
 import { color } from "../../utils/themes/colors";
 import comicDetailsBg from "../../assets/screensBgs/comicDetailsBg.png";
-import { getUserComicsAction } from "../../store/actions/userActions/userActions";
+import {
+  getUserComicsAction,
+} from "../../store/actions/userActions/userActions";
 import Loading from "../../components/loading/Loading";
 
 type ComicDetailsProps = {
   navigation: NavigationStackProp;
   getSelectedComic: typeof getComicByIdAction;
   selectedComic: Comic;
+  resetSelectedComic: typeof resetSelectedComicAction;
   getRelatedComics: typeof getRelatedComicsByCreatorsIdAction;
   relatedComics: Comic[];
   resetRelatedComics: typeof resetRelatedComicsAction;
@@ -46,6 +50,7 @@ type ComicDetailsProps = {
 const ComicDetails: React.FC<ComicDetailsProps> = ({
   navigation,
   getSelectedComic,
+  resetSelectedComic,
   selectedComic,
   getRelatedComics,
   relatedComics,
@@ -79,8 +84,11 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
   useEffect(() => {
     return () => {
       resetRelatedComics();
+      setAddedToCart(false);
+      setAddedToWhish(false);
+      resetSelectedComic();
     };
-  }, [selectedComic]);
+  }, []);
 
   const addToCartList = () => {
     try {
@@ -288,6 +296,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch) => ({
   getSelectedComic: (comicId: number, comics: Comic[]) =>
     dispatch(getComicByIdAction(comicId, comics)),
+  resetSelectedComic: () => dispatch(resetSelectedComicAction()),
   getRelatedComics: (creators: Creator[], offset: number) =>
     dispatch(getRelatedComicsByCreatorsIdAction(creators, offset)),
   resetRelatedComics: () => dispatch(resetRelatedComicsAction()),

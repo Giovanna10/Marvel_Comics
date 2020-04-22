@@ -6,7 +6,6 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
-  View,
 } from "react-native";
 import releasesBg from "../../assets/screensBgs/releasesBg.png";
 import { releasesStyles } from "./releasesStyles";

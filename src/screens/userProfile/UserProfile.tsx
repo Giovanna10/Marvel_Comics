@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import * as firebase from "firebase";
-import { getUserLoggedOutAction } from "../../store/actions/userActions/userActions";
-import { LoginManager } from "react-native-fbsdk";
-import { GoogleSignin } from "react-native-google-signin";
 import { AppState } from "../../store/store";
 import {
   User,
@@ -25,37 +21,21 @@ import redTrash from "../../assets/red-trash-can-outline.png";
 import yellowCart from "../../assets/yellow-cart.png";
 import profileStyle from "./profileStyles";
 import { color } from "../../utils/themes/colors";
+import { size } from "../../utils/themes/sizes";
 
 type ProfileProps = {
-  getUserLoggedOut: typeof getUserLoggedOutAction;
   userLogged: boolean;
   userInfo: User;
   userComics: UserComics;
 };
 
-const Profile: React.FC<ProfileProps> = ({
-  getUserLoggedOut,
-  userInfo,
-  userComics,
-}) => {
+const Profile: React.FC<ProfileProps> = ({ userInfo, userComics }) => {
   const styles = profileStyle;
 
   const [quantity, setQuantity] = useState(1);
 
-  const signOutUser = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        getUserLoggedOut();
-        LoginManager.logOut();
-        GoogleSignin.signOut();
-      });
-  };
-
   const renderCartComics = ({ item, index }) => {
     const title = item.title.split(" (")[0];
-
     return (
       <>
         {/* COMIC */}
@@ -69,10 +49,7 @@ const Profile: React.FC<ProfileProps> = ({
             />
           </View>
           <View style={styles.comicDescriptionContainerCart}>
-            <Text
-              numberOfLines={4}
-              style={[styles.comicTitle, { position: "absolute" }]}
-            >
+            <Text numberOfLines={4} style={styles.comicTitle}>
               {title}
             </Text>
             <Text
@@ -84,14 +61,26 @@ const Profile: React.FC<ProfileProps> = ({
               Price: {item.price}
             </Text>
             <TouchableHighlight style={{ position: "absolute", bottom: "10%" }}>
-              <View style={styles.qntContainer}>
-                <View style={{ width: "70%" }}>
-                  <Text>{quantity}</Text>
+              <>
+                <Text
+                  style={{
+                    color: color.title,
+                    fontSize: size.titleTextField,
+                    fontWeight: 'bold',
+                    marginBottom: 5
+                  }}
+                >
+                  QTY
+                </Text>
+                <View style={styles.qntContainer}>
+                  <View style={{ width: "70%" }}>
+                    <Text>{quantity}</Text>
+                  </View>
+                  <View style={{ width: "30%" }}>
+                    <Icon name="chevron-down" size={15} />
+                  </View>
                 </View>
-                <View style={{ width: "30%" }}>
-                  <Icon name="chevron-down" size={15} />
-                </View>
-              </View>
+              </>
             </TouchableHighlight>
           </View>
           {/* SEPARATORS */}
@@ -128,7 +117,11 @@ const Profile: React.FC<ProfileProps> = ({
             <Text numberOfLines={2} style={styles.comicTitle}>
               {title}
             </Text>
-            <Text style={styles.comicDetails}>Price: {item.price}</Text>
+            <Text
+              style={[styles.comicDetails, { position: "absolute", top: 35 }]}
+            >
+              Price: {item.price}
+            </Text>
           </View>
           <View style={styles.iconContainer}>
             <TouchableHighlight
@@ -219,10 +212,4 @@ const mapStateToProps = (state: AppState) => ({
   userComics: state.user.userComics,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  getUserLoggedOut: () => {
-    dispatch(getUserLoggedOutAction());
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, null)(Profile);

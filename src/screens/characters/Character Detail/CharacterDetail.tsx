@@ -1,21 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { characterDetailStyles } from "./characterDetailStyles";
 import { connect } from "react-redux";
 import { AppState } from "../../../store/store";
 import {
-  View,
   Text,
-  Image,
   TouchableOpacity,
   FlatList,
-  ScrollView,
   ImageBackground,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
 import { getSingleCharacterAction } from "../../../store/actions/charactersActions/charactersActions";
 import { NavigationStackProp } from "react-navigation-stack";
 import Header from "../../../components/header/Header";
@@ -24,8 +17,6 @@ import {
   Comic,
 } from "../../../store/actions/actionsTypes/ActionsTypes";
 import { getComicByIdAction } from "../../../store/actions/comicsActions/comicsActions";
-import { color } from "../../../utils/themes/colors";
-import { screenDimensions } from "../../../utils/themes/sizes";
 
 type CharacterDetailProps = {
   singleCharacter: Character;
@@ -39,7 +30,6 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
   getSingleCharacter,
   singleCharacter,
   getSelectedComic,
-  relatedComics,
   navigation,
 }) => {
   const styles = characterDetailStyles;
@@ -55,10 +45,8 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
     getSingleCharacter(navigation.state.params);
   }, [navigation.state.params]);
 
-  const handleComicPress = (uri) => {
-    const comicId = uri;
-    const splittedId = comicId.split("/");
-    getSelectedComic(splittedId[6], relatedComics, characterState);
+  const handleComicPress = (comicId: string) => {
+    getSelectedComic(comicId, singleCharacter.comics.items, characterState);
     navigation.navigate("ComicDetails");
   };
 
@@ -77,7 +65,7 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
   const renderComics = ({ item }) => (
     <TouchableOpacity
       style={styles.comicContainer}
-      onPress={() => handleComicPress(item.resourceURI)}
+      onPress={() => handleComicPress(item.id)}
     >
       <Text style={styles.comicName}> {item.name} </Text>
     </TouchableOpacity>

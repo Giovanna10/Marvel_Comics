@@ -16,7 +16,7 @@ const loginStyle = StyleSheet.create({
   },
   logoContainer: {
     alignItems: "center",
-    marginTop: hp("4%"), //CHANGED
+    marginTop: hp("4%"),
     marginBottom: hp("1%")
   },
   logo: { width: 114, height: 86 },
@@ -49,7 +49,7 @@ const loginStyle = StyleSheet.create({
     color: color.white,
     marginHorizontal: wp("10%")
   },
-  loginBtnsContainer: { marginTop: hp("7%") },//CHANGED
+  loginBtnsContainer: { marginTop: hp("7%") },
   loginBtnContainer: {
     alignItems: "center",
     marginTop: hp("1%"),
@@ -65,7 +65,6 @@ const loginStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    // marginTop: hp("1%")
   },
   warning: { color: color.white, fontSize: size.description },
   link: {

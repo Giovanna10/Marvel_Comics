@@ -2,14 +2,17 @@ import comics from "../../../interceptors/comicsInterceptor";
 import news from "../../../interceptors/newsInterceptor";
 import relatedComics from "../../../interceptors/relatedComics";
 import {
-  Comic,
-  Creator,
-  Character,
   GET_YEAR_COMICS,
   GET_NEWS,
   GET_SELECTED_COMIC,
   GET_RELATED_COMICS,
   RESET_RELATED,
+  RESET_SELECTED_COMIC,
+  Comic,
+  Creator,
+  Character,
+  ComicsItem,
+  News,
 } from "../actionsTypes/ActionsTypes";
 import {
   API_HOST_KEY as KEY,
@@ -63,7 +66,7 @@ export function getComicsNewsAction() {
   };
   return async (dispatch) => {
     const { data } = await news.get("", { params });
-    const comicsNews = data.articles.results.map((news) => ({
+    const comicsNews: News[] = data.articles.results.map((news) => ({
       id: news.uri,
       title: news.title,
       source: news.source.title,
@@ -127,8 +130,8 @@ export function getYearlyComicsAction(offset?: number) {
 }
 
 export function getComicByIdAction(
-  comicId: number,
-  comicsArray: Comic[],
+  comicId: number | string,
+  comicsArray: Comic[] | ComicsItem[],
   characterState?: boolean
 ) {
   const params = {
@@ -171,6 +174,32 @@ export function getComicByIdAction(
   };
 }
 
+export function resetSelectedComicAction() {
+  return {
+    type: RESET_SELECTED_COMIC,
+    payload: {
+      id: 0,
+      title: "",
+      comicNumber: "",
+      description: "",
+      modificationDate: "",
+      creationDate: "",
+      pageCount: 0,
+      price: 0,
+      thumbnail: {
+        path: "",
+        extension: "",
+      },
+      images: [],
+      creators: {
+        items: [],
+        returned: 0,
+      },
+      characters: [],
+    },
+  };
+}
+
 export function getRelatedComicsByCreatorsIdAction(
   creators: Creator[],
   offset?: number
@@ -185,9 +214,16 @@ export function getRelatedComicsByCreatorsIdAction(
     formatType: "comic",
   };
   return async (dispatch) => {
-    const editor = creators.find((creator) => creator.role === "editor");
-
-    const { data } = await relatedComics.get(`${editor.id}/comics`, { params });
+    let editor: Creator = {
+      resourceURI: "",
+      id: "",
+      name: "",
+      role: "",
+    };
+    editor = creators.find((creator) => creator.role === "editor");
+    const { data } = await relatedComics.get(`${editor.id}/comics`, {
+      params,
+    });
 
     const related: Comic[] = data.data.results.map((comic) => {
       const usefulData = usefulFunction(

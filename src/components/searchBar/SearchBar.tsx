@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { TextInput, Animated, Platform } from "react-native";
+import { TextInput, Animated } from "react-native";
 import { searchStyles } from "./styles/searchStyles";
 import { AppState } from "../../store/store";
 import { NavigationStackProp } from "react-navigation-stack";

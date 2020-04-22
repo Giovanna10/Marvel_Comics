@@ -1,11 +1,12 @@
 import {
-  GET_YEAR_COMICS,
   Action,
   ComicsActionInterface,
+  GET_YEAR_COMICS,
   GET_NEWS,
   GET_SELECTED_COMIC,
   GET_RELATED_COMICS,
   RESET_RELATED,
+  RESET_SELECTED_COMIC,
 } from "../../actions/actionsTypes/ActionsTypes";
 import { ComicsState } from "../../statesTypes/StatesTypes";
 
@@ -52,11 +53,11 @@ export default function (
         ...state,
         selectedComic: action.payload,
       };
-    case RESET_RELATED:
-      return {
-        ...state,
-        relatedComics: action.payload,
-      };
+    case RESET_SELECTED_COMIC: 
+    return {
+      ...state,
+      selectedComic: action.payload
+    }
     case GET_RELATED_COMICS:
       return {
         ...state,
@@ -64,6 +65,11 @@ export default function (
           [],
           [...state.relatedComics, action.payload]
         ),
+      };
+    case RESET_RELATED:
+      return {
+        ...state,
+        relatedComics: action.payload,
       };
     default:
       return state;

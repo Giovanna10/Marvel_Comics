@@ -15,14 +15,14 @@ import marvel_Logo from "../../../assets/marvel_Logo.png";
 import { color } from "../../../utils/themes/colors";
 import authStyles from "../authStyles";
 import CornerButton from "../../../components/cornerButton/CornerButton";
-import { getUserLoggedAction } from "../../../store/actions/userActions/userActions";
+import { setUserLoggedAction } from "../../../store/actions/userActions/userActions";
 import { AppState } from "../../../store/store";
 
 type RegistrationProps = {
-  getUserLogged: typeof getUserLoggedAction;
+  setUserLogged: typeof setUserLoggedAction;
 };
 
-const Registration: React.FC<RegistrationProps> = () => {
+const Registration: React.FC<RegistrationProps> = ({setUserLogged}) => {
   const styles = authStyles;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,9 +39,11 @@ const Registration: React.FC<RegistrationProps> = () => {
               displayName: name
             });
           })
+          .then(() => setUserLogged())
           .catch(error => setErrorMessage(error.message))
       : setErrorMessage("The username is invalid.");
   };
+  
   return (
     <View style={styles.screenContainer}>
       <ImageBackground
@@ -95,7 +97,7 @@ const Registration: React.FC<RegistrationProps> = () => {
             style={styles.signupBtnContainer}
             onPress={handleRegistration}
           >
-            <CornerButton textBtn='SIGN UP' btnColor={color.yellow} />
+            <CornerButton textBtn='SIGN UP' btnColor={color.yellow} textColor={color.black} />
           </TouchableOpacity>
           <View
             style={styles.warningContainer}
@@ -115,7 +117,7 @@ const mapStateToProps = (state:AppState) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getUserLogged: () => dispatch(getUserLoggedAction())
+  setUserLogged: () => dispatch(setUserLoggedAction())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registration);

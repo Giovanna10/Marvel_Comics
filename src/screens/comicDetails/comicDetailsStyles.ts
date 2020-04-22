@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from "react-native";
+import { StyleSheet } from "react-native";
 import { size, screenDimensions } from "../../utils/themes/sizes";
 import { color } from "../../utils/themes/colors";
 import {

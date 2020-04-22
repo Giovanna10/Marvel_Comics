@@ -9,7 +9,6 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
-  Button,
 } from "react-native";
 import charactersBg from "../../../assets/screensBgs/charactersBg.png";
 import Header from "../../../components/header/Header";

@@ -1,10 +1,6 @@
 import { StyleSheet } from "react-native";
 import { color } from "../../utils/themes/colors";
 import { size } from "../../utils/themes/sizes";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 
 const profileStyles = StyleSheet.create({
   //USER INFO
@@ -53,7 +49,6 @@ const profileStyles = StyleSheet.create({
   comicContainerCart: {
     display: "flex",
     flexDirection: "row",
-    // marginHorizontal: 30,
   },
   comicContainerWhish: {
     marginHorizontal: 20,
@@ -76,6 +71,7 @@ const profileStyles = StyleSheet.create({
     color: color.title,
     fontSize: size.comicTitle,
     fontWeight: "bold",
+    position: "absolute",
   },
   comicSubtitle: {
     color: color.subtitle,
@@ -99,7 +95,6 @@ const profileStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: 120,
-    marginTop: 5,
   },
   cartIconContainer: { width: "85%" },
   smallTrashIconContainer: { width: "15%" },
@@ -108,7 +103,7 @@ const profileStyles = StyleSheet.create({
     marginLeft: 40,
   },
   icon: { width: 30, height: 30 },
-  smallIcon: { width: 20, height: 20 },
+  smallIcon: { width: 20, height: 20, position: "absolute", top: 60 },
   //SEPARATORS
   verticalSeparatorCart: {
     height: 130,

@@ -14,8 +14,7 @@ import { NavigationStackProp } from "react-navigation-stack";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
 import { GoogleSignin } from "react-native-google-signin";
 import {
-  getUserLoggedAction,
-  getUserLoggedOutAction
+  setUserLoggedAction,
 } from "../../../store/actions/userActions/userActions";
 import marvelBackground from "../../../assets/marvelBackground.jpg";
 import marvel_Logo from "../../../assets/marvel_Logo.png";
@@ -26,11 +25,10 @@ import { AppState } from "../../../store/store";
 
 type LoginProps = {
   navigation: NavigationStackProp;
-  getUserLogged: typeof getUserLoggedAction;
-  userLogged: boolean;
+  setUserLogged: typeof setUserLoggedAction;
 };
 
-const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
+const Login: React.FC<LoginProps> = ({ navigation, setUserLogged }) => {
   const styles = authStyles;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,7 +56,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
     return firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(getUserLogged)
+      .then(() => setUserLogged())
       .catch(error => setErrorMessage(error.message));
   };
 
@@ -77,7 +75,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
         return firebase.auth().signInWithCredential(credential);
       })
       .then(() => {
-        getUserLogged();
+        setUserLogged();
         navigation.navigate("App");
       })
       .catch(error => {
@@ -94,7 +92,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
         return firebase.auth().signInWithCredential(credential);
       })
       .then(() => {
-        getUserLogged();
+        setUserLogged();
         navigation.navigate("App");
       })
       .catch(error => {
@@ -147,7 +145,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
               style={styles.loginBtnContainer}
               onPress={handleLogin}
             >
-              <CornerButton textBtn="LOGIN" btnColor={color.yellow} />
+              <CornerButton textBtn="LOGIN" btnColor={color.yellow} textColor={color.black} />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.loginBtnContainer}
@@ -158,6 +156,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
                 fbBtn
                 textBtn="Login with Facebook"
                 btnColor="#4269A4"
+                textColor={color.white}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -169,6 +168,7 @@ const Login: React.FC<LoginProps> = ({ navigation, getUserLogged }) => {
                 googleBtn
                 textBtn="Login with Google"
                 btnColor={color.white}
+                textColor={color.black}
               />
             </TouchableOpacity>
           </View>
@@ -191,8 +191,7 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getUserLogged: () => dispatch(getUserLoggedAction()),
-  getUserLoggedOut: () => dispatch(getUserLoggedOutAction())
+  setUserLogged: () => dispatch(setUserLoggedAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

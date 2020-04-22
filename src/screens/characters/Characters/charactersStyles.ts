@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { screenDimensions } from "../../../utils/themes/sizes";
 import { color } from "../../../utils/themes/colors";
 import {
   heightPercentageToDP as hp,

@@ -30,7 +30,6 @@ const NewsList: React.FC<ListProps> = ({ news }) => {
       imageStyle={{ opacity: 0.15 }}
     >
       <Text
-        // numberOfLines={4}
         style={[styles.title, { marginVertical: "2%" }]}
       >
         {item.title}

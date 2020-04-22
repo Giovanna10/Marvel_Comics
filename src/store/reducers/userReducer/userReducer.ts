@@ -1,8 +1,8 @@
 import {
-  USER_LOGGED,
-  USER_LOGGED_OUT,
   Action,
   UserActionInterface,
+  USER_LOGGED,
+  USER_LOGGED_OUT,
   USER_INFO,
   GET_USER_COMICS,
 } from "../../actions/actionsTypes/ActionsTypes";
@@ -33,7 +33,7 @@ export default function userReducer(
     case USER_LOGGED_OUT:
       return {
         ...state,
-        loggedIn: action.payload,
+        user: action.payload,
       };
     case USER_INFO:
       return {
