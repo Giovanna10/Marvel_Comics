@@ -10,6 +10,7 @@ export interface UserState {
   loggedIn: boolean;
   user: User;
   userComics: UserComics;
+  openModal: boolean;
 }
 
 export interface ComicsState {

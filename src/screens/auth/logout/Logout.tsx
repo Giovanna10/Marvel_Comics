@@ -12,7 +12,10 @@ import {
 import { NavigationStackProp } from "react-navigation-stack";
 import { LoginManager } from "react-native-fbsdk";
 import { GoogleSignin } from "react-native-google-signin";
-import { setUserLoggedOutAction } from "../../../store/actions/userActions/userActions";
+import {
+  setUserLoggedOutAction,
+  resetUserComicsAction,
+} from "../../../store/actions/userActions/userActions";
 import marvelBackground from "../../../assets/marvelBackground.jpg";
 import marvel_Logo from "../../../assets/marvel_Logo.png";
 import { color } from "../../../utils/themes/colors";
@@ -23,12 +26,18 @@ import { AppState } from "../../../store/store";
 type LogoutProps = {
   navigation: NavigationStackProp;
   setUserLoggetOut: typeof setUserLoggedOutAction;
+  resetUserComics: typeof resetUserComicsAction;
 };
 
-const Logout: React.FC<LogoutProps> = ({ navigation, setUserLoggetOut }) => {
+const Logout: React.FC<LogoutProps> = ({
+  navigation,
+  setUserLoggetOut,
+  resetUserComics,
+}) => {
   const styles = authStyles;
 
   const signOutUser = () => {
+    resetUserComics();
     firebase
       .auth()
       .signOut()
@@ -99,6 +108,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setUserLoggetOut: () => dispatch(setUserLoggedOutAction()),
+  resetUserComics: () => dispatch(resetUserComicsAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Logout);

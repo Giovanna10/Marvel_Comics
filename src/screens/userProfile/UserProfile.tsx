@@ -22,14 +22,27 @@ import yellowCart from "../../assets/yellow-cart.png";
 import profileStyle from "./profileStyles";
 import { color } from "../../utils/themes/colors";
 import { size } from "../../utils/themes/sizes";
+import QuantityModal from "../../components/quantityModal/QuantityModal";
+import {
+  openQuantityModalAction,
+  closeQuantityModalAction,
+} from "../../store/actions/userActions/userActions";
 
 type ProfileProps = {
   userLogged: boolean;
   userInfo: User;
   userComics: UserComics;
+  openModal: boolean;
+  openQuantityModal: typeof openQuantityModalAction;
+  closeQuantityModal: typeof closeQuantityModalAction;
 };
 
-const Profile: React.FC<ProfileProps> = ({ userInfo, userComics }) => {
+const Profile: React.FC<ProfileProps> = ({
+  userInfo,
+  userComics,
+  openQuantityModal,
+  openModal,
+}) => {
   const styles = profileStyle;
 
   const [quantity, setQuantity] = useState(1);
@@ -60,14 +73,17 @@ const Profile: React.FC<ProfileProps> = ({ userInfo, userComics }) => {
             >
               Price: {item.price}
             </Text>
-            <TouchableHighlight style={{ position: "absolute", bottom: "10%" }}>
+            <TouchableHighlight
+              onPress={() => openQuantityModal()}
+              style={{ position: "absolute", bottom: "10%" }}
+            >
               <>
                 <Text
                   style={{
                     color: color.title,
                     fontSize: size.titleTextField,
-                    fontWeight: 'bold',
-                    marginBottom: 5
+                    fontWeight: "bold",
+                    marginBottom: 5,
                   }}
                 >
                   QTY
@@ -117,11 +133,7 @@ const Profile: React.FC<ProfileProps> = ({ userInfo, userComics }) => {
             <Text numberOfLines={2} style={styles.comicTitle}>
               {title}
             </Text>
-            <Text
-              style={[styles.comicDetails, { position: "absolute", top: 35 }]}
-            >
-              Price: {item.price}
-            </Text>
+            <Text style={styles.comicDetails}>Price: {item.price}</Text>
           </View>
           <View style={styles.iconContainer}>
             <TouchableHighlight
@@ -146,7 +158,7 @@ const Profile: React.FC<ProfileProps> = ({ userInfo, userComics }) => {
 
   return (
     <LinearGradient
-      style={{ flex: 1 }}
+      style={{ flex: 1, height: "100%" }}
       colors={["#000000", "#ae0000"]}
       start={{ x: 1, y: 0.4 }}
       end={{ x: 1, y: 2 }}
@@ -202,6 +214,7 @@ const Profile: React.FC<ProfileProps> = ({ userInfo, userComics }) => {
           />
         </View>
       </SafeAreaView>
+      {openModal && <QuantityModal />}
     </LinearGradient>
   );
 };
@@ -210,6 +223,11 @@ const mapStateToProps = (state: AppState) => ({
   userLogged: state.user.loggedIn,
   userInfo: state.user.user,
   userComics: state.user.userComics,
+  openModal: state.user.openModal,
 });
 
-export default connect(mapStateToProps, null)(Profile);
+const mapDispatchToProps = (dispatch) => ({
+  openQuantityModal: () => dispatch(openQuantityModalAction()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

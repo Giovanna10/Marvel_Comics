@@ -5,6 +5,9 @@ import {
   USER_LOGGED_OUT,
   USER_INFO,
   GET_USER_COMICS,
+  RESET_USER_COMICS,
+  OPEN_QTY_MODAL,
+  CLOSE_QTY_MODAL,
 } from "../../actions/actionsTypes/ActionsTypes";
 import { UserState } from "../../statesTypes/StatesTypes";
 
@@ -18,6 +21,7 @@ const initialState: UserState = {
     whished: [],
     inCart: [],
   },
+  openModal: false,
 };
 
 export default function userReducer(
@@ -45,6 +49,22 @@ export default function userReducer(
         ...state,
         userComics: action.payload,
       };
+    case RESET_USER_COMICS:
+      return {
+        ...state,
+        userComics: action.payload,
+      };
+    case OPEN_QTY_MODAL:
+      return {
+        ...state,
+        openModal: action.payload,
+      };
+    case CLOSE_QTY_MODAL: {
+      return {
+        ...state,
+        openModal: action.payload,
+      };
+    }
     default:
       return state;
   }

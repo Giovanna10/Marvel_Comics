@@ -71,7 +71,7 @@ const profileStyles = StyleSheet.create({
     color: color.title,
     fontSize: size.comicTitle,
     fontWeight: "bold",
-    position: "absolute",
+    // position: "absolute",
   },
   comicSubtitle: {
     color: color.subtitle,
@@ -103,7 +103,7 @@ const profileStyles = StyleSheet.create({
     marginLeft: 40,
   },
   icon: { width: 30, height: 30 },
-  smallIcon: { width: 20, height: 20, position: "absolute", top: 60 },
+  smallIcon: { width: 20, height: 20 },
   //SEPARATORS
   verticalSeparatorCart: {
     height: 130,

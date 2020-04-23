@@ -60,7 +60,7 @@ const Releases: React.FC<ReleasesProps> = ({
   const styles = releasesStyles;
 
   const [offset, setOffset] = useState<number>(8);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);  
 
   useEffect(() => {
     news.length === 0 && getComicsNews();

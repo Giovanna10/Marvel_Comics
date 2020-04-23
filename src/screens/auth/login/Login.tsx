@@ -13,15 +13,14 @@ import {
 import { NavigationStackProp } from "react-navigation-stack";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
 import { GoogleSignin } from "react-native-google-signin";
-import {
-  setUserLoggedAction,
-} from "../../../store/actions/userActions/userActions";
+import { setUserLoggedAction } from "../../../store/actions/userActions/userActions";
 import marvelBackground from "../../../assets/marvelBackground.jpg";
 import marvel_Logo from "../../../assets/marvel_Logo.png";
 import { color } from "../../../utils/themes/colors";
 import authStyles from "../authStyles";
 import CornerButton from "../../../components/cornerButton/CornerButton";
 import { AppState } from "../../../store/store";
+import { db } from "../../../../App";
 
 type LoginProps = {
   navigation: NavigationStackProp;
@@ -38,7 +37,7 @@ const Login: React.FC<LoginProps> = ({ navigation, setUserLogged }) => {
     GoogleSignin.configure({
       scopes: [
         "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/userinfo.profile"
+        "https://www.googleapis.com/auth/userinfo.profile",
       ],
       webClientId:
         "710067175098-nblsjk2loski11il7vecpr89fddstspv.apps.googleusercontent.com",
@@ -48,7 +47,7 @@ const Login: React.FC<LoginProps> = ({ navigation, setUserLogged }) => {
       hostedDomain: "",
       loginHint: "",
       forceConsentPrompt: true, //ANDROID
-      accountName: "" //ANDROID
+      accountName: "", //ANDROID
     });
   }, []);
 
@@ -56,46 +55,61 @@ const Login: React.FC<LoginProps> = ({ navigation, setUserLogged }) => {
     return firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => setUserLogged())
-      .catch(error => setErrorMessage(error.message));
+      .then(() => {
+        db.collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            name: firebase.auth().currentUser.displayName,
+            accout: "Email",
+          });
+      })
+      .catch((error) => setErrorMessage(error.message));
   };
 
   const handleFBLogin = () => {
     LoginManager.logInWithPermissions(["public_profile"])
-      .then(result => {
+      .then((result) => {
         if (result.isCancelled) {
           return Promise.reject(new Error("The User cancelled the request"));
         }
         return AccessToken.getCurrentAccessToken();
       })
-      .then(data => {
+      .then((data) => {
         const credential = firebase.auth.FacebookAuthProvider.credential(
           data.accessToken
         );
         return firebase.auth().signInWithCredential(credential);
       })
       .then(() => {
-        setUserLogged();
-        navigation.navigate("App");
+        db.collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            name: firebase.auth().currentUser.displayName,
+            accout: "Facebook",
+          });
       })
-      .catch(error => {
+      .catch((error) => {
         setErrorMessage(error.message);
       });
   };
 
   const handleGoogleLogin = () => {
     GoogleSignin.signIn()
-      .then(data => {
+      .then((data) => {
         const credential = firebase.auth.GoogleAuthProvider.credential(
           data.idToken
         );
         return firebase.auth().signInWithCredential(credential);
       })
       .then(() => {
-        setUserLogged();
-        navigation.navigate("App");
+        db.collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            name: firebase.auth().currentUser.displayName,
+            accout: "Google",
+          });
       })
-      .catch(error => {
+      .catch((error) => {
         setErrorMessage(error.message);
       });
   };
@@ -125,7 +139,7 @@ const Login: React.FC<LoginProps> = ({ navigation, setUserLogged }) => {
               style={styles.input}
               autoCapitalize="none"
               value={email}
-              onChangeText={emailValue => setEmail(emailValue)}
+              onChangeText={(emailValue) => setEmail(emailValue)}
             />
           </View>
           <View>
@@ -136,7 +150,7 @@ const Login: React.FC<LoginProps> = ({ navigation, setUserLogged }) => {
               secureTextEntry
               autoCapitalize="none"
               value={password}
-              onChangeText={passwordValue => setPassword(passwordValue)}
+              onChangeText={(passwordValue) => setPassword(passwordValue)}
             />
           </View>
 
@@ -145,7 +159,11 @@ const Login: React.FC<LoginProps> = ({ navigation, setUserLogged }) => {
               style={styles.loginBtnContainer}
               onPress={handleLogin}
             >
-              <CornerButton textBtn="LOGIN" btnColor={color.yellow} textColor={color.black} />
+              <CornerButton
+                textBtn="LOGIN"
+                btnColor={color.yellow}
+                textColor={color.black}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.loginBtnContainer}
@@ -187,10 +205,10 @@ const Login: React.FC<LoginProps> = ({ navigation, setUserLogged }) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  userLogged: state.user.loggedIn
+  userLogged: state.user.loggedIn,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   setUserLogged: () => dispatch(setUserLoggedAction()),
 });
 

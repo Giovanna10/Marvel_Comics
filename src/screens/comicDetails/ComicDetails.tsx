@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import * as firebase from 'firebase'
 import { db } from "../../../App";
 import { connect } from "react-redux";
 import { AppState } from "../../store/store";
@@ -92,7 +93,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
 
   const addToCartList = () => {
     try {
-      db.collection("Cart").doc(selectedComic.title).set(selectedComic);
+      db.collection("Users").doc(firebase.auth().currentUser.uid).collection("Cart").doc(selectedComic.title).set(selectedComic);
     } catch (error) {
       console.log(error.message);
     }
@@ -101,7 +102,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
 
   const addToWhishes = () => {
     try {
-      db.collection("Whishlist").doc(selectedComic.title).set(selectedComic);
+      db.collection("Users").doc(firebase.auth().currentUser.uid).collection("Whishlist").doc(selectedComic.title).set(selectedComic);
     } catch (error) {
       console.log(error.message);
     }
