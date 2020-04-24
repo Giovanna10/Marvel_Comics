@@ -19,7 +19,7 @@ import {
 import { color } from "./src/utils/themes/colors";
 import ComicDetails from "./src/screens/comicDetails/ComicDetails";
 import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
-import { StatusBar, SafeAreaView, View } from "react-native";
+import { StatusBar, SafeAreaView, View, Text, Image } from "react-native";
 import NavigationBar from "react-native-navbar-color";
 import { screenDimensions } from "./src/utils/themes/sizes";
 import Logout from "./src/screens/auth/logout/Logout";
@@ -122,24 +122,39 @@ const ProfileStack = createStackNavigator(
   { headerMode: "none", initialRouteName: "Profile" }
 );
 
-const DrawerContentComponent = (props) => (
-  <SafeAreaView style={{ flex: 1 }}>
-    <View
-      style={{
-        paddingTop:
-          screenDimensions.height < 570
-            ? 300
-            : screenDimensions.height < 670
-            ? 400
-            : 550,
-      }}
-    >
-      <View style={{ backgroundColor: "#000000cc" }}>
-        <DrawerItems {...props} />
+const DrawerContentComponent = (props) => {
+  const currentUserName = firebase.auth().currentUser.displayName;
+  const currentUserImage = firebase.auth().currentUser.photoURL;
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View
+        style={{
+          paddingTop:
+            screenDimensions.height < 570
+              ? 300
+              : screenDimensions.height < 670
+                ? 400
+                : 15,
+        }}
+      >
+        <View style={{ alignSelf: 'center' }}>
+          <Image source={{ uri: currentUserImage }} style={{ width: 55, height: 51, borderRadius: 50 }} />
+        </View>
+        <Text style={{
+          color: color.title,
+          fontSize: 13,
+          textAlign: 'center',
+          fontWeight: 'bold',
+          paddingTop: 10
+        }}>{currentUserName}</Text>
+        <View style={{ backgroundColor: "#000000cc", paddingTop: 25 }}>
+          <DrawerItems {...props} />
+        </View>
       </View>
-    </View>
-  </SafeAreaView>
-);
+    </SafeAreaView>
+  )
+};
 
 const DrawerNavigationStack = createDrawerNavigator(
   {
@@ -184,7 +199,7 @@ const DrawerNavigationStack = createDrawerNavigator(
           />
         ),
       },
-      
+
     }
   },
   {

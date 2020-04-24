@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import * as firebase from "firebase";
+import { getUserComicsAction } from "../../store/actions/userActions/userActions";
 import { AppState } from "../../store/store";
 import {
-  User,
   UserComics,
 } from "../../store/actions/actionsTypes/ActionsTypes";
 import {
@@ -10,8 +11,7 @@ import {
   Text,
   Image,
   FlatList,
-  Platform,
-  SafeAreaView,
+  TouchableOpacity,
   TouchableHighlight,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -27,94 +27,74 @@ import {
   openQuantityModalAction,
   closeQuantityModalAction,
 } from "../../store/actions/userActions/userActions";
+import { db } from "../../../App";
+import { SafeAreaView } from "react-navigation";
 
 type ProfileProps = {
   userLogged: boolean;
-  userInfo: User;
   userComics: UserComics;
   openModal: boolean;
   openQuantityModal: typeof openQuantityModalAction;
   closeQuantityModal: typeof closeQuantityModalAction;
+  getUserComics: typeof getUserComicsAction;
 };
 
 const Profile: React.FC<ProfileProps> = ({
-  userInfo,
   userComics,
   openQuantityModal,
   openModal,
+  getUserComics,
 }) => {
   const styles = profileStyle;
 
   const [quantity, setQuantity] = useState(1);
 
-  const renderCartComics = ({ item, index }) => {
-    const title = item.title.split(" (")[0];
-    return (
-      <>
-        {/* COMIC */}
-        <View style={styles.comicContainerCart}>
-          <View style={{ display: "flex", flexDirection: "column" }}>
-            <Image
-              source={{
-                uri: `${item.thumbnail.path}/portrait_xlarge.jpg`,
-              }}
-              style={[styles.comic, { marginLeft: "5%" }]}
-            />
-          </View>
-          <View style={styles.comicDescriptionContainerCart}>
-            <Text numberOfLines={4} style={styles.comicTitle}>
-              {title}
-            </Text>
-            <Text
-              style={[
-                styles.comicDetails,
-                { position: "absolute", top: "40%" },
-              ]}
-            >
-              Price: {item.price}
-            </Text>
-            <TouchableHighlight
-              onPress={() => openQuantityModal()}
-              style={{ position: "absolute", bottom: "10%" }}
-            >
-              <>
-                <Text
-                  style={{
-                    color: color.title,
-                    fontSize: size.titleTextField,
-                    fontWeight: "bold",
-                    marginBottom: 5,
-                  }}
-                >
-                  QTY
-                </Text>
-                <View style={styles.qntContainer}>
-                  <View style={{ width: "70%" }}>
-                    <Text>{quantity}</Text>
-                  </View>
-                  <View style={{ width: "30%" }}>
-                    <Icon name="chevron-down" size={15} />
-                  </View>
-                </View>
-              </>
-            </TouchableHighlight>
-          </View>
-          {/* SEPARATORS */}
-          <View style={styles.verticalSeparatorCart} />
-          <TouchableHighlight
-            /* onPress={} */
-            style={styles.trashIconContainer}
-          >
-            <Image source={redTrash} style={styles.icon} />
-          </TouchableHighlight>
-        </View>
-        {index < userComics.inCart.length - 1 ? (
-          <View style={styles.horizontalSeparator} />
-        ) : (
-          <View style={{ marginTop: "5%", width: 140 }} />
-        )}
-      </>
+  const addToCartList = (id: number) => {
+    const comicFoundInWhish = userComics.whished.find(
+      (comic) => comic.id === id
     );
+    try {
+      db.collection("Users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("Cart")
+        .doc(comicFoundInWhish.title)
+        .set(comicFoundInWhish);
+    } catch (error) {
+      console.log(error.message);
+    }
+    getUserComics();
+  };
+
+  const deleteComicFromWishList = (id: number) => {
+    const comicFoundInWhish = userComics.whished.find(
+      (comic) => comic.id === id
+    );
+    try {
+      db.collection("Users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("Whishlist")
+        .doc(comicFoundInWhish.title)
+        .delete();
+    } catch (error) {
+      console.log(error.message);
+    }
+    getUserComics();
+  };
+
+  const deleteComicFromCart = (id: number) => {
+    const comicFoundInCart = userComics.inCart.find(
+      (comic) => comic.id === id
+    );
+    try {
+      db.collection("Users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("Cart")
+        .doc(comicFoundInCart.title)
+        .delete();
+    } catch (error) {
+      console.log(error.message);
+    }
+    getUserComics();
   };
 
   const renderWhishedComics = ({ item, index }) => {
@@ -129,7 +109,46 @@ const Profile: React.FC<ProfileProps> = ({
             }}
             style={styles.comic}
           />
-          <View style={styles.comicDescriptionContainerWhish}>
+          <View style={styles.comicDescriptionContainer}>
+            <Text numberOfLines={2} style={styles.comicTitle}>
+              {title}
+            </Text>
+            <Text style={styles.comicDetails}>Price: {item.price}</Text>
+          </View>
+          <View style={styles.iconContainer}>
+            <TouchableOpacity
+              onPress={() => addToCartList(item.id)} style={styles.cartIconContainer}
+            >
+              <Image source={yellowCart} style={styles.icon} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => deleteComicFromWishList(item.id)} style={styles.smallTrashIconContainer}
+            >
+              <Image source={redTrash} style={styles.icon} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* SEPARATOR */}
+        {index < userComics.whished.length - 1 ? (
+          <View style={styles.verticalSeparator} />
+        ) : null}
+      </View>
+    );
+  };
+
+  const renderCartComics = ({ item, index }) => {
+    const title = item.title.split(" (")[0];
+    return (
+      <View style={styles.comic_separator_container}>
+        {/* COMIC */}
+        <View style={styles.comicContainerCart}>
+          <Image
+            source={{
+              uri: `${item.thumbnail.path}/portrait_xlarge.jpg`,
+            }}
+            style={styles.comic}
+          />
+          <View style={styles.comicDescriptionContainer}>
             <Text numberOfLines={2} style={styles.comicTitle}>
               {title}
             </Text>
@@ -137,24 +156,36 @@ const Profile: React.FC<ProfileProps> = ({
           </View>
           <View style={styles.iconContainer}>
             <TouchableHighlight
-              /* onPress={} */ style={styles.cartIconContainer}
+              onPress={() => openQuantityModal()}
             >
-              <Image source={yellowCart} style={styles.smallIcon} />
+              <View style={styles.qntContainer}>
+                <View style={{ width: "70%" }}>
+                  <Text>{quantity}</Text>
+                </View>
+                <View style={{ width: "30%" }}>
+                  <Icon name="chevron-down" size={15} />
+                </View>
+              </View>
             </TouchableHighlight>
-            <TouchableHighlight
-              /* onPress={} */ style={styles.smallTrashIconContainer}
+            <TouchableOpacity
+              onPress={() => deleteComicFromCart(item.id)}
+              style={styles.trashIconContainer}
             >
-              <Image source={redTrash} style={styles.smallIcon} />
-            </TouchableHighlight>
+              <Image source={redTrash} style={styles.icon} />
+            </TouchableOpacity>
           </View>
         </View>
         {/* SEPARATOR */}
-        {index < userComics.whished.length - 1 ? (
-          <View style={styles.verticalSeparatorWhish} />
+        {index < userComics.inCart.length - 1 ? (
+          <View style={styles.verticalSeparator} />
         ) : null}
       </View>
     );
   };
+
+  const cartTotalPrice = userComics.inCart.reduce((prev, cur) => {
+    return prev + cur.price
+  }, 0)
 
   return (
     <LinearGradient
@@ -164,44 +195,9 @@ const Profile: React.FC<ProfileProps> = ({
       end={{ x: 1, y: 2 }}
     >
       <Header />
-      {/* USER INFO */}
-      <View
-        style={[
-          styles.userContainer,
-          Platform.OS === "android" && { paddingTop: "15%" },
-        ]}
-      >
-        <View style={styles.userImageContainer}>
-          <Image source={{ uri: userInfo.image }} style={styles.userImage} />
-        </View>
-        <View
-          style={[
-            styles.userNameContainer,
-            Platform.OS === "ios" && { paddingVertical: "10%" },
-          ]}
-        >
-          <Text style={styles.userName}>{userInfo.name}</Text>
-        </View>
-      </View>
-      {/* CART */}
-      <FlatList
-        data={userComics.inCart}
-        keyExtractor={(item) => `Key-${item.id}`}
-        renderItem={renderCartComics}
-        ListHeaderComponent={() => (
-          <View style={styles.cartListTitleContainer}>
-            <View style={styles.cartTitleContainer}>
-              <Text style={styles.listTitle}>CART</Text>
-            </View>
-          </View>
-        )}
-        bounces={false}
-        stickyHeaderIndices={[0]}
-        showsVerticalScrollIndicator={false}
-      />
       {/* WHISHLIST */}
-      <SafeAreaView style={{ marginBottom: "8%" }}>
-        <View style={{ marginBottom: "1%" }}>
+      <SafeAreaView style={{ marginBottom: "2%" }}>
+        <View>
           <View style={styles.listTitleContainer}>
             <Text style={styles.listTitle}>WHISHLIST</Text>
           </View>
@@ -215,19 +211,49 @@ const Profile: React.FC<ProfileProps> = ({
         </View>
       </SafeAreaView>
       {openModal && <QuantityModal />}
+      {/* CART */}
+      <View style={styles.cartListTitleContainer}>
+        <View style={styles.cartTitleContainer}>
+          <Text style={styles.listTitle}>CART</Text>
+        </View>
+      </View>
+      <FlatList
+        data={userComics.inCart}
+        keyExtractor={(item) => `Key-${item.id}`}
+        renderItem={renderCartComics}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      />
+      <View style={{
+        width: '100%', height: 70, backgroundColor: color.black,
+      }}>
+        <View style={styles.totalDetailsContainer}>
+          <Text style={styles.totalDetailsTitles}>TOT. QTY:
+            <Text style={styles.totalDetailsValues}> {userComics.inCart.length} </Text>
+          </Text>
+          <Text style={styles.totalDetailsTitles}>SUBTOTAL:
+            <Text style={styles.totalDetailsValues}> {cartTotalPrice.toFixed(2)} $ </Text>
+          </Text>
+        </View>
+        <TouchableOpacity>
+          <View style={styles.checkoutButtonContainer}>
+            <Text style={styles.checkoutButtonLabel}> CHECKOUT </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </LinearGradient>
   );
 };
 
 const mapStateToProps = (state: AppState) => ({
   userLogged: state.user.loggedIn,
-  userInfo: state.user.user,
   userComics: state.user.userComics,
   openModal: state.user.openModal,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   openQuantityModal: () => dispatch(openQuantityModalAction()),
+  getUserComics: () => dispatch(getUserComicsAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

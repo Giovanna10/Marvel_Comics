@@ -122,7 +122,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
     setAddedToWhish(false);
     getSelectedComic(id, relatedComics);
     navigation.navigate("ComicDetails");
-  };
+  };  
 
   const renderComic = ({ item }) => (
     <TouchableOpacity

@@ -140,7 +140,7 @@ export function getComicByIdAction(
     ts: TS,
   };
   return async (dispatch) => {
-    const selectedComic = comicsArray.find((comic) => comic.id === comicId);
+    const selectedComic = comicsArray.find((comic) => comic.id === comicId);    
     const { data } = await comics.get(`/${comicId}`, { params });
     const result = data.data.results[0];
     const usefulData = usefulFunction(
