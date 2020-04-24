@@ -3,9 +3,7 @@ import { connect } from "react-redux";
 import * as firebase from "firebase";
 import { getUserComicsAction } from "../../store/actions/userActions/userActions";
 import { AppState } from "../../store/store";
-import {
-  UserComics,
-} from "../../store/actions/actionsTypes/ActionsTypes";
+import { UserComics } from "../../store/actions/actionsTypes/ActionsTypes";
 import {
   View,
   Text,
@@ -82,9 +80,7 @@ const Profile: React.FC<ProfileProps> = ({
   };
 
   const deleteComicFromCart = (id: number) => {
-    const comicFoundInCart = userComics.inCart.find(
-      (comic) => comic.id === id
-    );
+    const comicFoundInCart = userComics.inCart.find((comic) => comic.id === id);
     try {
       db.collection("Users")
         .doc(firebase.auth().currentUser.uid)
@@ -113,16 +109,20 @@ const Profile: React.FC<ProfileProps> = ({
             <Text numberOfLines={2} style={styles.comicTitle}>
               {title}
             </Text>
-            <Text style={styles.comicDetails}>Price: {item.price}</Text>
+            {item.price !== 0 && (
+              <Text style={styles.comicDetails}>Price: {item.price} $</Text>
+            )}
           </View>
           <View style={styles.iconContainer}>
             <TouchableOpacity
-              onPress={() => addToCartList(item.id)} style={styles.cartIconContainer}
+              onPress={() => addToCartList(item.id)}
+              style={styles.leftIconContainer}
             >
               <Image source={yellowCart} style={styles.icon} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => deleteComicFromWishList(item.id)} style={styles.smallTrashIconContainer}
+              onPress={() => deleteComicFromWishList(item.id)}
+              style={styles.rightIconContainer}
             >
               <Image source={redTrash} style={styles.icon} />
             </TouchableOpacity>
@@ -152,10 +152,13 @@ const Profile: React.FC<ProfileProps> = ({
             <Text numberOfLines={2} style={styles.comicTitle}>
               {title}
             </Text>
-            <Text style={styles.comicDetails}>Price: {item.price}</Text>
+            {item.price !== 0 && (
+              <Text style={styles.comicDetails}>Price: {item.price} $</Text>
+            )}
           </View>
-          <View style={styles.iconContainer}>
+          <View style={[styles.iconContainer, { alignItems: "center" }]}>
             <TouchableHighlight
+              style={styles.leftIconContainer}
               onPress={() => openQuantityModal()}
             >
               <View style={styles.qntContainer}>
@@ -169,7 +172,7 @@ const Profile: React.FC<ProfileProps> = ({
             </TouchableHighlight>
             <TouchableOpacity
               onPress={() => deleteComicFromCart(item.id)}
-              style={styles.trashIconContainer}
+              style={[styles.rightIconContainer, { marginTop: 10 }]}
             >
               <Image source={redTrash} style={styles.icon} />
             </TouchableOpacity>
@@ -184,63 +187,78 @@ const Profile: React.FC<ProfileProps> = ({
   };
 
   const cartTotalPrice = userComics.inCart.reduce((prev, cur) => {
-    return prev + cur.price
-  }, 0)
+    return prev + cur.price;
+  }, 0);
 
   return (
     <LinearGradient
       style={{ flex: 1, height: "100%" }}
-      colors={["#000000", "#ae0000"]}
-      start={{ x: 1, y: 0.4 }}
-      end={{ x: 1, y: 2 }}
+      colors={["#ae0000", "#000000"]}
+      start={{ x: 1, y: 0.1 }}
+      end={{ x: 1, y: 0.4 }}
     >
       <Header />
       {/* WHISHLIST */}
-      <SafeAreaView style={{ marginBottom: "2%" }}>
-        <View>
-          <View style={styles.listTitleContainer}>
-            <Text style={styles.listTitle}>WHISHLIST</Text>
-          </View>
-          <FlatList
-            data={userComics.whished}
-            keyExtractor={(item) => `Key-${item.id}`}
-            renderItem={renderWhishedComics}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          />
+      <View>
+        <View style={styles.listTitleContainer}>
+          <Text style={styles.listTitle}>WHISHLIST</Text>
         </View>
-      </SafeAreaView>
-      {openModal && <QuantityModal />}
-      {/* CART */}
-      <View style={styles.cartListTitleContainer}>
-        <View style={styles.cartTitleContainer}>
+        <FlatList
+          data={userComics.whished}
+          keyExtractor={(item) => `Key-${item.id}`}
+          renderItem={renderWhishedComics}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+        {/* CART */}
+      </View>
+      <View>
+        <View
+          style={[
+            styles.listTitleContainer,
+            { borderTopWidth: 0.2, borderTopColor: color.mattYellow },
+          ]}
+        >
           <Text style={styles.listTitle}>CART</Text>
         </View>
+        <FlatList
+          data={userComics.inCart}
+          keyExtractor={(item) => `Key-${item.id}`}
+          renderItem={renderCartComics}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
       </View>
-      <FlatList
-        data={userComics.inCart}
-        keyExtractor={(item) => `Key-${item.id}`}
-        renderItem={renderCartComics}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      />
-      <View style={{
-        width: '100%', height: 70, backgroundColor: color.black,
-      }}>
-        <View style={styles.totalDetailsContainer}>
-          <Text style={styles.totalDetailsTitles}>TOT. QTY:
-            <Text style={styles.totalDetailsValues}> {userComics.inCart.length} </Text>
-          </Text>
-          <Text style={styles.totalDetailsTitles}>SUBTOTAL:
-            <Text style={styles.totalDetailsValues}> {cartTotalPrice.toFixed(2)} $ </Text>
-          </Text>
-        </View>
-        <TouchableOpacity>
-          <View style={styles.checkoutButtonContainer}>
-            <Text style={styles.checkoutButtonLabel}> CHECKOUT </Text>
+      <View
+        style={{
+          backgroundColor: color.black,
+        }}
+      >
+        <SafeAreaView>
+          <View style={styles.totalDetailsContainer}>
+            <Text style={styles.totalDetailsTitles}>
+              TOT. QTY:
+              <Text style={styles.totalDetailsValues}>
+                {" "}
+                {userComics.inCart.length}{" "}
+              </Text>
+            </Text>
+            <Text style={styles.totalDetailsTitles}>
+              SUBTOTAL:
+              <Text style={styles.totalDetailsValues}>
+                {" "}
+                {cartTotalPrice.toFixed(2)} ${" "}
+              </Text>
+            </Text>
           </View>
-        </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.checkoutButtonContainer}>
+              <Text style={styles.checkoutButtonLabel}> CHECKOUT </Text>
+            </View>
+          </TouchableOpacity>
+        </SafeAreaView>
       </View>
+      {openModal && <QuantityModal />}
     </LinearGradient>
   );
 };

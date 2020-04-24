@@ -81,3 +81,7 @@ export function closeQuantityModalAction() {
     payload: false
   }
 }
+
+export function getQuantity() {
+  
+}

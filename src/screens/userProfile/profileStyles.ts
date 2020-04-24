@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { color } from "../../utils/themes/colors";
-import { size } from "../../utils/themes/sizes";
+import { size, screenDimensions } from "../../utils/themes/sizes";
 
 const profileStyles = StyleSheet.create({
   //LISTS
@@ -17,11 +17,10 @@ const profileStyles = StyleSheet.create({
     paddingVertical: "1%",
   },
   listTitleContainer: {
-    borderTopWidth: 0.2,
-    borderTopColor: color.mattYellow,
-    paddingVertical: "1%",
-    backgroundColor: "#bdbdbd1c",
-    marginBottom: "4%",
+    height: 30,
+    justifyContent: 'center',
+    backgroundColor: "#bdbdbd5c",
+    marginBottom: '4%'
   },
   listTitle: {
     color: color.yellow,
@@ -43,8 +42,8 @@ const profileStyles = StyleSheet.create({
     marginBottom: 4,
   },
   comic: {
-    width: 85,
-    height: 135,
+    width: screenDimensions.height < 670 ? 85 : 120,
+    height: screenDimensions.height < 670 ? 135 : 180,
     borderColor: color.subtitle,
     borderWidth: 0.7,
     marginBottom: 10,
@@ -58,15 +57,14 @@ const profileStyles = StyleSheet.create({
     color: color.title,
     fontSize: size.comicTitle,
     fontWeight: "bold",
-  },
-  comicSubtitle: {
-    color: color.subtitle,
-    fontSize: size.comicDetails,
+    position: 'absolute',
   },
   comicDetails: {
     color: color.subtitle,
     fontSize: size.comicDetails,
     marginTop: 5,
+    position: 'absolute',
+    top: 30,
   },
   qntContainer: {
     display: "flex",
@@ -77,18 +75,16 @@ const profileStyles = StyleSheet.create({
     height: 30,
     borderRadius: 6,
     backgroundColor: color.white,
+    marginTop: 5
   },
   iconContainer: {
     display: "flex",
     flexDirection: "row",
     width: 120,
+    marginBottom: 5
   },
-  cartIconContainer: { width: "85%" },
-  smallTrashIconContainer: { width: "15%" },
-  trashIconContainer: {
-    justifyContent: "center",
-    marginLeft: 40,
-  },
+  leftIconContainer: { width: "85%", marginTop: 10 },
+  rightIconContainer: { width: "15%", marginTop: 10 },
   icon: { width: 20, height: 20 },
   //SEPARATORS
   verticalSeparator: {
@@ -100,10 +96,12 @@ const profileStyles = StyleSheet.create({
   },
   //CHECKOUT
   totalDetailsContainer: {
+    borderTopWidth: 0.2,
+    borderTopColor: color.mattYellow,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 20,
-    paddingTop: 5,
+    marginTop: 20
   },
   totalDetailsTitles: {
     fontSize: size.description,
@@ -121,7 +119,7 @@ const profileStyles = StyleSheet.create({
     height: 30,
     borderRadius: 5,
     justifyContent: 'center',
-    marginTop: 15
+    marginTop: 10
   },
   checkoutButtonLabel: {
     textAlign: 'center', 
