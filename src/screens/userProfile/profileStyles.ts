@@ -42,8 +42,8 @@ const profileStyles = StyleSheet.create({
     marginBottom: 4,
   },
   comic: {
-    width: screenDimensions.height < 670 ? 85 : 120,
-    height: screenDimensions.height < 670 ? 135 : 180,
+    width: screenDimensions.height < 670 ? 85 : 75,
+    height: screenDimensions.height < 670 ? 135 : 115,
     borderColor: color.subtitle,
     borderWidth: 0.7,
     marginBottom: 10,

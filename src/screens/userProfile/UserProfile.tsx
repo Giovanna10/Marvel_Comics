@@ -188,7 +188,7 @@ const Profile: React.FC<ProfileProps> = ({
 
   const cartTotalPrice = userComics.inCart.reduce((prev, cur) => {
     return prev + cur.price;
-  }, 0);
+  }, 0);  
 
   return (
     <LinearGradient
@@ -203,6 +203,7 @@ const Profile: React.FC<ProfileProps> = ({
         <View style={styles.listTitleContainer}>
           <Text style={styles.listTitle}>WHISHLIST</Text>
         </View>
+        {userComics.whished.length > 0 ? (
         <FlatList
           data={userComics.whished}
           keyExtractor={(item) => `Key-${item.id}`}
@@ -210,6 +211,12 @@ const Profile: React.FC<ProfileProps> = ({
           horizontal
           showsHorizontalScrollIndicator={false}
         />
+        ) : (
+          <View style={{alignItems: 'center', marginVertical: 65}}>
+            <Icon name="playlist-remove" size={65} color={color.yellow} />
+            <Text style={{fontSize: 15, fontWeight: 'bold', color: color.white}}> Your wishlist is empty. </Text>
+          </View>
+        )}
         {/* CART */}
       </View>
       <View>
@@ -221,6 +228,7 @@ const Profile: React.FC<ProfileProps> = ({
         >
           <Text style={styles.listTitle}>CART</Text>
         </View>
+        {userComics.inCart.length > 0 ? (
         <FlatList
           data={userComics.inCart}
           keyExtractor={(item) => `Key-${item.id}`}
@@ -228,6 +236,12 @@ const Profile: React.FC<ProfileProps> = ({
           horizontal
           showsHorizontalScrollIndicator={false}
         />
+        ) : (
+          <View style={{alignItems: 'center', marginVertical: 71}}>
+            <Icon name="cart-minus" size={65} color={color.yellow} />
+            <Text style={{fontSize: 15, fontWeight: 'bold', color: color.white}}> Your cart is empty. </Text>
+          </View>
+        )}
       </View>
       <View
         style={{
