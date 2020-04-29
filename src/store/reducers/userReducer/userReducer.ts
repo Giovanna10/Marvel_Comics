@@ -6,8 +6,14 @@ import {
   USER_INFO,
   GET_USER_COMICS,
   RESET_USER_COMICS,
-  OPEN_QTY_MODAL,
-  CLOSE_QTY_MODAL,
+  ADD_MORE_TO_CART,
+  GET_SELECTED_COMIC_ID_IN_CART,
+  GET_SELECTED_COMIC_IN_CART,
+  RESET_SELECTED_COMIC_IN_CART,
+  ADD_COMIC_TO_CART,
+  REMOVE_COMIC_FROM_CART,
+  RESET_SELECTED_COMIC_ID_IN_CART,
+  ADD_COMIC_FROM_WHISHES,
 } from "../../actions/actionsTypes/ActionsTypes";
 import { UserState } from "../../statesTypes/StatesTypes";
 
@@ -21,7 +27,22 @@ const initialState: UserState = {
     whished: [],
     inCart: [],
   },
-  openModal: false,
+  selectedComic: {
+    id: 0,
+    title: "",
+    comicNumber: "",
+    description: "",
+    modificationDate: "",
+    creationDate: "",
+    pageCount: 0,
+    price: 0,
+    thumbnail: { path: "", extension: "" },
+    images: [],
+    creators: { items: [], returned: 0 },
+    characters: [],
+    qtyInCart: 0,
+  },
+  selectedComicId: 0,
 };
 
 export default function userReducer(
@@ -54,17 +75,56 @@ export default function userReducer(
         ...state,
         userComics: action.payload,
       };
-    case OPEN_QTY_MODAL:
+    case GET_SELECTED_COMIC_IN_CART:
       return {
         ...state,
-        openModal: action.payload,
+        selectedComic: action.payload,
       };
-    case CLOSE_QTY_MODAL: {
+    case RESET_SELECTED_COMIC_IN_CART:
       return {
         ...state,
-        openModal: action.payload,
+        selectedComic: action.payload,
       };
-    }
+    case GET_SELECTED_COMIC_ID_IN_CART:
+      return {
+        ...state,
+        selectedComicId: action.payload,
+      };
+    case RESET_SELECTED_COMIC_ID_IN_CART:
+      return {
+        ...state,
+        selectedComicId: action.payload,
+      };
+    case ADD_COMIC_FROM_WHISHES:
+      return {
+        ...state,
+        userComics: {
+          ...state.userComics,
+          whished: state.userComics.whished.map((comic) =>
+            comic.id !== state.selectedComicId ? comic : action.payload
+          ),
+        },
+      };
+    case REMOVE_COMIC_FROM_CART:
+      return {
+        ...state,
+        userComics: {
+          ...state.userComics,
+          inCart: state.userComics.inCart.map((comic) =>
+            comic.id !== state.selectedComicId ? comic : action.payload
+          ),
+        },
+      };
+    case ADD_MORE_TO_CART:
+      return {
+        ...state,
+        userComics: {
+          ...state.userComics,
+          inCart: state.userComics.inCart.map((comic) =>
+            comic.id !== state.selectedComicId ? comic : action.payload
+          ),
+        },
+      };
     default:
       return state;
   }

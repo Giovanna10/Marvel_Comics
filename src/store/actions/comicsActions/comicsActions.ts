@@ -11,8 +11,12 @@ import {
   Comic,
   Creator,
   Character,
-  ComicsItem,
   News,
+  ADD_COMIC_TO_CART,
+  ADD_MORE_TO_CART,
+  REMOVE_COMIC_FROM_CART,
+  GET_SELECTED_COMIC_ID,
+  RESET_SELECTED_COMIC_ID,
 } from "../actionsTypes/ActionsTypes";
 import {
   API_HOST_KEY as KEY,
@@ -31,6 +35,7 @@ function usefulFunction(
   creators: Creator[],
   characters: Character[]
 ) {
+  const comicNumber = title.split("#")[1] !== undefined ? title.split("#")[1] : 0
   const characterItems = characters.map(
     (character: Character) => character.name
   );
@@ -44,8 +49,7 @@ function usefulFunction(
     };
   });
   return {
-    title: title.split("#")[0],
-    comicN: title.split("#")[1],
+    comicN: comicNumber,
     creationDate: JSON.stringify(creationDate).slice(1, 11),
     modificationDate: JSON.stringify(modificationDate).slice(1, 11),
     creators: creatorsItems,
@@ -105,7 +109,7 @@ export function getYearlyComicsAction(offset?: number) {
 
       return {
         id: comic.id,
-        title: usefulData.title,
+        title: comic.title,
         comicNumber: usefulData.comicN,
         description: comic.description,
         modificationDate: usefulData.modificationDate,
@@ -119,6 +123,7 @@ export function getYearlyComicsAction(offset?: number) {
           returned: comic.creators.returned,
         },
         characters: usefulData.characters,
+        qtyInCart: 0,
       };
     });
 
@@ -131,8 +136,8 @@ export function getYearlyComicsAction(offset?: number) {
 
 export function getComicByIdAction(
   comicId: number | string,
-  comicsArray: Comic[] | ComicsItem[],
-  characterState?: boolean
+  characterState?: boolean,
+  comicsArray?: Comic[]
 ) {
   const params = {
     apikey: KEY,
@@ -140,9 +145,13 @@ export function getComicByIdAction(
     ts: TS,
   };
   return async (dispatch) => {
-    const selectedComic = comicsArray.find((comic) => comic.id === comicId);    
+    const selectedComic: Comic =
+      !characterState && comicsArray.find((comic) => comic.id === comicId);
+
+    //COMIC FROM CHARACTER
     const { data } = await comics.get(`/${comicId}`, { params });
     const result = data.data.results[0];
+
     const usefulData = usefulFunction(
       result.title,
       result.dates[0].date,
@@ -152,7 +161,7 @@ export function getComicByIdAction(
     );
     const selectedComicCharacter: Comic = {
       id: result.id,
-      title: usefulData.title,
+      title: result.title,
       comicNumber: usefulData.comicN,
       description: result.description,
       modificationDate: usefulData.modificationDate,
@@ -166,11 +175,59 @@ export function getComicByIdAction(
         returned: result.creators.returned,
       },
       characters: usefulData.characters,
+      qtyInCart: 0,
     };
     return dispatch({
       type: GET_SELECTED_COMIC,
       payload: characterState ? selectedComicCharacter : selectedComic,
     });
+  };
+}
+
+export function getSelectedComicIdAction(selectedComic: Comic) {
+  return {
+    type: GET_SELECTED_COMIC_ID,
+    payload: selectedComic.id,
+  };
+}
+
+export function resetSelectedComicIdAction() {
+  return {
+    type: RESET_SELECTED_COMIC_ID,
+    payload: 0,
+  };
+}
+
+export function addComicToCartAction(selectedComic: Comic) {
+  return {
+    type: ADD_COMIC_TO_CART,
+    payload: {
+      ...selectedComic,
+      qtyInCart: 1,
+    },
+  };
+}
+
+export function removeComicFromCartAction(selectedComic: Comic) {
+  return {
+    type: REMOVE_COMIC_FROM_CART,
+    payload: {
+      ...selectedComic,
+      qtyInCart: 0,
+    },
+  };
+}
+
+export function addMoreThanOneInCartAction(
+  selectedComic: Comic,
+  selectedQty: number
+) {
+  return {
+    type: ADD_MORE_TO_CART,
+    payload: {
+      ...selectedComic,
+      qtyInCart: selectedQty,
+    },
   };
 }
 
@@ -196,6 +253,7 @@ export function resetSelectedComicAction() {
         returned: 0,
       },
       characters: [],
+      qtyInCart: 0,
     },
   };
 }
@@ -236,7 +294,7 @@ export function getRelatedComicsByCreatorsIdAction(
 
       return {
         id: comic.id,
-        title: usefulData.title,
+        title: comic.title,
         comicNumber: usefulData.comicN,
         description: comic.description,
         modificationDate: usefulData.modificationDate,
@@ -250,6 +308,7 @@ export function getRelatedComicsByCreatorsIdAction(
           returned: comic.creators.returned,
         },
         characters: usefulData.characters,
+        qtyInCart: 0,
       };
     });
 

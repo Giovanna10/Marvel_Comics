@@ -4,23 +4,11 @@ import { size, screenDimensions } from "../../utils/themes/sizes";
 
 const profileStyles = StyleSheet.create({
   //LISTS
-  cartListTitleContainer: {
-    borderTopWidth: 0.2,
-    borderTopColor: color.mattYellow,
-    marginBottom: "4%",
-    backgroundColor: "#bdbdbd1c",
-  },
-  cartTitleContainer: {
-    width: 60,
-    alignSelf: "flex-end",
-    marginRight: "4%",
-    paddingVertical: "1%",
-  },
   listTitleContainer: {
     height: 30,
-    justifyContent: 'center',
+    justifyContent: "center",
     backgroundColor: "#bdbdbd5c",
-    marginBottom: '4%'
+    marginBottom: screenDimensions.height < 670 ? "0%" : "4%",
   },
   listTitle: {
     color: color.yellow,
@@ -42,12 +30,12 @@ const profileStyles = StyleSheet.create({
     marginBottom: 4,
   },
   comic: {
-    width: screenDimensions.height < 670 ? 85 : 75,
-    height: screenDimensions.height < 670 ? 135 : 115,
+    width: screenDimensions.height < 670 ? 85 : 120,
+    height: screenDimensions.height < 670 ? 135 : 180,
     borderColor: color.subtitle,
     borderWidth: 0.7,
-    marginBottom: 10,
-    alignSelf: 'center',
+    marginBottom: screenDimensions.height < 670 ?  1 : 10,
+    alignSelf: "center",
   },
   comicDescriptionContainer: {
     width: 120,
@@ -57,13 +45,19 @@ const profileStyles = StyleSheet.create({
     color: color.title,
     fontSize: size.comicTitle,
     fontWeight: "bold",
-    position: 'absolute',
+    position: "absolute",
+  },
+  comicName: {
+    marginHorizontal: "3%",
+    textAlign: "center",
+    fontSize: 13,
+    color: color.yellow,
   },
   comicDetails: {
     color: color.subtitle,
     fontSize: size.comicDetails,
     marginTop: 5,
-    position: 'absolute',
+    position: "absolute",
     top: 30,
   },
   qntContainer: {
@@ -75,16 +69,16 @@ const profileStyles = StyleSheet.create({
     height: 30,
     borderRadius: 6,
     backgroundColor: color.white,
-    marginTop: 5
+    marginTop: 5,
   },
   iconContainer: {
     display: "flex",
     flexDirection: "row",
     width: 120,
-    marginBottom: 5
+    marginBottom: 5,
   },
-  leftIconContainer: { width: "85%", marginTop: 10 },
-  rightIconContainer: { width: "15%", marginTop: 10 },
+  leftIconContainer: { width: "80%", marginTop: screenDimensions.height < 670 ? 2 : 10 },
+  rightIconContainer: { width: "20%", marginTop: screenDimensions.height < 670 ? 2 : 10 },
   icon: { width: 20, height: 20 },
   //SEPARATORS
   verticalSeparator: {
@@ -96,12 +90,12 @@ const profileStyles = StyleSheet.create({
   },
   //CHECKOUT
   totalDetailsContainer: {
+    marginBottom: "3%",
     borderTopWidth: 0.2,
     borderTopColor: color.mattYellow,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: 20,
-    marginTop: 20
   },
   totalDetailsTitles: {
     fontSize: size.description,
@@ -109,23 +103,22 @@ const profileStyles = StyleSheet.create({
   },
   totalDetailsValues: {
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: color.yellow,
   },
   checkoutButtonContainer: {
-    alignSelf: 'center',
+    alignSelf: "center",
     backgroundColor: color.yellow,
     width: 225,
     height: 30,
     borderRadius: 5,
-    justifyContent: 'center',
-    marginTop: 10
+    justifyContent: "center",
   },
   checkoutButtonLabel: {
-    textAlign: 'center', 
+    textAlign: "center",
     fontSize: size.titleDetails,
     color: color.black,
-  }
+  },
 });
 
 export default profileStyles;

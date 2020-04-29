@@ -4,8 +4,12 @@ import {
   USER_INFO,
   GET_USER_COMICS,
   RESET_USER_COMICS,
-  OPEN_QTY_MODAL,
-  CLOSE_QTY_MODAL
+  GET_SELECTED_COMIC_IN_CART,
+  RESET_SELECTED_COMIC_IN_CART,
+  GET_SELECTED_COMIC_ID_IN_CART,
+  RESET_SELECTED_COMIC_ID_IN_CART,
+  ADD_COMIC_FROM_WHISHES,
+  Comic,
 } from "../actionsTypes/ActionsTypes";
 import * as firebase from "firebase";
 import { db } from "../../../../App";
@@ -35,18 +39,35 @@ export function getUserInfoAction() {
   return { type: USER_INFO, payload: userInfo };
 }
 
-export function getUserComicsAction() {
+export function getUserComicsAction(title?: string, qtyInCart?: number) {
   return async (dispatch) => {
     const userComics = {
       whished: [],
       inCart: [],
     };
-    const whishedCollection = await db.collection("Users").doc(firebase.auth().currentUser.uid).collection("Whishlist").get();
+
+    const whishedCollection = await db
+      .collection("Users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("Whishlist")
+      .get();
     userComics.whished = whishedCollection.docs.map((doc) => {
       return doc.data();
     });
 
-    const cartCollection = await db.collection("Users").doc(firebase.auth().currentUser.uid).collection("Cart").get();
+    if (title !== undefined && qtyInCart !== undefined) {
+      db.collection("Users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("Cart")
+        .doc(`${title}`)
+        .update({ qtyInCart: qtyInCart });
+    }
+
+    const cartCollection = await db
+      .collection("Users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("Cart")
+      .get();
     userComics.inCart = cartCollection.docs.map((doc) => {
       return doc.data();
     });
@@ -63,25 +84,71 @@ export function resetUserComicsAction() {
     type: RESET_USER_COMICS,
     payload: {
       whished: [],
-      inCart: []
-    }
-  }
+      inCart: [],
+    },
+  };
 }
 
-export function openQuantityModalAction() {
+export function getComicInCartByIdAction(
+  comicId: number | string,
+  comicsArray: Comic[]
+) {
+  const selectedComic: Comic = comicsArray.find(
+    (comic) => comic.id === comicId
+  );
   return {
-    type: OPEN_QTY_MODAL,
-    payload: true
-  }
+    type: GET_SELECTED_COMIC_IN_CART,
+    payload: selectedComic,
+  };
 }
 
-export function closeQuantityModalAction() {
+export function resetSelectedComicInCartAction() {
   return {
-    type: CLOSE_QTY_MODAL,
-    payload: false
-  }
+    type: RESET_SELECTED_COMIC_IN_CART,
+    payload: {
+      id: 0,
+      title: "",
+      comicNumber: "",
+      description: "",
+      modificationDate: "",
+      creationDate: "",
+      pageCount: 0,
+      price: 0,
+      thumbnail: {
+        path: "",
+        extension: "",
+      },
+      images: [],
+      creators: {
+        items: [],
+        returned: 0,
+      },
+      characters: [],
+      qtyInCart: 0,
+    },
+  };
 }
 
-export function getQuantity() {
-  
+export function getSelectedComicIdInCartAction(selectedComic: Comic) {
+  return {
+    type: GET_SELECTED_COMIC_ID_IN_CART,
+    payload: selectedComic.id,
+  };
+}
+
+export function resetSelectedComicIdInCartAction(){
+  return {
+    type: RESET_SELECTED_COMIC_ID_IN_CART,
+    payload: 0,
+  };
+}
+
+export function addComicFromWhishesAction(selectedComic: Comic) {
+  return {
+    type: ADD_COMIC_FROM_WHISHES,
+    payload: {
+      ...selectedComic,
+      qtyInCart: 1,
+    },
+  };
 }

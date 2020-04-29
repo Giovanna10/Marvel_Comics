@@ -1,14 +1,14 @@
 import { combineReducers } from "redux";
 import userReducer from "./userReducer/userReducer";
-import allCharactersReducer from "./charactersReducer/allCharactersReducer";
-import singleCharacterReducer from "./charactersReducer/singleCharacterReducer";
+import charactersReducer from "./charactersReducer/charactersReducer";
 import comicsReducer from "./comicsReducer/comicsReducer";
 import searchBoxReducer from "./searchBoxReducer/searchBoxReducer";
+import cartReducer from "./cartReducer/cartReducer"
 
 const reducers = combineReducers({
   user: userReducer,
-  allCharacters: allCharactersReducer,
-  singleCharacter: singleCharacterReducer,
+  cart: cartReducer,
+  characters: charactersReducer,
   comics: comicsReducer,
   searchBox: searchBoxReducer,
 });

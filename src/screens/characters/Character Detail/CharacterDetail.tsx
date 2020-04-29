@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { characterDetailStyles } from "./characterDetailStyles";
 import { connect } from "react-redux";
 import { AppState } from "../../../store/store";
@@ -9,7 +9,6 @@ import {
   ImageBackground,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { getSingleCharacterAction } from "../../../store/actions/charactersActions/charactersActions";
 import { NavigationStackProp } from "react-navigation-stack";
 import Header from "../../../components/header/Header";
 import {
@@ -17,36 +16,31 @@ import {
   Comic,
 } from "../../../store/actions/actionsTypes/ActionsTypes";
 import { getComicByIdAction } from "../../../store/actions/comicsActions/comicsActions";
+import { setFromCharacterAction } from "../../../store/actions/charactersActions/charactersActions";
 
 type CharacterDetailProps = {
-  singleCharacter: Character;
-  relatedComics: Comic[];
   navigation?: NavigationStackProp;
-  getSingleCharacter: typeof getSingleCharacterAction;
+  singleCharacter: Character;
   getSelectedComic: typeof getComicByIdAction;
+  setFromCharacter: typeof setFromCharacterAction;
 };
 
 const CharacterDetail: React.FC<CharacterDetailProps> = ({
-  getSingleCharacter,
+  navigation,
   singleCharacter,
   getSelectedComic,
-  navigation,
+  setFromCharacter,
 }) => {
   const styles = characterDetailStyles;
-
-  const characterState = true;
 
   const extension =
     singleCharacter.thumbnail.extension === "jpg"
       ? "/landscape_xlarge.jpg"
       : ".gif";
 
-  useEffect(() => {
-    getSingleCharacter(navigation.state.params);
-  }, [navigation.state.params]);
-
   const handleComicPress = (comicId: string) => {
-    getSelectedComic(comicId, singleCharacter.comics.items, characterState);
+    setFromCharacter()
+    getSelectedComic(comicId, true, []);
     navigation.navigate("ComicDetails");
   };
 
@@ -67,7 +61,7 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
       style={styles.comicContainer}
       onPress={() => handleComicPress(item.id)}
     >
-      <Text style={styles.comicName}> {item.name} </Text>
+      <Text style={styles.comicName}> {item.title} </Text>
     </TouchableOpacity>
   );
 
@@ -82,7 +76,7 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
       >
         <FlatList
           data={singleCharacter.comics.items}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item) => `Key-${item.id}`}
           renderItem={renderComics}
           bounces={false}
           showsVerticalScrollIndicator={false}
@@ -96,18 +90,16 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
 };
 
 const mapStateToProps = (state: AppState) => ({
-  singleCharacter: state.singleCharacter.singleCharacter,
-  relatedComics: state.comics.relatedComics,
+  singleCharacter: state.characters.singleCharacter,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getSingleCharacter: (characterName) =>
-    dispatch(getSingleCharacterAction(characterName)),
   getSelectedComic: (
-    comicId: number,
-    comics: Comic[],
-    characterState: boolean
-  ) => dispatch(getComicByIdAction(comicId, comics, characterState)),
+    comicId: string,
+    characterState: boolean,
+    array: Comic[]
+  ) => dispatch(getComicByIdAction(comicId, characterState, array)),
+  setFromCharacter: () => dispatch(setFromCharacterAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CharacterDetail);

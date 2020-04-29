@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import * as firebase from 'firebase'
+import * as firebase from "firebase";
 import { db } from "../../../App";
 import { connect } from "react-redux";
 import { AppState } from "../../store/store";
@@ -7,6 +7,7 @@ import {
   Comic,
   Creator,
   UserComics,
+  Character,
 } from "../../store/actions/actionsTypes/ActionsTypes";
 import {
   View,
@@ -27,37 +28,69 @@ import {
   getComicByIdAction,
   resetRelatedComicsAction,
   resetSelectedComicAction,
+  addComicToCartAction,
+  getSelectedComicIdAction,
+  resetSelectedComicIdAction,
 } from "../../store/actions/comicsActions/comicsActions";
 import { NavigationStackProp } from "react-navigation-stack";
 import { color } from "../../utils/themes/colors";
 import comicDetailsBg from "../../assets/screensBgs/comicDetailsBg.png";
-import {
-  getUserComicsAction,
-} from "../../store/actions/userActions/userActions";
+import { getUserComicsAction } from "../../store/actions/userActions/userActions";
 import Loading from "../../components/loading/Loading";
+import {
+  getSelectedComicIdInCharacterAction,
+  addComicFromCharacterAction,
+  resetSelectedComicIdInCharacterAction,
+  setFromCharacterAction,
+  resetFromCharacterAction,
+} from "../../store/actions/charactersActions/charactersActions";
 
 type ComicDetailsProps = {
   navigation: NavigationStackProp;
-  getSelectedComic: typeof getComicByIdAction;
-  selectedComic: Comic;
-  resetSelectedComic: typeof resetSelectedComicAction;
+  yearlyComics: Comic[];
   getRelatedComics: typeof getRelatedComicsByCreatorsIdAction;
-  relatedComics: Comic[];
   resetRelatedComics: typeof resetRelatedComicsAction;
+  relatedComics: Comic[];
   getUserComics: typeof getUserComicsAction;
   userComics: UserComics;
+  getSelectedComic: typeof getComicByIdAction;
+  resetSelectedComic: typeof resetSelectedComicAction;
+  selectedComic: Comic;
+  getSelectedComicId: typeof getSelectedComicIdAction;
+  resetSelectedComicId: typeof resetSelectedComicIdAction;
+  selectedComicId: number;
+  selectedCharacter: Character;
+  getComicIdFromCharacter: typeof getSelectedComicIdInCharacterAction;
+  resetSelectedComicIdInCharacter: typeof resetSelectedComicIdInCharacterAction;
+  comicIdFromCharacter: number;
+  addComicToCart: typeof addComicToCartAction;
+  fromCharacter: boolean;
+  resetFromCharacter: typeof resetFromCharacterAction;
+  addComicFromCharacter: typeof addComicFromCharacterAction;
 };
 
 const ComicDetails: React.FC<ComicDetailsProps> = ({
   navigation,
+  yearlyComics,
+  getRelatedComics,
+  resetRelatedComics,
+  relatedComics,
+  getUserComics,
+  userComics,
   getSelectedComic,
   resetSelectedComic,
   selectedComic,
-  getRelatedComics,
-  relatedComics,
-  resetRelatedComics,
-  getUserComics,
-  userComics,
+  getSelectedComicId,
+  resetSelectedComicId,
+  selectedComicId,
+  selectedCharacter,
+  getComicIdFromCharacter,
+  resetSelectedComicIdInCharacter,
+  comicIdFromCharacter,
+  addComicToCart,
+  fromCharacter,
+  resetFromCharacter,
+  addComicFromCharacter,
 }) => {
   const styles = comicDetailsStyles;
 
@@ -65,44 +98,89 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [addedToCart, setAddedToCart] = useState(false);
   const [addedToWhish, setAddedToWhish] = useState(false);
+  const [comparisonArray, setComparisonArray] = useState<Comic[] | Character[]>(
+    []
+  );
+  const [comicId, setComicId] = useState(0);
+  const [comicInRelated, setComicInRelated] = useState(false);
 
   useEffect(() => {
-    const comicFoundInCart = userComics.inCart.find(
-      (comic) => comic.id === selectedComic.id
-    );
-    comicFoundInCart && setAddedToCart(true);
-
-    const comicFoundInWhish = userComics.whished.find(
-      (comic) => comic.id === selectedComic.id
-    );
-    comicFoundInWhish && setAddedToWhish(true);
-  }, [selectedComic, userComics]);
-
-  useEffect(() => {
-    getRelatedComics(selectedComic.creators.items);
+    fromCharacter
+      ? getComicIdFromCharacter(selectedComic)
+      : getSelectedComicId(selectedComic);
+    relatedComics.length === 0 &&
+      getRelatedComics(selectedComic.creators.items);
   }, [selectedComic]);
 
   useEffect(() => {
-    return () => {
-      resetRelatedComics();
-      setAddedToCart(false);
-      setAddedToWhish(false);
-      resetSelectedComic();
-    };
-  }, []);
+    fromCharacter
+      ? setComicId(comicIdFromCharacter)
+      : setComicId(selectedComicId);
+  }, [selectedComicId, comicIdFromCharacter]);
 
-  const addToCartList = () => {
+  useEffect(() => {
+    const comicFoundInCart = userComics.inCart.find(
+      (comic) => comic.id === comicId
+    );
+    comicFoundInCart && setAddedToCart(true);
+    const comicFoundInWhish = userComics.whished.find(
+      (comic) => comic.id === comicId
+    );
+    comicFoundInWhish && setAddedToWhish(true);
+  }, [comicId, userComics]);
+
+  useEffect(() => {
+    !comicInRelated
+      ? setComparisonArray(yearlyComics)
+      : setComparisonArray(relatedComics);
+  }, [comicInRelated, yearlyComics, relatedComics]);
+
+  useEffect(() => {
+    const selected = fromCharacter
+      ? selectedCharacter.comics.items.find(
+          (comic) => parseInt(comic.id, 10) === comicId
+        )
+      : comparisonArray.find((comic) => comic.id === comicId);
+
     try {
-      db.collection("Users").doc(firebase.auth().currentUser.uid).collection("Cart").doc(selectedComic.title).set(selectedComic);
+      selected !== undefined &&
+        db
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .collection("Cart")
+          .doc(selected.title)
+          .set(selected);
     } catch (error) {
       console.log(error.message);
     }
     getUserComics();
+  }, [fromCharacter, selectedCharacter.comics.items, comparisonArray]);
+
+  useEffect(() => {
+    return () => {
+      resetRelatedComics();
+      resetFromCharacter();
+      setAddedToCart(false);
+      setAddedToWhish(false);
+      resetSelectedComic();
+      resetSelectedComicId();
+      resetSelectedComicIdInCharacter();
+    };
+  }, []);
+
+  const addToCartList = () => {
+    fromCharacter
+      ? addComicFromCharacter(selectedComic)
+      : addComicToCart(selectedComic);
   };
 
   const addToWhishes = () => {
     try {
-      db.collection("Users").doc(firebase.auth().currentUser.uid).collection("Whishlist").doc(selectedComic.title).set(selectedComic);
+      db.collection("Users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("Whishlist")
+        .doc(selectedComic.title)
+        .set(selectedComic);
     } catch (error) {
       console.log(error.message);
     }
@@ -120,30 +198,38 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
   const handleComicPress = (id: number) => {
     setAddedToCart(false);
     setAddedToWhish(false);
-    getSelectedComic(id, relatedComics);
+    resetFromCharacter();
+    resetSelectedComic();
+    resetSelectedComicId();
+    resetSelectedComicIdInCharacter();
+    getSelectedComic(id, false, relatedComics);
+    setComicInRelated(true);
     navigation.navigate("ComicDetails");
-  };  
+  };
 
-  const renderComic = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => handleComicPress(item.id)}
-      style={styles.comicListContainer}
-    >
-      <Image
-        source={{
-          uri: `${item.thumbnail.path}/portrait_xlarge.jpg`,
-        }}
-        style={styles.comic}
-      />
-      <View style={styles.comicDescriptionContainer}>
-        <Text numberOfLines={4} style={styles.comicTitle}>
-          {item.title}
-        </Text>
-        <Text style={styles.comicSubtitle}>#{item.comicNumber}</Text>
-        <Text style={styles.comicDetails}>{item.modificationDate}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderComic = ({ item }) => {
+    const title = item.title.split("#")[0];
+    return (
+      <TouchableOpacity
+        onPress={() => handleComicPress(item.id)}
+        style={styles.comicListContainer}
+      >
+        <Image
+          source={{
+            uri: `${item.thumbnail.path}/portrait_xlarge.jpg`,
+          }}
+          style={styles.comic}
+        />
+        <View style={styles.comicDescriptionContainer}>
+          <Text numberOfLines={2} style={styles.comicTitle}>
+            {title}
+          </Text>
+          <Text numberOfLines={1} style={styles.comicSubtitle}>#{item.comicNumber}</Text>
+          <Text style={styles.comicDetails}>{item.modificationDate}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <>
@@ -190,7 +276,7 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
                         backgroundColor: addedToCart ? "#4EAF24" : color.yellow,
                       },
                     ]}
-                    onPress={() => addToCartList()}
+                    onPress={addToCartList}
                   >
                     <View style={styles.btnTextContainer}>
                       <Text style={styles.btnText}>
@@ -289,14 +375,31 @@ const ComicDetails: React.FC<ComicDetailsProps> = ({
 };
 
 const mapStateToProps = (state: AppState) => ({
-  selectedComic: state.comics.selectedComic,
+  yearlyComics: state.comics.yearlyComics,
   relatedComics: state.comics.relatedComics,
   userComics: state.user.userComics,
+  selectedComic: state.comics.selectedComic,
+  selectedComicId: state.comics.selectedComicId,
+  selectedCharacter: state.characters.singleCharacter,
+  fromCharacter: state.characters.fromCharacter,
+  comicIdFromCharacter: state.characters.selectedComicId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getSelectedComic: (comicId: number, comics: Comic[]) =>
-    dispatch(getComicByIdAction(comicId, comics)),
+  getSelectedComic: (comicId: number, boolean: boolean, comics: Comic[]) =>
+    dispatch(getComicByIdAction(comicId, boolean, comics)),
+  getSelectedComicId: (selectedComic: Comic) =>
+    dispatch(getSelectedComicIdAction(selectedComic)),
+  resetSelectedComicId: () => dispatch(resetSelectedComicIdAction()),
+  getComicIdFromCharacter: (selectedComic: Comic) =>
+    dispatch(getSelectedComicIdInCharacterAction(selectedComic)),
+  resetSelectedComicIdInCharacter: () =>
+    dispatch(resetSelectedComicIdInCharacterAction()),
+  addComicToCart: (selectedComic: Comic) =>
+    dispatch(addComicToCartAction(selectedComic)),
+  resetFromCharacter: () => dispatch(resetFromCharacterAction()),
+  addComicFromCharacter: (selectedComic: Comic) =>
+    dispatch(addComicFromCharacterAction(selectedComic)),
   resetSelectedComic: () => dispatch(resetSelectedComicAction()),
   getRelatedComics: (creators: Creator[], offset: number) =>
     dispatch(getRelatedComicsByCreatorsIdAction(creators, offset)),

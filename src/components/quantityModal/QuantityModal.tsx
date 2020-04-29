@@ -10,21 +10,27 @@ import {
 } from "react-native";
 import modalStyles from "./styles/modalStyles";
 import { AppState } from "../../store/store";
-import { closeQuantityModalAction } from "../../store/actions/userActions/userActions";
+import { closeQuantityModalAction } from "../../store/actions/cartActions/cartActions";
 import { screenDimensions } from "../../utils/themes/sizes";
-import { SafeAreaView } from "react-navigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Comic } from "../../store/actions/actionsTypes/ActionsTypes";
+import { addMoreThanOneInCartAction } from "../../store/actions/comicsActions/comicsActions";
+import { getUserComicsAction } from "../../store/actions/userActions/userActions";
 
 type ModalProps = {
-  openModal: boolean;
+  selectedComic: Comic;
   closeQuantityModal: typeof closeQuantityModalAction;
+  openModal: boolean;
+  addMoreThanOneInCart: typeof addMoreThanOneInCartAction;
+  getUserComics: typeof getUserComicsAction;
 };
 
-//LA VARIABILE open RIMANE TRUE... VEDERE COME RESETTARE LO STATE
-
 const QuantityModal: React.FC<ModalProps> = ({
+  selectedComic,
   closeQuantityModal,
   openModal,
+  addMoreThanOneInCart,
+  getUserComics,
 }) => {
   const styles = modalStyles;
 
@@ -59,6 +65,12 @@ const QuantityModal: React.FC<ModalProps> = ({
   useEffect(() => {
     return () => closeQuantityModal();
   }, []);
+
+  const handlePressModalItem = (number: number) => {    
+    addMoreThanOneInCart(selectedComic, number);
+    getUserComics(selectedComic.title, number);
+    closeQuantityModal();
+  };
 
   const renderHeader = () => (
     <View style={styles.headerListContainer}>
@@ -96,7 +108,10 @@ const QuantityModal: React.FC<ModalProps> = ({
   );
 
   const renderQuantities = ({ item }) => (
-    <TouchableOpacity style={styles.listItemContainer}>
+    <TouchableOpacity
+      onPress={() => handlePressModalItem(item)}
+      style={styles.listItemContainer}
+    >
       <Text style={styles.listItem}>{item}</Text>
     </TouchableOpacity>
   );
@@ -154,11 +169,16 @@ const QuantityModal: React.FC<ModalProps> = ({
 };
 
 const mapStateToProps = (state: AppState) => ({
-  openModal: state.user.openModal,
+  openModal: state.cart.openModal,
+  selectedComic: state.user.selectedComic,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getUserComics: (title: string, qty: number) =>
+    dispatch(getUserComicsAction(title, qty)),
   closeQuantityModal: () => dispatch(closeQuantityModalAction()),
+  addMoreThanOneInCart: (selectedComic: Comic, selectedQty: number) =>
+    dispatch(addMoreThanOneInCartAction(selectedComic, selectedQty)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuantityModal);

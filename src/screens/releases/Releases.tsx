@@ -66,7 +66,7 @@ const Releases: React.FC<ReleasesProps> = ({
     news.length === 0 && getComicsNews();
     yearlyComics.length === 0 && getYearlyComics();
     userInfo.name.length === 0 && getUserInfo();
-    userComics && userComics.whished.length === 0 && getUserComics();
+    userComics.whished.length === 0 && getUserComics();
   }, []);
 
   const handleLoadMore = () => {
@@ -78,11 +78,13 @@ const Releases: React.FC<ReleasesProps> = ({
   };
 
   const handleComicPress = (item: Comic) => {
-    getSelectedComic(item.id, yearlyComics);
+    getSelectedComic(item.id, false, yearlyComics);
     navigation.navigate("ComicDetails");
   };
 
-  const renderComic = ({ item }) => (
+  const renderComic = ({ item }) => {
+    const title = item.title.split("#")[0]
+    return(
     <TouchableOpacity
       style={styles.comicContainer}
       onPress={() => handleComicPress(item)}
@@ -94,12 +96,12 @@ const Releases: React.FC<ReleasesProps> = ({
         style={styles.comic}
       />
       <Text numberOfLines={4} style={styles.comicTitle}>
-        {item.title}
+        {title}
       </Text>
       <Text style={styles.comicSubtitle}>#{item.comicNumber}</Text>
       <Text style={styles.comicDate}>{item.modificationDate}</Text>
     </TouchableOpacity>
-  );
+  )};
 
   return (
     <>
@@ -148,8 +150,8 @@ const mapDispatchToProps = (dispatch) => ({
   getUserComics: () => dispatch(getUserComicsAction()),
   getComicsNews: () => dispatch(getComicsNewsAction()),
   getYearlyComics: (offset: number) => dispatch(getYearlyComicsAction(offset)),
-  getSelectedComic: (comicId: number, comics: Comic[]) =>
-    dispatch(getComicByIdAction(comicId, comics)),
+  getSelectedComic: (comicId: number, boolean: boolean, comics: Comic[]) =>
+    dispatch(getComicByIdAction(comicId, boolean, comics)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Releases);

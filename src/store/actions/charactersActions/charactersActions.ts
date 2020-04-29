@@ -5,11 +5,16 @@ import {
   API_HOST_TS as TS,
 } from "react-native-dotenv";
 import {
+  IS_FROM_CHARACTER,
+  ISNT_FROM_CHARACTER,
   GET_ALL_CHARACTERS,
   GET_SINGLE_CHARACTER,
+  GET_SELECTED_COMIC_ID_IN_CHARACTER,
+  RESET_SELECTED_COMIC_ID_IN_CHARACTER,
+  ADD_TO_CART_FROM_CHARACTER,
   Character,
+  Comic,
 } from "../actionsTypes/ActionsTypes";
-import { NavigationParams } from "react-navigation";
 
 export function getAllCharactersAction(offset?: number) {
   const params = {
@@ -42,7 +47,7 @@ export function getAllCharactersAction(offset?: number) {
   };
 }
 
-export function getSingleCharacterAction(name: NavigationParams) {
+export function getSingleCharacterAction(name: string) {
   const params = {
     apikey: KEY,
     hash: HASH,
@@ -56,7 +61,7 @@ export function getSingleCharacterAction(name: NavigationParams) {
       const comicId = comic.resourceURI.split("comics/")[1];
       return {
         id: comicId,
-        name: comic.name,
+        title: comic.name,
       };
     });
     const singleCharacter: Character = {
@@ -74,5 +79,43 @@ export function getSingleCharacterAction(name: NavigationParams) {
       type: GET_SINGLE_CHARACTER,
       payload: singleCharacter,
     });
+  };
+}
+
+export function setFromCharacterAction() {
+  return {
+    type: IS_FROM_CHARACTER,
+    payload: true
+  }
+}
+
+export function resetFromCharacterAction() {
+  return {
+    type: ISNT_FROM_CHARACTER,
+    payload: false
+  }
+}
+
+export function addComicFromCharacterAction(selectedComic: Comic) {
+  return {
+    type: ADD_TO_CART_FROM_CHARACTER,
+    payload: {
+      ...selectedComic,
+      qtyInCart: 1
+    },
+  };
+}
+
+export function getSelectedComicIdInCharacterAction(selectedComic: Comic) {
+  return {
+    type: GET_SELECTED_COMIC_ID_IN_CHARACTER,
+    payload: selectedComic.id,
+  };
+}
+
+export function resetSelectedComicIdInCharacterAction() {
+  return {
+    type: RESET_SELECTED_COMIC_ID_IN_CHARACTER,
+    payload: 0,
   };
 }

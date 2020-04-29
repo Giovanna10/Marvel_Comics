@@ -128,17 +128,8 @@ const DrawerContentComponent = (props) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View
-        style={{
-          paddingTop:
-            screenDimensions.height < 570
-              ? 300
-              : screenDimensions.height < 670
-                ? 400
-                : 15,
-        }}
-      >
-        <View style={{ alignSelf: 'center' }}>
+      <View>
+        <View style={{ alignSelf: 'center', marginTop: '20%' }}>
           <Image source={{ uri: currentUserImage }} style={{ width: 55, height: 51, borderRadius: 50 }} />
         </View>
         <Text style={{

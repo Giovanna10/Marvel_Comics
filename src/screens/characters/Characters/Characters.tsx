@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import charactersBg from "../../../assets/screensBgs/charactersBg.png";
 import Header from "../../../components/header/Header";
-import { getAllCharactersAction } from "../../../store/actions/charactersActions/charactersActions";
+import { getAllCharactersAction, getSingleCharacterAction } from "../../../store/actions/charactersActions/charactersActions";
 import { Character } from "../../../store/actions/actionsTypes/ActionsTypes";
 import { color } from "../../../utils/themes/colors";
 import { NavigationStackProp } from "react-navigation-stack";
@@ -22,12 +22,14 @@ type CharactersProps = {
   allCharacters: Character[];
   navigation?: NavigationStackProp;
   getAllCharacters: typeof getAllCharactersAction;
+  getSingleCharacter: typeof getSingleCharacterAction;
 };
 
 const Characters: React.FC<CharactersProps> = ({
+  navigation,
   allCharacters,
   getAllCharacters,
-  navigation,
+  getSingleCharacter,
 }) => {
   const styles = charactersStyles;
 
@@ -46,8 +48,9 @@ const Characters: React.FC<CharactersProps> = ({
     setOffset(offset + 8);
   };
 
-  const goToCharacterDetail = (characterName) => {
-    navigation.navigate("CharacterDetail", characterName);
+  const goToCharacterDetail = (characterName: string) => {
+    getSingleCharacter(characterName)
+    navigation.navigate("CharacterDetail");
   };
 
   const renderCharacters = ({ item }) => (
@@ -105,11 +108,13 @@ const Characters: React.FC<CharactersProps> = ({
 };
 
 const mapStateToProps = (state: AppState) => ({
-  allCharacters: state.allCharacters.allCharacters,
+  allCharacters: state.characters.allCharacters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getAllCharacters: (offset) => dispatch(getAllCharactersAction(offset)),
+  getAllCharacters: (offset: number) => dispatch(getAllCharactersAction(offset)),
+  getSingleCharacter: (characterName: string) =>
+    dispatch(getSingleCharacterAction(characterName)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Characters);

@@ -10,6 +10,11 @@ export interface UserState {
   loggedIn: boolean;
   user: User;
   userComics: UserComics;
+  selectedComic: Comic;
+  selectedComicId: number;
+}
+
+export interface CartState {
   openModal: boolean;
 }
 
@@ -17,13 +22,13 @@ export interface ComicsState {
   comicsNews: News[];
   yearlyComics: Comic[];
   selectedComic: Comic;
+  selectedComicId: number;
   relatedComics: Comic[];
 }
 
-export interface AllCharactersState {
+export interface CharactersState {
+  fromCharacter: boolean;
   allCharacters: Character[];
-}
-
-export interface SingleCharacterState {
   singleCharacter: Character;
+  selectedComicId: number;
 }
