@@ -36,6 +36,7 @@ local.properties
 # node.js
 #
 node_modules/
+!node_modules/react-native/Libraries/Core/Timers/JSTimers.js
 npm-debug.log
 yarn-error.log
 
