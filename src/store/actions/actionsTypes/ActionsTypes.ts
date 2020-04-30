@@ -98,7 +98,7 @@ export interface CharactersActionInterface {
 export interface Comic {
   id: number;
   title: string;
-  comicNumber: string;
+  comicNumber: number | string;
   description: string;
   modificationDate: string;
   creationDate: string;

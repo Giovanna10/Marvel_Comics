@@ -35,7 +35,8 @@ function usefulFunction(
   creators: Creator[],
   characters: Character[]
 ) {
-  const comicNumber = title.split("#")[1] !== undefined ? title.split("#")[1] : 0
+  const comicNumber =
+    title.split("#")[1] !== undefined ? title.split("#")[1] : 0;
   const characterItems = characters.map(
     (character: Character) => character.name
   );
@@ -279,9 +280,11 @@ export function getRelatedComicsByCreatorsIdAction(
       role: "",
     };
     editor = creators.find((creator) => creator.role === "editor");
-    const { data } = await relatedComics.get(`${editor.id}/comics`, {
-      params,
-    });
+    const { data } =
+      editor !== undefined &&
+      (await relatedComics.get(`${editor.id}/comics`, {
+        params,
+      }));
 
     const related: Comic[] = data.data.results.map((comic) => {
       const usefulData = usefulFunction(
